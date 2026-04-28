@@ -4,6 +4,42 @@ Chronologisches Logbuch. Neueste Einträge oben.
 
 ---
 
+## 2026-04-28 — v0.3 Onboarding-Wizard (public, 7 Steps, sign-up am Schluss)
+
+**Architektur-Move:** Onboarding ist **public** (kein Login nötig bis Schritt 7). State client-side via Reducer + localStorage. Magic-Link-Sign-up am Schluss → `/auth/callback?next=/onboarding/finalize` → Server-Action persistiert alles → `/dashboard`.
+
+**Was gemacht:**
+- **`lib/onboarding/state.ts`** — typed Reducer (`next`/`prev`/`goto`/`patch-band`/`set-invites`/`select-venue`/`hydrate`/`reset`), `canAdvance(step)` Gate-Logik
+- **`lib/onboarding/venues-static.ts`** — 12 statische DACH-Venues + `matchVenues(input, limit)` Score-Algorithmus (Genre×3 + Region×2 + Capacity×1)
+- **`lib/onboarding/finalize.ts`** — Server-Action `finalizeOnboarding(state)`: erstellt Band (Trigger erstellt automatisch leader-Membership), Invitations mit 14d-Token, optionales Booking aus statischem Venue. Untyped Cast wegen Workspace-Type-Resolution; clean nach `gen-types`.
+- **`components/onboarding/`**
+  - `WizardProvider.tsx` — Context + Reducer + auto-hydrate/persist localStorage
+  - `Wizard.tsx` — Shell: Header (Logo + StepProgress + "Schon ein Konto?"), Step-Body, Sticky-Footer mit Zurück/Weiter/Skip
+  - `StepProgress.tsx` — Pills `01..07` mit aktiv/past/future States
+  - `Step1Welcome.tsx` — Bold Display-Headline + Continue
+  - `Step2BandBasics.tsx` — Bandname (mit Live-Echo), Genre-Multi (max 3), Bandgröße-Stepper 3–8
+  - `Step3Geo.tsx` — Country-Picker (CH/DE/AT mit Flaggen) + 1–5 Cities Chip-Multi (vorbereitet für MapLibre v0.4)
+  - `Step4Ambition.tsx` — 3 Cards Hobby/Semi-Pro/Pro mit Auto-Advance bei Klick
+  - `Step5Invites.tsx` — 1–7 Email-Rows mit Instrument, Skip-prominent
+  - `Step6Venues.tsx` — 1.4s Loading-Shimmer + 3 Match-Cards (mit Match%, Cap, Genres) + Auswahl
+  - `Step7SignUp.tsx` — Zusammenfassung + Email-Input + Magic-Link signInWithOtp(emailRedirectTo: `/auth/callback?next=/onboarding/finalize`)
+  - `FinalizeClient.tsx` — Loading → Reads localStorage → calls `finalizeOnboarding` → success: cleart Storage + redirect zu `/dashboard` · error: zurück zu Onboarding
+- **`app/onboarding/page.tsx`** + **`app/onboarding/finalize/page.tsx`** — beide noindex
+- **`middleware.ts`** — `/onboarding` zu `PUBLIC_PATHS` hinzugefügt
+- **Marketing CTAs** (Hero + Nav) zeigen jetzt auf `https://app.klano.ai/onboarding` statt `#waitlist`
+
+**Build:** Web 11 Routes (Onboarding 10.3kB · Finalize 2kB) + Middleware grün. Marketing 4 Pages grün.
+
+**Bekannte Punkte (für später):**
+- Idempotente Re-Run-Schutz in `finalize.ts` deaktiviert — kommt zurück mit echten Types post-`gen-types`
+- Step 3 Geografie nutzt Chip-Liste statt MapLibre — Map-Implementation Q-E2 deferred bis v0.4
+- Logo-Upload (`band.logoDataUrl`) ist im State definiert aber UI fehlt — kommt mit Storage-Wiring v0.4
+- Typed Supabase-Client durch Workspace re-export bricht Generic-Inference; Workaround mit `as SupabaseClient` cast in `finalize.ts`. Sauberere Lösung: Database aus `@klano/db` direkt re-exportieren oder Types nach `gen-types` neu generieren
+
+**Push:** Initial-Push auf https://github.com/pascal-kuptz/klano.git erfolgt; v0.3 Commit folgt.
+
+---
+
 ## 2026-04-28 — v0.2 Schema + Auth-Pipeline (offline ready)
 
 **Was gemacht:**

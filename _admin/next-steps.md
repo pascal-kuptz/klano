@@ -4,9 +4,24 @@ Aktuell anstehende, konkrete Tasks. Nach Erledigung → `progress-log.md` und hi
 
 > **Reihenfolge:** Top-down = Priorität.
 
+## GitHub-Remote pushen (wenn du sagst)
+
+Repo ist bereit: https://github.com/pascal-kuptz/klano.git
+
+```bash
+cd C:/Users/pakup/Desktop/klano
+git remote add origin https://github.com/pascal-kuptz/klano.git
+git push -u origin main
+```
+
+(Kein Auto-Push — sag wenn's losgehen soll. Falls das Repo auf GitHub schon einen initial commit / README hat, vorher `git pull --rebase origin main` damit lokale 7 Commits drauf passen.)
+
 ## Sofort — Auth lokal aufschalten
 
-Schema + Auth-Pipeline sind aufgesetzt aber noch nicht connected. Damit Sign-in real funktioniert:
+Schema + Auth-Pipeline sind aufgesetzt aber noch nicht connected.
+
+**Voraussetzung:** Docker Desktop installiert ([Download](https://www.docker.com/products/docker-desktop/)).
+Alternative: Supabase Cloud-Projekt unter [supabase.com](https://supabase.com) (EU-Frankfurt).
 
 1. **Supabase CLI lokal starten** (Docker muss laufen)
    ```bash

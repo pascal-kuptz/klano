@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import type { Database } from '@klano/db/types';
 
-const PUBLIC_PATHS = ['/sign-in', '/auth/callback', '/auth/sign-out'];
+const PUBLIC_PATHS = ['/sign-in', '/auth/callback', '/auth/sign-out', '/onboarding'];
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
