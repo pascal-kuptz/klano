@@ -1,0 +1,45 @@
+---
+import LogoMark from './LogoMark.astro';
+import Button from './Button.astro';
+
+interface Props {
+  waitlistLabel: string;
+  menuLabel: string;
+  homeHref?: string;
+}
+const { waitlistLabel, menuLabel, homeHref = '/' } = Astro.props;
+---
+
+<nav id="site-nav" class="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-klano-void/65 transition-colors duration-300">
+  <div class="max-w-screen-xl mx-auto flex items-center justify-between px-4 py-4 md:px-8 md:py-5 xl:px-12 xl:py-6">
+    <LogoMark href={homeHref} />
+    <div class="flex items-center gap-2">
+      <Button
+        variant="primary"
+        href="#waitlist"
+        class="!min-h-[44px] !px-5 !py-2.5 !text-sm"
+      >
+        {waitlistLabel}
+      </Button>
+      <button
+        type="button"
+        aria-label={menuLabel}
+        class="hidden md:inline-flex bg-transparent border border-klano-edge text-klano-pearl font-mono text-[11px] tracking-[0.18em] uppercase px-4 py-2.5 rounded-xl hover:border-klano-mist transition-colors"
+      >
+        {menuLabel}
+      </button>
+    </div>
+  </div>
+</nav>
+
+<script>
+  const nav = document.getElementById('site-nav');
+  if (nav) {
+    const onScroll = () => {
+      nav.classList.toggle('bg-klano-void/95', window.scrollY > 16);
+      nav.classList.toggle('bg-klano-void/65', window.scrollY <= 16);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+</script>

@@ -1,0 +1,69 @@
+---
+import Base from './Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { copy } from '../lib/copy';
+import type { Locale } from '../lib/seo';
+
+interface Props {
+  title: string;
+  description?: string;
+  locale: Locale;
+}
+const { title, description, locale } = Astro.props;
+const c = copy[locale];
+---
+
+<Base title={title} description={description} noindex={false}>
+  <Nav waitlistLabel={c.nav.waitlist} menuLabel={c.nav.menu} homeHref={locale === 'de' ? '/' : '/en'} />
+  <main class="pt-36 pb-20 md:pt-48 md:pb-28">
+    <article class="max-w-2xl mx-auto px-4 md:px-8 prose-klano">
+      <h1 class="legal-h1">{title}</h1>
+      <slot />
+    </article>
+  </main>
+  <Footer
+    tag={c.footer.tag}
+    cols={c.footer.cols}
+    from={c.footer.from}
+    legalLeft={c.footer.legalLeft}
+    legalRight={c.footer.legalRight}
+  />
+</Base>
+
+<style is:global>
+  .legal-h1 {
+    font-family: 'Fraunces Variable', Georgia, serif;
+    font-variation-settings: 'opsz' 144, 'SOFT' 30, 'WONK' 1;
+    font-weight: 800;
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1;
+    letter-spacing: -0.035em;
+    color: var(--color-klano-pearl);
+    margin-bottom: 2.5rem;
+  }
+  .prose-klano h2 {
+    font-family: 'Geist Variable', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--color-klano-pearl);
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  .prose-klano p,
+  .prose-klano li {
+    color: var(--color-klano-bone);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+  .prose-klano a {
+    color: var(--color-klano-acid);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .prose-klano ul {
+    list-style: disc;
+    padding-left: 1.25rem;
+    margin-bottom: 1rem;
+  }
+</style>

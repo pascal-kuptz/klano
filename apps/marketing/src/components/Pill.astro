@@ -1,0 +1,21 @@
+---
+interface Props {
+  variant?: 'default' | 'acid';
+  class?: string;
+}
+const { variant = 'default', class: className = '' } = Astro.props;
+---
+
+<span
+  class:list={[
+    'inline-flex items-center gap-2 px-3 py-1.5 rounded-md',
+    'font-mono text-[11px] tracking-[0.12em] uppercase',
+    'before:content-[""] before:w-1.5 before:h-1.5 before:rounded-full before:bg-current',
+    variant === 'acid'
+      ? 'bg-klano-acid/12 border border-klano-acid/30 text-klano-acid'
+      : 'bg-klano-spotlight border border-klano-edge text-klano-bone',
+    className,
+  ]}
+>
+  <slot />
+</span>

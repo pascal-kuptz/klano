@@ -1,0 +1,90 @@
+---
+interface FooterCol {
+  heading: string;
+  links: { label: string; href: string }[];
+}
+interface Props {
+  tag: readonly string[];
+  cols: readonly FooterCol[];
+  from: string;
+  legalLeft: string;
+  legalRight: string;
+}
+const { tag, cols, from, legalLeft, legalRight } = Astro.props;
+---
+
+<footer class="border-t border-klano-edge pt-20 pb-10 mt-0 bg-klano-void">
+  <div class="max-w-screen-xl mx-auto px-4 md:px-8 xl:px-12">
+    <div class="footer-top grid gap-12 md:grid-cols-[2fr_1fr_1fr_1fr] md:gap-16 mb-20">
+      <p class="footer-tag">
+        {tag[0]}<em>{tag[1]}</em>{tag[2]}
+      </p>
+      {
+        cols.map((col) => (
+          <div class="footer-col">
+            <h4 class="font-mono text-[11px] tracking-[0.22em] uppercase text-klano-fog mb-4">
+              {col.heading}
+            </h4>
+            <ul class="space-y-2.5">
+              {col.links.map((l) => (
+                <li>
+                  <a href={l.href} class="text-klano-bone hover:text-klano-pearl transition-colors">
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="mega-wordmark relative leading-[0.78] mb-12">
+      <span class="text">kla<span class="o">n</span>o</span>
+      <span class="absolute right-0 top-1 font-mono text-[11px] tracking-[0.22em] uppercase text-klano-fog">
+        {from}
+      </span>
+    </div>
+
+    <div class="footer-bottom flex flex-col md:flex-row md:items-center md:justify-between gap-3 pt-6 border-t border-klano-edge font-mono text-[11px] tracking-[0.18em] uppercase">
+      <span class="text-klano-fog">
+        <span class="text-klano-acid">●</span>
+        {legalLeft}
+      </span>
+      <span class="text-klano-fog">{legalRight}</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer-tag {
+    font-family: 'Fraunces Variable', Georgia, serif;
+    font-variation-settings: 'opsz' 144, 'SOFT' 30, 'WONK' 1;
+    font-weight: 700;
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    line-height: 1.25;
+    color: var(--color-klano-pearl);
+    white-space: pre-line;
+    max-width: 360px;
+  }
+  .footer-tag :global(em) {
+    font-style: italic;
+    font-weight: 400;
+    font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+    color: var(--color-klano-coral);
+  }
+  .mega-wordmark .text {
+    font-family: 'Fraunces Variable', Georgia, serif;
+    font-variation-settings: 'opsz' 144, 'SOFT' 30, 'WONK' 1;
+    font-weight: 900;
+    font-size: clamp(5rem, 25vw, 18rem);
+    color: var(--color-klano-pearl);
+    letter-spacing: -0.075em;
+    display: block;
+  }
+  .mega-wordmark .text .o {
+    color: var(--color-klano-coral);
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  }
+</style>

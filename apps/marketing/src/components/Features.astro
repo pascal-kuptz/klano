@@ -1,0 +1,83 @@
+---
+import Eyebrow from './Eyebrow.astro';
+import Pill from './Pill.astro';
+
+interface FeatureCard {
+  eyebrow: string;
+  title: string;
+  body: string;
+  pills: { variant: 'default' | 'acid'; label: string }[];
+}
+interface Props {
+  eyebrow: string;
+  heading: readonly [string, string];
+  lede: string;
+  cards: readonly FeatureCard[];
+}
+const { eyebrow, heading, lede, cards } = Astro.props;
+---
+
+<section id="features" class="reveal py-24 lg:py-36">
+  <div class="max-w-screen-xl mx-auto px-4 md:px-8 xl:px-12">
+    <div class="features-header mb-14 max-w-[800px]">
+      <Eyebrow variant="coral" class="mb-6">{eyebrow}</Eyebrow>
+      <h2 class="features-heading">
+        {heading[0]} <em>{heading[1]}</em>
+      </h2>
+      <p class="text-klano-bone text-lg leading-relaxed mt-6 max-w-[560px]">{lede}</p>
+    </div>
+
+    <div class="grid gap-6 lg:grid-cols-2 lg:auto-rows-fr">
+      {
+        cards.map((card, i) => (
+          <article
+            class:list={[
+              'fcard bg-klano-card border border-klano-edge rounded-3xl p-7 md:p-10 lg:p-11',
+              'min-h-[420px] md:min-h-[480px] flex flex-col',
+              'hover:border-klano-mist hover:-translate-y-1 transition-all duration-300',
+              i === 2 && 'lg:col-span-2',
+            ]}
+          >
+            <span class="font-mono text-[11px] tracking-[0.22em] uppercase text-klano-coral mb-6">
+              {card.eyebrow}
+            </span>
+            <h3 class="fcard-title">{card.title}</h3>
+            <p class="text-klano-sand text-base leading-relaxed mb-8 max-w-[460px]">{card.body}</p>
+            <div class="flex items-center gap-3 mt-auto flex-wrap">
+              {card.pills.map((p) => (
+                <Pill variant={p.variant}>{p.label}</Pill>
+              ))}
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .features-heading {
+    font-family: 'Fraunces Variable', Georgia, serif;
+    font-variation-settings: 'opsz' 144, 'SOFT' 30, 'WONK' 1;
+    font-weight: 800;
+    font-size: clamp(2.5rem, 7vw, 4.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+    color: var(--color-klano-pearl);
+  }
+  .features-heading em {
+    font-style: italic;
+    font-weight: 400;
+    font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+    color: var(--color-klano-coral);
+  }
+  .fcard-title {
+    font-family: 'Geist Variable', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: var(--color-klano-pearl);
+    margin-bottom: 16px;
+  }
+</style>

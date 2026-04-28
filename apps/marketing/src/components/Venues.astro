@@ -1,0 +1,85 @@
+---
+import Eyebrow from './Eyebrow.astro';
+
+interface VenueCard {
+  rank: string;
+  match: string;
+  region: string;
+  name: string;
+  city: string;
+  cap: string;
+  genre: string;
+  verdict: string;
+}
+interface Props {
+  eyebrow: string;
+  heading: readonly [string, string];
+  lede: string;
+  cards: readonly VenueCard[];
+}
+const { eyebrow, heading, lede, cards } = Astro.props;
+---
+
+<section class="reveal py-24 lg:py-36">
+  <div class="max-w-screen-xl mx-auto px-4 md:px-8 xl:px-12">
+    <div class="mb-14 max-w-[800px]">
+      <Eyebrow class="mb-6">{eyebrow}</Eyebrow>
+      <h2 class="venues-heading">
+        {heading[0]} <em>{heading[1]}</em>
+      </h2>
+      <p class="text-klano-bone text-lg leading-relaxed mt-6 max-w-[560px]">{lede}</p>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-3">
+      {
+        cards.map((vc) => (
+          <article class="vc bg-klano-card border border-klano-edge rounded-2xl p-6 md:p-7 hover:border-klano-mist hover:-translate-y-1 transition-all duration-300">
+            <div class="flex items-center justify-between font-mono text-[11px] tracking-[0.18em] uppercase text-klano-fog mb-6">
+              <span>
+                {vc.rank} · <span class="text-klano-acid">Match {vc.match}</span>
+              </span>
+              <span>{vc.region}</span>
+            </div>
+            <h3 class="vc-name">{vc.name}</h3>
+            <p class="text-klano-sand mt-1 text-sm">{vc.city}</p>
+            <div class="vc-stats mt-6 pt-5 border-t border-klano-edge-soft flex items-center justify-between font-mono text-[11px] tracking-[0.12em] uppercase text-klano-bone">
+              <span>
+                Cap <strong class="text-klano-pearl">{vc.cap}</strong>
+              </span>
+              <span>{vc.genre}</span>
+              <span class="text-klano-acid">
+                <strong>{vc.verdict}</strong>
+              </span>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .venues-heading {
+    font-family: 'Fraunces Variable', Georgia, serif;
+    font-variation-settings: 'opsz' 144, 'SOFT' 30, 'WONK' 1;
+    font-weight: 800;
+    font-size: clamp(2.5rem, 7vw, 4.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+    color: var(--color-klano-pearl);
+  }
+  .venues-heading em {
+    font-style: italic;
+    font-weight: 400;
+    font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+    color: var(--color-klano-coral);
+  }
+  .vc-name {
+    font-family: 'Geist Variable', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3vw, 1.875rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--color-klano-pearl);
+  }
+</style>

@@ -4,6 +4,32 @@ Chronologisches Logbuch. Neueste Einträge oben.
 
 ---
 
+## 2026-04-28 — v0.1 Marketing-Site (Sektionen + Inhalte)
+
+**Wer:** Pascal + Claude
+
+**Was gemacht:**
+- 4 Primitives: `LogoMark` (k-Mark mit Coral-Pulse), `Button` (primary/ghost/dark + arrow-shift), `Pill` (default/acid), `Eyebrow` (acid/coral/dark)
+- 7 Sektionen: `Nav` (sticky, blur, scroll-darken), `Hero` (rise-Animation, 5h/3× Stats), `CreamPause` (Editorial-Quote), `Wordmark` (massive "klano" mit Waveform-SVG), `Features` (3 Cards inkl. wide), `Venues` (3 Match-Cards), `Waitlist` (Acid-CTA, optimistic Submit), `Footer` (3 Cols + Mega-Wordmark)
+- Vollständige DE/EN-Copy in `lib/copy.ts` (typed, pillar-narrowed)
+- Pages: `/` (DE), `/en/`, `/datenschutz`, `/impressum` (Stub-Texte, Status: Entwurf v0)
+- `Legal.astro` Layout für rechtliche Seiten
+- Reveal-on-Scroll via IntersectionObserver, prefers-reduced-motion respektiert
+- Waitlist-Form: lokaler optimistic-success Stub, Plausible-Goal `waitlist_signup` getrackt
+- `pnpm --filter @klano/marketing build` ✅ (0 errors, 0 warnings, 4 pages, sitemap-index)
+
+**Was offen:**
+- Wartelisten-POST gegen Supabase Edge Function — ab v0.2 wenn Supabase live
+- Plausible-Script einbinden — wenn Account/Domain bereit
+- AGB-Seite — wartet auf Anwalt
+- Pricing-Page (`/pricing`) — eigener Sprint
+
+**Bekannte Punkte:**
+- Tailwind v4 `@theme`-Tokens dupliziert in beiden Apps. Konsolidierung ab v0.4 in `packages/ui`.
+- shadcn/ui noch nicht initialisiert.
+
+---
+
 ## 2026-04-28 — Tag 1: v0 Foundation Scaffold
 
 **Wer:** Pascal + Claude

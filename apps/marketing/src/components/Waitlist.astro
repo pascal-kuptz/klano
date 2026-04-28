@@ -1,0 +1,110 @@
+---
+import Button from './Button.astro';
+
+interface Props {
+  eyebrow: string;
+  heading: readonly [string, string];
+  placeholder: string;
+  submit: string;
+  success: string;
+  successPlaceholder: string;
+  meta: string;
+  /** Locale tag for analytics + edge function later. */
+  locale: 'de' | 'en';
+}
+const { eyebrow, heading, placeholder, submit, success, successPlaceholder, meta, locale } = Astro.props;
+---
+
+<section
+  id="waitlist"
+  class="reveal py-24 lg:py-36 bg-klano-acid text-klano-ink relative overflow-hidden"
+>
+  <div class="max-w-screen-xl mx-auto px-4 md:px-8 xl:px-12 text-center">
+    <span class="font-mono text-[11px] tracking-[0.22em] uppercase text-[rgba(10,10,11,0.6)] mb-8 inline-block">
+      {eyebrow}
+    </span>
+    <h2 class="cta-title mb-12">
+      {heading[0]}
+      <br />
+      <em>{heading[1]}</em>
+    </h2>
+
+    <form
+      class="cta-form flex flex-col md:flex-row gap-3 max-w-2xl mx-auto"
+      data-locale={locale}
+      data-success={success}
+      data-success-placeholder={successPlaceholder}
+    >
+      <input
+        type="email"
+        name="email"
+        required
+        placeholder={placeholder}
+        class="flex-1 min-h-14 bg-klano-ink text-klano-pearl placeholder:text-klano-fog px-5 py-3.5 rounded-[14px] font-medium text-base outline-none focus:ring-2 focus:ring-klano-ink/30 transition"
+      />
+      <Button variant="dark" type="submit" arrow>{submit}</Button>
+    </form>
+
+    <p class="mt-8 font-mono text-[11px] tracking-[0.18em] uppercase text-[rgba(10,10,11,0.55)]">
+      {meta}
+    </p>
+  </div>
+</section>
+
+<style>
+  .cta-title {
+    font-family: 'Fraunces Variable', Georgia, serif;
+    font-variation-settings: 'opsz' 144, 'SOFT' 30, 'WONK' 1;
+    font-weight: 800;
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    color: var(--color-klano-ink);
+  }
+  .cta-title em {
+    font-style: italic;
+    font-weight: 400;
+    font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('form.cta-form').forEach((form) => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const input = form.querySelector<HTMLInputElement>('input[name="email"]');
+      const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if (!input || !button) return;
+
+      const email = input.value.trim();
+      if (!email) return;
+
+      const success = form.dataset.success ?? 'You are in.';
+      const successPlaceholder = form.dataset.successPlaceholder ?? '';
+      const locale = form.dataset.locale ?? 'de';
+      const originalLabel = button.innerHTML;
+
+      button.disabled = true;
+      button.innerHTML = '...';
+
+      try {
+        // POST to /api/waitlist (Supabase Edge Function proxy) — to be wired in v0.1.
+        // For now, optimistic local-only success so demo works without backend.
+        await new Promise((r) => setTimeout(r, 400));
+
+        input.value = '';
+        input.placeholder = successPlaceholder;
+        button.innerHTML = success;
+
+        const plausible = (window as unknown as {
+          plausible?: (event: string, opts?: { props?: Record<string, string> }) => void;
+        }).plausible;
+        plausible?.('waitlist_signup', { props: { locale } });
+      } catch (err) {
+        button.disabled = false;
+        button.innerHTML = originalLabel;
+        console.error('waitlist submit failed', err);
+      }
+    });
+  });
+</script>

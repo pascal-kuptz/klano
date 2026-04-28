@@ -1,17 +1,17 @@
 ---
-import Base from '../layouts/Base.astro';
-import Nav from '../components/Nav.astro';
-import Hero from '../components/Hero.astro';
-import CreamPause from '../components/CreamPause.astro';
-import Wordmark from '../components/Wordmark.astro';
-import Features from '../components/Features.astro';
-import Venues from '../components/Venues.astro';
-import Waitlist from '../components/Waitlist.astro';
-import Footer from '../components/Footer.astro';
-import { copy } from '../lib/copy';
-import { SITE } from '../lib/seo';
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Hero from '../../components/Hero.astro';
+import CreamPause from '../../components/CreamPause.astro';
+import Wordmark from '../../components/Wordmark.astro';
+import Features from '../../components/Features.astro';
+import Venues from '../../components/Venues.astro';
+import Waitlist from '../../components/Waitlist.astro';
+import Footer from '../../components/Footer.astro';
+import { copy } from '../../lib/copy';
+import { SITE } from '../../lib/seo';
 
-const c = copy.de;
+const c = copy.en;
 
 const faqJsonLd = {
   '@context': 'https://schema.org',
@@ -19,34 +19,34 @@ const faqJsonLd = {
   mainEntity: [
     {
       '@type': 'Question',
-      name: 'Was ist Klano?',
+      name: 'What is Klano?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Klano ist ein KI-Agent für Hobby- und Semi-Pro-Bands, der Booking, interne Koordination und Follow-ups automatisiert.',
+        text: 'Klano is an AI agent for hobby and semi-pro bands that automates venue booking, internal coordination, and follow-ups.',
       },
     },
     {
       '@type': 'Question',
-      name: 'Was kostet Klano?',
+      name: 'How much does Klano cost?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Es gibt einen permanent kostenlosen Free-Tier und einen Pro-Tier für 19 CHF pro Monat oder 190 CHF pro Jahr. Pro kann 14 Tage kostenlos getestet werden.',
+        text: 'There is a permanently free tier and a Pro tier at 19 CHF/EUR/USD per month or 190 per year. Pro is free for 14 days, no credit card required.',
       },
     },
     {
       '@type': 'Question',
-      name: 'In welchen Ländern funktioniert Klano?',
+      name: 'Which countries does Klano serve?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Klano startet in DACH (Schweiz, Deutschland, Österreich) mit einer kuratierten Venue-Datenbank für diese Region.',
+        text: 'Klano launches in the DACH region (Switzerland, Germany, Austria) with a curated venue database for this market.',
       },
     },
   ],
 };
 ---
 
-<Base title={SITE.tagline.de} description={SITE.description.de} jsonLd={[faqJsonLd]}>
-  <Nav waitlistLabel={c.nav.waitlist} menuLabel={c.nav.menu} homeHref="/" />
+<Base title={SITE.tagline.en} description={SITE.description.en} jsonLd={[faqJsonLd]}>
+  <Nav waitlistLabel={c.nav.waitlist} menuLabel={c.nav.menu} homeHref="/en" />
   <main>
     <Hero
       eyebrow={c.hero.eyebrow}
@@ -61,23 +61,14 @@ const faqJsonLd = {
       attributionName={c.pause.attribution.name}
       attributionRole={c.pause.attribution.role}
     />
-    <Wordmark
-      labelTop={c.wordmark.labelTop}
-      labelSub={c.wordmark.labelSub}
-      caption={c.wordmark.caption}
-    />
+    <Wordmark labelTop={c.wordmark.labelTop} labelSub={c.wordmark.labelSub} caption={c.wordmark.caption} />
     <Features
       eyebrow={c.features.eyebrow}
       heading={c.features.heading}
       lede={c.features.lede}
       cards={c.features.cards}
     />
-    <Venues
-      eyebrow={c.venues.eyebrow}
-      heading={c.venues.heading}
-      lede={c.venues.lede}
-      cards={c.venues.cards}
-    />
+    <Venues eyebrow={c.venues.eyebrow} heading={c.venues.heading} lede={c.venues.lede} cards={c.venues.cards} />
     <Waitlist
       eyebrow={c.waitlist.eyebrow}
       heading={c.waitlist.heading}
@@ -86,7 +77,7 @@ const faqJsonLd = {
       success={c.waitlist.success}
       successPlaceholder={c.waitlist.successPlaceholder}
       meta={c.waitlist.meta}
-      locale="de"
+      locale="en"
     />
   </main>
   <Footer

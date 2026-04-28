@@ -1,0 +1,52 @@
+---
+import Eyebrow from './Eyebrow.astro';
+
+interface Props {
+  eyebrow: string;
+  quote: string;
+  attributionName: string;
+  attributionRole: string;
+}
+const { eyebrow, quote, attributionName, attributionRole } = Astro.props;
+
+// Wrap a few key phrases in <em> for the editorial italic accent.
+function renderQuote(text: string): string {
+  return text
+    .replace(/handles them\.|löst sie einfach\./g, (m) => `<em>${m}</em>`)
+    .replace(/on our side|auf unserer Seite/g, (m) => `<em>${m}</em>`);
+}
+const quoteHtml = renderQuote(quote);
+---
+
+<section
+  class="reveal bg-klano-cream text-klano-ink py-24 lg:py-36 border-y border-klano-edge relative overflow-hidden"
+>
+  <div class="max-w-screen-xl mx-auto px-4 md:px-8 xl:px-12">
+    <div class="max-w-[1100px]">
+      <Eyebrow variant="dark" class="mb-12">{eyebrow}</Eyebrow>
+      <p class="pause-quote" set:html={quoteHtml}></p>
+      <div class="grid gap-2 pt-8 mt-14 border-t border-klano-cream-edge max-w-[480px]">
+        <span class="font-bold text-base text-klano-ink">{attributionName}</span>
+        <span class="text-sm text-[rgba(10,10,11,0.55)]">{attributionRole}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pause-quote {
+    font-family: 'Fraunces Variable', Georgia, serif;
+    font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 0;
+    font-weight: 500;
+    font-size: clamp(2rem, 6vw, 4.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--color-klano-ink);
+    margin-bottom: 0;
+  }
+  .pause-quote :global(em) {
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+    font-weight: 400;
+  }
+</style>
