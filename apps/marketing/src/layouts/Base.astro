@@ -1,17 +1,25 @@
 ---
 import '../styles/global.css';
 import SeoHead from '../components/SeoHead.astro';
+import Marquee from '../components/Marquee.astro';
+import GridOverlay from '../components/GridOverlay.astro';
+import { copy } from '../lib/copy';
 import type { ComponentProps } from 'astro/types';
+import type { Locale } from '../lib/seo';
 
 type SeoProps = ComponentProps<typeof SeoHead>;
 
-interface Props extends SeoProps {}
+interface Props extends SeoProps {
+  hideMarquee?: boolean;
+}
 
-const seoProps = Astro.props;
+const { hideMarquee = false, ...seoProps } = Astro.props;
+const locale = (Astro.currentLocale ?? 'de') as Locale;
+const marqueeItems = copy[locale].marquee.items;
 ---
 
 <!doctype html>
-<html lang={Astro.currentLocale ?? 'de'}>
+<html lang={locale}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -19,6 +27,17 @@ const seoProps = Astro.props;
     <SeoHead {...seoProps} />
   </head>
   <body>
-    <slot />
+    {!hideMarquee && <Marquee items={marqueeItems} />}
+    <GridOverlay />
+    <div class="page-content">
+      <slot />
+    </div>
   </body>
 </html>
+
+<style>
+  .page-content {
+    position: relative;
+    z-index: 2;
+  }
+</style>

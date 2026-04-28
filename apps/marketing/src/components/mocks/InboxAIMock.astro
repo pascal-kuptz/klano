@@ -1,0 +1,232 @@
+---
+interface Props {
+  locale: 'de' | 'en';
+}
+const { locale } = Astro.props;
+
+const t = locale === 'de'
+  ? {
+      title: 'Inbox · Halbnacht',
+      sub: '1 neue Antwort',
+      from: 'bookings@bogenf.ch',
+      to: 'band-halbnacht-booking-2c4f@inbound.klano.ai',
+      subject: 'Re: Gig request — 17. Mai',
+      body: 'Hi! Ja, der 17. Mai passt. Standard-Gage 800 CHF + 10% Door. Tech-Specs hänge ich an. Wann macht ihr Soundcheck?',
+      classifyTitle: 'Klano hat erkannt',
+      tags: [
+        { label: 'Positiv', tone: 'acid' },
+        { label: 'Datum: 17. Mai', tone: 'default' },
+        { label: 'Gage: 800 CHF', tone: 'default' },
+        { label: 'Frage: Soundcheck', tone: 'coral' },
+      ],
+      cta: 'Antwort entwerfen',
+    }
+  : {
+      title: 'Inbox · Halbnacht',
+      sub: '1 new reply',
+      from: 'bookings@bogenf.ch',
+      to: 'band-halbnacht-booking-2c4f@inbound.klano.ai',
+      subject: 'Re: Gig request — May 17',
+      body: 'Hi! Yes, May 17 works. Standard fee 800 CHF + 10% door. Tech specs attached. When are you doing soundcheck?',
+      classifyTitle: 'Klano detected',
+      tags: [
+        { label: 'Positive', tone: 'acid' },
+        { label: 'Date: May 17', tone: 'default' },
+        { label: 'Fee: 800 CHF', tone: 'default' },
+        { label: 'Question: soundcheck', tone: 'coral' },
+      ],
+      cta: 'Draft reply',
+    };
+---
+
+<div class="mock inbox-mock">
+  <div class="mock-chrome">
+    <span class="mock-dot mock-dot-r"></span>
+    <span class="mock-dot mock-dot-y"></span>
+    <span class="mock-dot mock-dot-g"></span>
+    <span class="mock-url">app.klano.ai/inbox</span>
+  </div>
+  <div class="mock-body">
+    <div class="mock-header">
+      <div>
+        <h4 class="mock-title">{t.title}</h4>
+        <p class="mock-sub">{t.sub}</p>
+      </div>
+      <span class="mock-pill">
+        <span class="dot"></span>
+        AI
+      </span>
+    </div>
+
+    <div class="email">
+      <div class="email-meta">
+        <div class="email-row"><span class="lbl">From</span><span class="val">{t.from}</span></div>
+        <div class="email-row"><span class="lbl">Reply</span><span class="val val-reply">{t.to}</span></div>
+        <div class="email-row"><span class="lbl">Subject</span><span class="val val-subject">{t.subject}</span></div>
+      </div>
+      <p class="email-body">{t.body}</p>
+    </div>
+
+    <div class="classify">
+      <div class="classify-head">
+        <span class="cl-dot"></span>
+        <span class="cl-title">{t.classifyTitle}</span>
+      </div>
+      <div class="classify-tags">
+        {
+          t.tags.map((tag) => (
+            <span class:list={['cl-tag', `cl-tag-${tag.tone}`]}>{tag.label}</span>
+          ))
+        }
+      </div>
+      <button class="classify-cta" type="button">
+        <span>{t.cta}</span>
+        <span aria-hidden="true">→</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .mock {
+    background: var(--color-klano-stage);
+    border: 1px solid var(--color-klano-edge);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+  }
+  .mock-chrome {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px;
+    background: var(--color-klano-void);
+    border-bottom: 1px solid var(--color-klano-edge-soft);
+  }
+  .mock-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--color-klano-mist); }
+  .mock-dot-r { background: #FF5C39; }
+  .mock-dot-y { background: #F4B942; }
+  .mock-dot-g { background: #5DD4A0; }
+  .mock-url {
+    margin-left: 12px;
+    font-family: 'Geist Mono Variable', ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--color-klano-fog);
+  }
+  .mock-body { padding: 20px; }
+  @media (min-width: 768px) { .mock-body { padding: 28px; } }
+  .mock-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 16px; margin-bottom: 20px;
+  }
+  .mock-title {
+    font-family: 'Geist Variable', system-ui, sans-serif;
+    font-weight: 700; font-size: 16px;
+    color: var(--color-klano-pearl);
+    letter-spacing: -0.015em;
+  }
+  .mock-sub {
+    font-family: 'Geist Mono Variable', ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--color-klano-fog); margin-top: 4px;
+  }
+  .mock-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px; border-radius: 999px;
+    background: rgba(197, 242, 92, 0.1);
+    border: 1px solid rgba(197, 242, 92, 0.3);
+    color: var(--color-klano-acid);
+    font-family: 'Geist Mono Variable', ui-monospace, monospace;
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .mock-pill .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--color-klano-acid);
+    box-shadow: 0 0 6px var(--color-klano-acid);
+  }
+
+  .email {
+    background: var(--color-klano-card);
+    border: 1px solid var(--color-klano-edge);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+  }
+  .email-meta {
+    border-bottom: 1px dashed var(--color-klano-edge-soft);
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .email-row {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 10px;
+    font-family: 'Geist Mono Variable', ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--color-klano-bone);
+  }
+  .email-row .lbl {
+    color: var(--color-klano-fog);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .val-reply { color: var(--color-klano-acid); font-size: 10px; }
+  .val-subject { color: var(--color-klano-pearl); font-weight: 600; font-family: 'Geist Variable', system-ui, sans-serif; font-size: 13px; letter-spacing: -0.01em; }
+  .email-body {
+    color: var(--color-klano-bone);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .classify {
+    background: linear-gradient(180deg, rgba(197, 242, 92, 0.05) 0%, transparent 100%);
+    border: 1px solid rgba(197, 242, 92, 0.25);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .classify-head {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 12px;
+  }
+  .cl-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--color-klano-acid);
+    box-shadow: 0 0 8px var(--color-klano-acid);
+  }
+  .cl-title {
+    font-family: 'Geist Mono Variable', ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--color-klano-acid);
+  }
+  .classify-tags {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-bottom: 14px;
+  }
+  .cl-tag {
+    padding: 4px 10px; border-radius: 999px;
+    font-family: 'Geist Mono Variable', ui-monospace, monospace;
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    border: 1px solid;
+  }
+  .cl-tag-acid { background: rgba(197,242,92,0.12); border-color: rgba(197,242,92,0.4); color: var(--color-klano-acid); }
+  .cl-tag-default { background: var(--color-klano-card); border-color: var(--color-klano-edge); color: var(--color-klano-bone); }
+  .cl-tag-coral { background: rgba(255,92,57,0.1); border-color: rgba(255,92,57,0.4); color: var(--color-klano-coral); }
+  .classify-cta {
+    width: 100%;
+    background: var(--color-klano-acid);
+    color: var(--color-klano-ink);
+    border: none;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-family: 'Geist Variable', system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    transition: background 200ms;
+  }
+  .classify-cta:hover { background: var(--color-klano-acid-soft); }
+</style>

@@ -43,6 +43,13 @@
   --ease-back-out: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+:root {
+  --marquee-h: 50px;
+}
+@media (min-width: 768px) {
+  :root { --marquee-h: 56px; }
+}
+
 @layer base {
   html {
     background: var(--color-klano-void);
@@ -54,6 +61,7 @@
   body {
     position: relative;
     overflow-x: clip;
+    padding-top: var(--marquee-h);
   }
   /* Subtle film-grain — keeps dark sections from feeling flat. */
   body::before {

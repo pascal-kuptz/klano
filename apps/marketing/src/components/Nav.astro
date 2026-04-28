@@ -11,7 +11,7 @@ interface Props {
 const { waitlistLabel, menuLabel, howLabel, homeHref = '/' } = Astro.props;
 ---
 
-<nav id="site-nav" class="fixed top-0 inset-x-0 z-50 transition-colors duration-300">
+<nav id="site-nav" class="fixed inset-x-0 z-50 transition-colors duration-300">
   <div class="nav-row max-w-screen-xl mx-auto flex items-center justify-between px-4 py-4 md:px-8 md:py-5 xl:px-12 xl:py-6">
     <LogoMark href={homeHref} size={40} />
     <div class="flex items-center gap-3">
@@ -29,6 +29,8 @@ const { waitlistLabel, menuLabel, howLabel, homeHref = '/' } = Astro.props;
 
 <style>
   #site-nav {
+    /* sits below the fixed marquee at top */
+    top: var(--marquee-h, 52px);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     background: rgba(10, 10, 11, 0.5);

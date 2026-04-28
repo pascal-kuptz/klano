@@ -7,6 +7,7 @@ import CreamPause from '../../components/CreamPause.astro';
 import Wordmark from '../../components/Wordmark.astro';
 import Features from '../../components/Features.astro';
 import Venues from '../../components/Venues.astro';
+import Plans from '../../components/Plans.astro';
 import TrustStrip from '../../components/TrustStrip.astro';
 import Waitlist from '../../components/Waitlist.astro';
 import Footer from '../../components/Footer.astro';
@@ -86,6 +87,7 @@ const faqJsonLd = {
       heading={c.features.heading}
       lede={c.features.lede}
       cards={c.features.cards}
+      locale="en"
     />
     <Venues
       track={c.venues.track}
@@ -93,6 +95,13 @@ const faqJsonLd = {
       heading={c.venues.heading}
       lede={c.venues.lede}
       cards={c.venues.cards}
+    />
+    <Plans
+      track={c.plans.track}
+      eyebrow={c.plans.eyebrow}
+      heading={c.plans.heading}
+      lede={c.plans.lede}
+      cards={c.plans.cards}
     />
     <TrustStrip lines={c.trust.lines} />
     <Waitlist

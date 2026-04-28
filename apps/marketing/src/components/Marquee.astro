@@ -1,0 +1,81 @@
+---
+interface Props {
+  items: readonly string[];
+  variant?: 'acid' | 'cream';
+}
+const { items, variant = 'acid' } = Astro.props;
+// Repeat the items so the loop has zero visible seam regardless of viewport width.
+const repeated = [...items, ...items, ...items, ...items];
+---
+
+<div class:list={['marquee', variant === 'cream' ? 'is-cream' : 'is-acid']} role="presentation" aria-hidden="true">
+  <div class="marquee-track">
+    {
+      repeated.map((item) => (
+        <span class="marquee-item">
+          <span class="text">{item}</span>
+          <span class="dot" aria-hidden="true">●</span>
+        </span>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .marquee {
+    overflow: hidden;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--color-klano-ink);
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 60;
+  }
+  .marquee.is-acid {
+    background: var(--color-klano-acid);
+    color: var(--color-klano-ink);
+  }
+  .marquee.is-cream {
+    background: var(--color-klano-cream);
+    color: var(--color-klano-ink);
+  }
+  .marquee-track {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    padding: 14px 0;
+    animation: marquee-scroll 38s linear infinite;
+    will-change: transform;
+  }
+  .marquee-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 24px;
+    padding-right: 24px;
+    font-family: 'Geist Variable', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+  }
+  @media (min-width: 768px) {
+    .marquee-item {
+      font-size: 22px;
+      gap: 32px;
+      padding-right: 32px;
+    }
+  }
+  .marquee-item .dot {
+    font-size: 10px;
+    opacity: 0.7;
+  }
+  @keyframes marquee-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-25%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track { animation: none; }
+  }
+</style>

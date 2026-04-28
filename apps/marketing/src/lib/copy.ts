@@ -64,6 +64,23 @@ export const copy: Record<
     trust: {
       lines: readonly string[];
     };
+    plans: {
+      track: string;
+      eyebrow: string;
+      heading: readonly [string, string];
+      lede: string;
+      cards: readonly {
+        name: string;
+        price: string;
+        priceMeta: string;
+        description: string;
+        features: string[];
+        cta: string;
+        ctaHref: string;
+        highlight?: boolean;
+      }[];
+    };
+    marquee: { items: readonly string[] };
     waitlist: {
       track: string;
       eyebrow: string;
@@ -172,10 +189,70 @@ export const copy: Record<
       ],
     },
     trust: {
-      lines: [
-        'Aus Zürich. Zwei Leute.',
-        'Kein VC. Kein Tracking.',
-        'Wir antworten auf jede Mail.',
+      lines: ['Aus Zürich. Zwei Leute.', 'Kein VC. Kein Tracking.', 'Wir antworten auf jede Mail.'],
+    },
+    plans: {
+      track: '07',
+      eyebrow: 'Was du bekommst',
+      heading: ['Frei beim Spielen.', 'Pro beim Buchen.'] as const,
+      lede:
+        'Die Beta ist frei für die ersten 50 Bands. Danach bleibt Free permanent — Pro nimmt euch die Arbeit ab.',
+      cards: [
+        {
+          name: 'Beta',
+          price: 'gratis',
+          priceMeta: 'Frühjahr 2026 · 50 Plätze',
+          description: 'Volle Funktionalität für die ersten 50 Bands. Kein Limit, kein Catch.',
+          features: [
+            'Alles aus Pro',
+            'Wöchentliche Calls mit dem Team',
+            'Du formst das Produkt mit',
+            'Nach Beta: 6 Monate Pro gratis',
+          ],
+          cta: 'Beta-Platz sichern',
+          ctaHref: '#waitlist',
+          highlight: true,
+        },
+        {
+          name: 'Free',
+          price: '0 CHF',
+          priceMeta: 'für immer',
+          description: 'Wenn ihr Klano leichtgewichtig nutzen wollt — für die Band, die nur 4–6 Gigs im Jahr spielt.',
+          features: [
+            'Bis 6 Bandmitglieder',
+            '10 Outreach-Mails / Monat',
+            'Manuelles Inbox-Sortieren',
+            'Probetermin-Vorschläge',
+            'Community Support',
+          ],
+          cta: 'Mit Free starten',
+          ctaHref: '#waitlist',
+        },
+        {
+          name: 'Pro',
+          price: '19 CHF',
+          priceMeta: 'pro Monat · 14 Tage gratis',
+          description: 'Wenn ihr aktiv bookt und der Agent für euch arbeiten soll.',
+          features: [
+            'Unlimitierte Outreach-Mails',
+            'Auto-Follow-ups',
+            'AI-Inbox-Klassifizierung',
+            'Unlimitierte Mitglieder',
+            'Priority Support',
+            '190 CHF/Jahr — 17% Rabatt',
+          ],
+          cta: 'Pro testen',
+          ctaHref: '#waitlist',
+        },
+      ],
+    },
+    marquee: {
+      items: [
+        'Made in Zürich',
+        'For musicians who play',
+        'Closed Beta · Frühjahr 2026',
+        'DACH first',
+        'Stop running the band',
       ],
     },
     waitlist: {
@@ -318,6 +395,70 @@ export const copy: Record<
     },
     trust: {
       lines: ['From Zürich. Two people.', 'No VC. No tracking.', 'We answer every email.'],
+    },
+    plans: {
+      track: '07',
+      eyebrow: 'What you get',
+      heading: ['Free when you play.', 'Pro when you book.'] as const,
+      lede:
+        'Beta is free for the first 50 bands. After that, Free stays free forever — Pro takes the work off your plate.',
+      cards: [
+        {
+          name: 'Beta',
+          price: 'free',
+          priceMeta: 'Spring 2026 · 50 spots',
+          description: 'Full functionality for the first 50 bands. No limit, no catch.',
+          features: [
+            'Everything from Pro',
+            'Weekly calls with the team',
+            'You shape the product',
+            'After beta: 6 months of Pro free',
+          ],
+          cta: 'Get a beta seat',
+          ctaHref: '#waitlist',
+          highlight: true,
+        },
+        {
+          name: 'Free',
+          price: '0 CHF',
+          priceMeta: 'forever',
+          description: 'For bands using Klano lightly — the ones playing 4–6 gigs a year.',
+          features: [
+            'Up to 6 band members',
+            '10 outreach emails / month',
+            'Manual inbox sorting',
+            'Rehearsal proposals',
+            'Community support',
+          ],
+          cta: 'Start with Free',
+          ctaHref: '#waitlist',
+        },
+        {
+          name: 'Pro',
+          price: '19 CHF',
+          priceMeta: 'per month · 14-day trial',
+          description: 'When you book actively and want the agent working for you.',
+          features: [
+            'Unlimited outreach emails',
+            'Auto follow-ups',
+            'AI inbox classification',
+            'Unlimited members',
+            'Priority support',
+            '190 CHF/year — save 17%',
+          ],
+          cta: 'Try Pro',
+          ctaHref: '#waitlist',
+        },
+      ],
+    },
+    marquee: {
+      items: [
+        'Made in Zürich',
+        'For musicians who play',
+        'Closed beta · Spring 2026',
+        'DACH first',
+        'Stop running the band',
+      ],
     },
     waitlist: {
       track: '06',
