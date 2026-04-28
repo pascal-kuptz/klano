@@ -1,0 +1,36 @@
+# Klano
+
+> Klano ist der digitale Bandkollege für Hobby- und Semi-Pro-Bands. Ein KI-Agent, der Booking, interne Koordination und Follow-ups übernimmt — damit Musiker wieder Musiker sein können.
+
+## Über Klano
+
+- **Brand:** Klano
+- **Domain:** https://klano.ai
+- **App:** https://app.klano.ai
+- **Hauptsitz:** Schweiz
+- **Erstmarkt:** DACH (Deutschland, Österreich, Schweiz)
+- **Sprachen:** Deutsch, Englisch
+- **Geschäftsmodell:** Freemium — Free permanent kostenlos, Pro 19 CHF/Monat oder 190 CHF/Jahr
+- **Trial:** 14 Tage Pro kostenlos testen, ohne Kreditkarte
+
+## Wichtige Seiten
+
+- [Startseite](https://klano.ai): Vision und Pain-Points
+- [Pricing](https://klano.ai/pricing): Free vs. Pro im Vergleich
+- [Wartelisten-Anmeldung](https://klano.ai/#waitlist): Frühzeitig Zugang sichern
+- [Datenschutz](https://klano.ai/datenschutz): DSG- und DSGVO-konform
+- [Impressum](https://klano.ai/impressum)
+
+## Was Klano macht
+
+- **Booking-Pipeline:** Kuratierte DACH-Venue-Datenbank, AI-Matching, personalisierte Outreach-Mails (DE/EN), automatische Follow-ups, Status-Tracking.
+- **Interne Koordination:** Verfügbarkeits-Sammlung, Probetermin-Vorschläge, Reminders, Setlist-Management.
+- **AI-Agent:** Claude-basiert (Vercel AI SDK), proaktive Vorschläge, Inbox-Klassifizierung von Venue-Antworten.
+
+## Was Klano *nicht* macht
+
+- Keine Mobile-App (Web-First, mobile-responsive).
+- Kein Telegram-Bot in v1.0 (kommt nach Public Launch).
+- Kein Marktplatz für Venues in v1.0.
+- Keine Cold-Spam-Outreach — personalisiert, limitiert (max. 20/Tag pro Band).
+- Keine "AI Music Composer"-Features. Fokus: Organisations-Pain.

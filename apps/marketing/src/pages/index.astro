@@ -1,0 +1,74 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../lib/seo';
+
+const locale = (Astro.currentLocale ?? SITE.defaultLocale) as 'de' | 'en';
+
+// FAQ JSON-LD — boost AI search visibility for product questions
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Was ist Klano?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Klano ist ein KI-Agent für Hobby- und Semi-Pro-Bands, der Booking, interne Koordination und Follow-ups automatisiert.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Was kostet Klano?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Es gibt einen permanent kostenlosen Free-Tier und einen Pro-Tier für 19 CHF pro Monat oder 190 CHF pro Jahr. Pro kann 14 Tage kostenlos getestet werden.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'In welchen Ländern funktioniert Klano?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Klano startet in DACH (Schweiz, Deutschland, Österreich) mit einer kuratierten Venue-Datenbank für diese Region.',
+      },
+    },
+  ],
+};
+---
+
+<Base
+  title={SITE.tagline[locale]}
+  description={SITE.description[locale]}
+  jsonLd={[faqJsonLd]}
+>
+  <main class="min-h-screen flex flex-col items-center justify-center px-4 py-24 text-center">
+    <span
+      class="font-mono text-[11px] tracking-[0.22em] uppercase text-klano-fog mb-8 inline-flex items-center gap-3"
+    >
+      <span class="w-6 h-px bg-klano-acid"></span>
+      Klano · v0 · Foundation
+    </span>
+
+    <h1
+      class="font-serif font-extrabold text-[clamp(3rem,11vw,7.5rem)] leading-[0.92] tracking-[-0.04em] max-w-5xl"
+      style="font-variation-settings: 'opsz' 144, 'SOFT' 30, 'WONK' 1;"
+    >
+      make <em
+        class="italic font-normal"
+        style="font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;">musicians</em
+      > be musicians<span class="text-klano-coral">.</span>
+    </h1>
+
+    <p class="mt-10 max-w-xl text-klano-bone text-lg leading-relaxed">
+      Marketing-Site läuft. Wartelisten-Form kommt in v0.1.
+    </p>
+
+    <a
+      href="https://app.klano.ai"
+      class="mt-12 inline-flex items-center gap-2.5 min-h-14 px-7 py-3.5 bg-klano-acid hover:bg-klano-acid-soft text-klano-ink font-semibold rounded-[14px] transition-all duration-250 hover:-translate-y-0.5"
+    >
+      Open the app <span aria-hidden="true">→</span>
+    </a>
+  </main>
+</Base>

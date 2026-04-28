@@ -1,0 +1,67 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/fraunces';
+@import '@fontsource-variable/geist';
+@import '@fontsource-variable/geist-mono';
+
+@theme {
+  /* === Klano Tokens — siehe _source/design-system.md §4 + §11 === */
+  --color-klano-void: #0a0a0b;
+  --color-klano-stage: #131215;
+  --color-klano-card: #16151a;
+  --color-klano-spotlight: #1e1c22;
+  --color-klano-edge: #2a2730;
+  --color-klano-edge-soft: #221f27;
+  --color-klano-mist: #46414b;
+  --color-klano-cream: #f2eee6;
+  --color-klano-cream-edge: #e0dbd0;
+  --color-klano-ink: #0a0a0b;
+  --color-klano-pearl: #ffffff;
+  --color-klano-bone: #e8e4dc;
+  --color-klano-sand: #bbb5aa;
+  --color-klano-fog: #87817a;
+  --color-klano-acid: #c5f25c;
+  --color-klano-acid-soft: #d8f88c;
+  --color-klano-acid-deep: #8fb832;
+  --color-klano-coral: #ff5c39;
+  --color-klano-coral-soft: #ff8466;
+  --color-klano-coral-deep: #c8350f;
+  --color-klano-plum: #3d1f4a;
+  --color-klano-plum-deep: #1f0e27;
+  --color-klano-success: #5dd4a0;
+  --color-klano-warning: #f4b942;
+  --color-klano-danger: #e84855;
+
+  --font-sans: 'Geist Variable', system-ui, sans-serif;
+  --font-serif: 'Fraunces Variable', Georgia, serif;
+  --font-mono: 'Geist Mono Variable', ui-monospace, monospace;
+
+  --radius-xl: 14px;
+  --radius-2xl: 16px;
+  --radius-3xl: 24px;
+
+  --ease-quart-out: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-back-out: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@layer base {
+  html {
+    background: var(--color-klano-void);
+    color: var(--color-klano-pearl);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: var(--color-klano-acid);
+    color: var(--color-klano-ink);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

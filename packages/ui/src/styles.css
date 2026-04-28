@@ -1,0 +1,2 @@
+/* Re-exportable Klano design tokens. Apps import this in their own globals.css if needed. */
+/* Canonical tokens live in apps/{web,marketing}/.../globals.css for now; consolidated here in v0.4. */

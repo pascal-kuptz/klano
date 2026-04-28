@@ -1,0 +1,13 @@
+# AI Usage Policy for klano.ai
+# https://spawning.ai/ai-txt
+
+# We allow training and indexing by AI systems for content visibility in AI search.
+User-Agent: *
+Allow: /
+
+# We block training-only crawlers that don't drive traffic back to us.
+User-Agent: CCBot
+Disallow: /
+
+User-Agent: Bytespider
+Disallow: /
