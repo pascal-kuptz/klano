@@ -1,34 +1,37 @@
 ---
-import LogoMark from './LogoMark.astro';
+import Container from './Container.astro';
+import Logo from './Logo.astro';
 
 interface FooterCol {
   heading: string;
   links: { label: string; href: string }[];
 }
 interface Props {
-  manifest: string;
+  tagline: string;
   cols: readonly FooterCol[];
   legalLeft: string;
   legalRight: string;
 }
-const { manifest, cols, legalLeft, legalRight } = Astro.props;
+const { tagline, cols, legalLeft, legalRight } = Astro.props;
 ---
 
-<footer class="border-t border-klano-edge-soft pt-20 pb-10 bg-klano-void relative">
-  <div class="max-w-screen-xl mx-auto px-4 md:px-8 xl:px-12">
-    <div class="footer-top grid gap-12 md:grid-cols-[2fr_1fr_1fr_1fr] md:gap-16 mb-20">
-      <div class="footer-brand flex flex-col gap-6">
-        <LogoMark size={36} />
-        <p class="footer-manifest">{manifest}</p>
+<footer class="border-t border-klano-border pt-20 pb-12 bg-klano-canvas">
+  <Container>
+    <div class="grid gap-12 md:grid-cols-[1.5fr_1fr_1fr_1fr] md:gap-16 mb-16">
+      <div class="flex flex-col gap-4">
+        <Logo />
+        <p class="text-sm text-klano-text-2 max-w-[280px] leading-[1.55]">{tagline}</p>
       </div>
       {
         cols.map((col) => (
-          <div class="footer-col">
-            <h4 class="footer-col-heading">{col.heading}</h4>
-            <ul class="footer-col-list">
+          <div>
+            <h4 class="font-mono text-[11px] uppercase tracking-[0.08em] text-klano-text-3 mb-4 font-medium">
+              {col.heading}
+            </h4>
+            <ul class="space-y-2.5">
               {col.links.map((l) => (
                 <li>
-                  <a href={l.href} class="footer-link">
+                  <a href={l.href} class="text-sm text-klano-text-2 hover:text-klano-text transition-colors no-underline">
                     {l.label}
                   </a>
                 </li>
@@ -39,61 +42,9 @@ const { manifest, cols, legalLeft, legalRight } = Astro.props;
       }
     </div>
 
-    <div
-      class="footer-bottom flex flex-col md:flex-row md:items-center md:justify-between gap-3 pt-8 border-t border-klano-edge-soft font-mono text-[11px] tracking-[0.18em] uppercase"
-    >
-      <span class="text-klano-fog inline-flex items-center gap-2">
-        <span class="dot" aria-hidden="true"></span>
-        {legalLeft}
-      </span>
-      <span class="text-klano-fog">{legalRight}</span>
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pt-8 border-t border-klano-border font-mono text-xs text-klano-text-3">
+      <span>{legalLeft}</span>
+      <span>{legalRight}</span>
     </div>
-  </div>
+  </Container>
 </footer>
-
-<style>
-  .footer-manifest {
-    font-family: 'Fraunces Variable', Georgia, serif;
-    font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 0;
-    font-style: italic;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 1.5;
-    color: var(--color-klano-bone);
-    max-width: 320px;
-  }
-  .footer-col-heading {
-    font-family: 'Geist Mono Variable', ui-monospace, monospace;
-    font-size: 11px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--color-klano-fog);
-    margin-bottom: 16px;
-    font-weight: 500;
-  }
-  .footer-col-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .footer-link {
-    color: var(--color-klano-bone);
-    text-decoration: none;
-    font-size: 14px;
-    transition: color 200ms cubic-bezier(0.25, 1, 0.5, 1);
-  }
-  .footer-link:hover {
-    color: var(--color-klano-pearl);
-  }
-  .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--color-klano-acid);
-    box-shadow: 0 0 6px rgba(197, 242, 92, 0.5);
-    display: inline-block;
-  }
-</style>

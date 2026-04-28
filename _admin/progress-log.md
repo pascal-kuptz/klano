@@ -4,7 +4,38 @@ Chronologisches Logbuch. Neueste Einträge oben.
 
 ---
 
-## 2026-04-28 — v0.1 Marketing-Site (Sektionen + Inhalte)
+## 2026-04-28 — Brand Reset v1.0 (Suno-Stil · Instrument Serif + Inter)
+
+**Was passiert ist:**
+Nach zwei Iterationen der Editorial/Affinity-Direction (langweilig + zu laut) hat Pascal harten Reset gefordert: „neutrales design wie suno.com" → „sauberes design system. neue tokens brand file anpassen alles. wir müssen clean sein von tag 1".
+
+**Neue Brand-Direction (Decision D12):**
+- **Light by default** — Canvas `#FAFAFA`, Surface `#FFFFFF`, Text `#0A0A0A`
+- **Type:** Instrument Serif (Display + h1) + Inter Variable (alles andere) + Geist Mono (technische Labels). Fraunces + Geist Sans entfernt.
+- **Action:** Schwarz auf Weiß, Pill-Buttons (full radius). Keine Brand-Akzentfarben.
+- **Cards:** weiß, 1px-Border `#E4E4E7`, Radius 20px.
+- **Keine Editorial-Moves:** kein Marquee, keine Cream-Pause-Sections, kein Wordmark-XL, kein Track-Marker, keine Italic-em-Mixed-Type.
+
+**Was gemacht:**
+- `_source/design-system.md` komplett ersetzt (v0.3 → v1.0)
+- `_admin/decisions.md` D12 ergänzt
+- Alle Marketing-Components gewiped, neu gebaut: Logo, Button, Container, Nav, Hero, Demo (Browser-Mockup mit Bookings-Tabelle), Features (3-spaltige Card-Grid mit Lucide-Icons), Plans (3 Plan-Cards inkl. Beta-Highlight), Waitlist, Footer
+- `lib/copy.ts` neu — neutraler, direkter Ton („Der Booking-Agent für Bands.")
+- DE/EN-Pages, Datenschutz/Impressum mit neuem Legal-Layout
+- `apps/web` globals + page synchronisiert
+- Fonts deps: `@fontsource/instrument-serif` + `@fontsource-variable/inter` ersetzen Fraunces + Geist Sans
+- Favicon: schwarzer Square mit weißem Instrument-Serif "k"
+- Theme-Color → `#FAFAFA`, color-scheme → light
+
+**Build:** beide Apps grün.
+
+---
+
+## 2026-04-28 — v0.1 Marketing-Site (Sektionen + Inhalte) [VERWORFEN]
+
+**Hinweis:** Diese Iteration wurde durch Reset oben ersetzt. Komponenten/Copy von hier existieren nicht mehr.
+
+
 
 **Wer:** Pascal + Claude
 

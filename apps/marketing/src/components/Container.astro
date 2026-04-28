@@ -1,0 +1,13 @@
+---
+interface Props {
+  class?: string;
+  /** narrow uses max-width 720px for prose; default 1200px. */
+  width?: 'default' | 'narrow';
+}
+const { class: className = '', width = 'default' } = Astro.props;
+const max = width === 'narrow' ? 'max-w-[720px]' : 'max-w-[1200px]';
+---
+
+<div class:list={['mx-auto px-4 md:px-8 xl:px-12 w-full', max, className]}>
+  <slot />
+</div>

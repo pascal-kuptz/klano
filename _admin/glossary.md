@@ -14,11 +14,8 @@ Klano-spezifische Begriffe und ihre exakte Bedeutung. Bei Unsicherheit hier nach
 | **Agent** | Der KI-Bandkollege. Vercel AI SDK + Claude Sonnet 4.6 (Default). Tool-Calling über `packages/agent`. |
 | **Wizard** | Editorial-Onboarding, 7 Schritte, Vollbild, mobile-first. Ende = erste Outreach gesendet. |
 | **Wow-Moment** | Wizard Schritt 6: 3 echte Venue-Vorschläge nach 3-Sek-Loading. Aktivierungs-Trigger. |
-| **Cream-Pause** | Helle (`#F2EEE6`) Editorial-Section, max. 1–2 pro Page, bricht Dark-Canvas für Quote/Manifest. |
-| **Acid** | Primär-Akzent `#C5F25C`. CTAs, Brand-Heart-Beat. |
-| **Coral** | Sekundär-Akzent `#FF5C39`. Logo-Pulse, Italic-Highlights. |
-| **k-Mark** | Single-Letter-Logo "k" in Fraunces Italic, WONK 1, SOFT 100. |
-| **Wordmark** | Volles "klano" — nur als Mega-Footer-Statement. |
+| **Wordmark** | "klano" in Instrument Serif 400, schwarz auf hellem Canvas. Nav + Footer. |
+| **Action-Black** | Primary-CTA-Farbe `#0A0A0A` auf weißem Pill-Button — keine Brand-Akzentfarbe, klare Werkzeug-Sprache. |
 | **DACH** | Deutschland + Österreich + Schweiz. Erstmarkt. `bands.country ∈ {CH, DE, AT}`. |
 | **Free-Tier** | Permanent kostenlos, 6 Members, 10 Outreach/Monat, 5 AI-Mails, 20 Venue-Suggestions, keine Auto-Follow-ups. |
 | **Pro-Tier** | 19 CHF/EUR/USD pro Monat oder 190/Jahr, alle Limits aufgehoben. 14d Trial ohne Karte. |

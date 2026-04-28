@@ -1,26 +1,19 @@
 export default function Home() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-4 py-24 text-center">
-      <span className="font-mono text-[11px] tracking-[0.22em] uppercase text-klano-fog mb-8 inline-flex items-center gap-3">
-        <span className="w-6 h-px bg-klano-acid" />
+      <span className="inline-flex items-center gap-2 h-7 px-3 rounded-full bg-klano-surface border border-klano-border text-[12px] font-mono text-klano-text-2 mb-8">
+        <span className="w-1.5 h-1.5 rounded-full bg-klano-success" />
         Klano App · v0
       </span>
 
       <h1
-        className="font-serif font-extrabold text-[clamp(3rem,11vw,7.5rem)] leading-[0.92] tracking-[-0.04em] max-w-5xl"
-        style={{ fontVariationSettings: "'opsz' 144, 'SOFT' 30, 'WONK' 1" }}
+        className="text-[clamp(2.5rem,6vw,4.5rem)] leading-[1.05] tracking-[-0.025em] text-klano-text"
+        style={{ fontFamily: 'Instrument Serif, Georgia, serif', fontWeight: 400 }}
       >
-        the digital{' '}
-        <em
-          className="italic font-normal"
-          style={{ fontVariationSettings: "'opsz' 144, 'SOFT' 100, 'WONK' 1" }}
-        >
-          bandmate
-        </em>
-        <span className="text-klano-coral">.</span>
+        klano <span className="italic text-klano-text-2">app</span>
       </h1>
 
-      <p className="mt-10 max-w-xl text-klano-bone text-lg leading-relaxed">
+      <p className="mt-6 max-w-xl text-klano-text-2 text-base leading-relaxed">
         Auth, Onboarding und Dashboard kommen ab v0.2.
       </p>
     </main>

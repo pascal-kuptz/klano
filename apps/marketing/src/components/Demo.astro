@@ -1,0 +1,290 @@
+---
+import Container from './Container.astro';
+
+interface BookingRow {
+  venue: string;
+  city: string;
+  status: 'sent' | 'opened' | 'replied' | 'booked';
+  match: string;
+  meta: string;
+}
+interface Props {
+  /** Browser chrome URL */
+  url?: string;
+  bandLabel: string;
+  statsLabel: string;
+  rows: readonly BookingRow[];
+  /** Heading row column labels: Venue / Status / Match / Last */
+  cols: readonly [string, string, string, string];
+  aiLabel: string;
+  aiText: string;
+  aiCta: string;
+}
+const { url = 'app.klano.ai/bookings', bandLabel, statsLabel, rows, cols, aiLabel, aiText, aiCta } =
+  Astro.props;
+
+const statusStyle: Record<BookingRow['status'], string> = {
+  sent: 'bg-klano-surface-2 text-klano-text-2 border-klano-border',
+  opened: 'bg-klano-info/10 text-klano-info border-klano-info/30',
+  replied: 'bg-klano-success/10 text-klano-success border-klano-success/30',
+  booked: 'bg-klano-text text-klano-action-fg border-klano-text',
+};
+---
+
+<section class="pt-4 pb-24 md:pb-32">
+  <Container>
+    <div class="mock-frame">
+      <div class="chrome">
+        <div class="chrome-dots">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="chrome-url">{url}</div>
+        <div class="chrome-spacer"></div>
+      </div>
+      <div class="mock-body">
+        <div class="mock-toolbar">
+          <div>
+            <h3 class="mock-h">{bandLabel}</h3>
+            <p class="mock-sub">{statsLabel}</p>
+          </div>
+          <span class="mock-tag">
+            <span class="dot"></span>
+            {aiLabel}
+          </span>
+        </div>
+
+        <div class="mock-table">
+          <div class="mock-tr mock-th">
+            <span>{cols[0]}</span>
+            <span>{cols[1]}</span>
+            <span>{cols[2]}</span>
+            <span>{cols[3]}</span>
+          </div>
+          {
+            rows.map((row) => (
+              <div class="mock-tr">
+                <span class="mock-cell-venue">
+                  <span class="venue-name">{row.venue}</span>
+                  <span class="venue-city">{row.city}</span>
+                </span>
+                <span class={`mock-status ${statusStyle[row.status]}`}>{row.status}</span>
+                <span class="mock-match">{row.match}</span>
+                <span class="mock-meta">{row.meta}</span>
+              </div>
+            ))
+          }
+        </div>
+
+        <div class="mock-ai">
+          <div class="mock-ai-text">
+            <span class="ai-dot"></span>
+            <span>{aiText}</span>
+          </div>
+          <button type="button" class="mock-ai-cta">
+            {aiCta}
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .mock-frame {
+    background: var(--color-klano-surface);
+    border: 1px solid var(--color-klano-border);
+    border-radius: 20px;
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.04),
+      0 24px 48px -16px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+  }
+  .chrome {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--color-klano-border);
+    background: var(--color-klano-surface-2);
+  }
+  .chrome-dots {
+    display: inline-flex;
+    gap: 6px;
+  }
+  .chrome-dots span {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--color-klano-border-strong);
+  }
+  .chrome-url {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-klano-text-3);
+    background: var(--color-klano-surface);
+    border: 1px solid var(--color-klano-border);
+    border-radius: 8px;
+    padding: 4px 10px;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+  .chrome-spacer {
+    width: 56px;
+  }
+
+  .mock-body {
+    padding: 24px;
+  }
+  @media (min-width: 768px) {
+    .mock-body { padding: 32px; }
+  }
+
+  .mock-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--color-klano-border);
+  }
+  .mock-h {
+    font-family: var(--font-sans);
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--color-klano-text);
+  }
+  .mock-sub {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-klano-text-3);
+    margin-top: 4px;
+  }
+  .mock-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px;
+    border: 1px solid var(--color-klano-border);
+    background: var(--color-klano-surface);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-klano-text-2);
+  }
+  .mock-tag .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--color-klano-success);
+    box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+  }
+
+  .mock-table {
+    display: flex;
+    flex-direction: column;
+  }
+  .mock-tr {
+    display: grid;
+    grid-template-columns: 2fr 80px 60px 1.5fr;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--color-klano-border);
+    font-size: 13px;
+  }
+  .mock-tr:last-child { border-bottom: 0; }
+  .mock-th {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-klano-text-3);
+    padding-bottom: 14px;
+  }
+  .mock-cell-venue {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .venue-name {
+    font-weight: 600;
+    color: var(--color-klano-text);
+    font-size: 14px;
+  }
+  .venue-city {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-klano-text-3);
+  }
+  .mock-status {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 22px;
+    padding: 0 8px;
+    border-radius: 999px;
+    border: 1px solid;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    width: fit-content;
+  }
+  .mock-match {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-klano-text);
+    font-weight: 500;
+  }
+  .mock-meta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-klano-text-3);
+    text-align: right;
+  }
+
+  .mock-ai {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 14px 16px;
+    background: var(--color-klano-surface-2);
+    border: 1px solid var(--color-klano-border);
+    border-radius: 14px;
+  }
+  .mock-ai-text {
+    display: inline-flex; align-items: center; gap: 10px;
+    color: var(--color-klano-text);
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  .ai-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--color-klano-text);
+    flex-shrink: 0;
+  }
+  .mock-ai-cta {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 32px; padding: 0 12px;
+    background: var(--color-klano-action);
+    color: var(--color-klano-action-fg);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+    border: 0;
+    cursor: pointer;
+    transition: background 150ms;
+  }
+  .mock-ai-cta:hover { background: var(--color-klano-action-hover); }
+
+  /* Mobile: simplify table to 2 columns */
+  @media (max-width: 640px) {
+    .mock-tr {
+      grid-template-columns: 1fr auto;
+    }
+    .mock-tr.mock-th { display: none; }
+    .mock-match, .mock-meta { display: none; }
+  }
+</style>

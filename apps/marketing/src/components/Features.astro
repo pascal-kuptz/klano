@@ -1,209 +1,80 @@
 ---
-import TrackMarker from './TrackMarker.astro';
-import Pill from './Pill.astro';
-import CornerMarks from './CornerMarks.astro';
-import BookingPipelineMock from './mocks/BookingPipelineMock.astro';
-import SyncCalendarMock from './mocks/SyncCalendarMock.astro';
-import InboxAIMock from './mocks/InboxAIMock.astro';
+import Container from './Container.astro';
 
 interface FeatureCard {
-  eyebrow: string;
+  icon: string;
   title: string;
   body: string;
-  pills: { variant: 'default' | 'acid'; label: string }[];
 }
 interface Props {
-  track: string;
   eyebrow: string;
-  heading: readonly [string, string];
-  lede: string;
+  heading: string;
   cards: readonly FeatureCard[];
-  locale: 'de' | 'en';
 }
-const { track, eyebrow, heading, lede, cards, locale } = Astro.props;
+const { eyebrow, heading, cards } = Astro.props;
 ---
 
-<section id="features" class="features-section reveal py-24 lg:py-36 relative">
-  <div class="max-w-screen-xl mx-auto px-4 md:px-8 xl:px-12 relative">
-    <div class="features-header mb-16 lg:mb-24 max-w-[820px]">
-      <TrackMarker num={track} label={eyebrow} />
-      <h2 class="features-heading mt-6">
-        {heading[0]} <em>{heading[1]}</em>
+<section id="features" class="py-24 md:py-36">
+  <Container>
+    <div class="max-w-[720px] mb-16 md:mb-20">
+      <p class="font-mono text-xs uppercase tracking-[0.08em] text-klano-text-3 mb-4">{eyebrow}</p>
+      <h2 class="font-display text-[clamp(2rem,4vw,3rem)] leading-[1.05] tracking-[-0.02em] text-klano-text">
+        {heading}
       </h2>
-      <p class="text-klano-bone text-base md:text-lg leading-relaxed mt-8 max-w-[520px]">{lede}</p>
     </div>
 
-    <div class="feature-stack">
-      {/* Feature 1 — Booking (wide, mockup right) */}
-      <article class="feat feat-wide">
-        <CornerMarks />
-        <div class="feat-text">
-          <span class="feat-eyebrow">{cards[0]?.eyebrow}</span>
-          <h3 class="feat-title">{cards[0]?.title}</h3>
-          <p class="feat-body">{cards[0]?.body}</p>
-          <div class="feat-pills">
-            {cards[0]?.pills.map((p) => <Pill variant={p.variant}>{p.label}</Pill>)}
-          </div>
-        </div>
-        <div class="feat-visual">
-          <BookingPipelineMock locale={locale} />
-        </div>
-      </article>
-
-      {/* Feature 2 — Sync (mockup left, text right) */}
-      <article class="feat feat-wide feat-reverse">
-        <CornerMarks />
-        <div class="feat-text">
-          <span class="feat-eyebrow">{cards[1]?.eyebrow}</span>
-          <h3 class="feat-title">{cards[1]?.title}</h3>
-          <p class="feat-body">{cards[1]?.body}</p>
-          <div class="feat-pills">
-            {cards[1]?.pills.map((p) => <Pill variant={p.variant}>{p.label}</Pill>)}
-          </div>
-        </div>
-        <div class="feat-visual">
-          <SyncCalendarMock locale={locale} />
-        </div>
-      </article>
-
-      {/* Feature 3 — Inbox AI (text top, mockup bottom, full width) */}
-      <article class="feat feat-stack-vertical">
-        <CornerMarks />
-        <div class="feat-text">
-          <span class="feat-eyebrow">{cards[2]?.eyebrow}</span>
-          <h3 class="feat-title">{cards[2]?.title}</h3>
-          <p class="feat-body">{cards[2]?.body}</p>
-          <div class="feat-pills">
-            {cards[2]?.pills.map((p) => <Pill variant={p.variant}>{p.label}</Pill>)}
-          </div>
-        </div>
-        <div class="feat-visual feat-visual-narrow">
-          <InboxAIMock locale={locale} />
-        </div>
-      </article>
+    <div class="grid gap-4 md:grid-cols-3 md:gap-5">
+      {
+        cards.map((card) => (
+          <article class="feat-card">
+            <div class="feat-icon" aria-hidden="true" set:html={card.icon} />
+            <h3 class="feat-title">{card.title}</h3>
+            <p class="feat-body">{card.body}</p>
+          </article>
+        ))
+      }
     </div>
-  </div>
+  </Container>
 </section>
 
 <style>
-  .features-heading {
-    font-family: 'Fraunces Variable', Georgia, serif;
-    font-variation-settings: 'opsz' 144, 'SOFT' 30, 'WONK' 1;
-    font-weight: 800;
-    font-size: clamp(2.25rem, 6vw, 4rem);
-    line-height: 0.98;
-    letter-spacing: -0.04em;
-    color: var(--color-klano-pearl);
-  }
-  .features-heading em {
-    font-style: italic;
-    font-weight: 400;
-    font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
-    color: var(--color-klano-coral);
-  }
-
-  .feature-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-  }
-  @media (min-width: 1024px) {
-    .feature-stack { gap: 32px; }
-  }
-
-  .feat {
-    background: var(--color-klano-card);
-    border: 1px solid var(--color-klano-edge);
-    border-radius: 28px;
+  .feat-card {
+    background: var(--color-klano-surface);
+    border: 1px solid var(--color-klano-border);
+    border-radius: 20px;
     padding: 28px;
-    position: relative;
-    transition: border-color 300ms cubic-bezier(0.25, 1, 0.5, 1);
-    display: grid;
-    gap: 32px;
+    transition: border-color 200ms, transform 200ms;
   }
   @media (min-width: 768px) {
-    .feat { padding: 40px; }
+    .feat-card { padding: 32px; }
   }
-  @media (min-width: 1024px) {
-    .feat { padding: 48px; }
+  .feat-card:hover {
+    border-color: var(--color-klano-border-strong);
+    transform: translateY(-2px);
   }
-  .feat:hover {
-    border-color: var(--color-klano-mist);
-  }
-
-  /* Wide layout: text left, visual right */
-  .feat-wide {
-    grid-template-columns: 1fr;
-  }
-  @media (min-width: 1024px) {
-    .feat-wide {
-      grid-template-columns: 5fr 7fr;
-      align-items: center;
-      gap: 56px;
-    }
-  }
-  .feat-reverse .feat-text { order: 1; }
-  .feat-reverse .feat-visual { order: 2; }
-  @media (min-width: 1024px) {
-    .feat-reverse .feat-text { order: 2; }
-    .feat-reverse .feat-visual { order: 1; }
-  }
-
-  /* Vertical: text top, visual narrower below */
-  .feat-stack-vertical {
-    grid-template-columns: 1fr;
-    align-items: start;
-  }
-  @media (min-width: 1024px) {
-    .feat-stack-vertical {
-      grid-template-columns: 1fr 1fr;
-      gap: 56px;
-      align-items: center;
-    }
-  }
-
-  .feat-eyebrow {
-    font-family: 'Geist Mono Variable', ui-monospace, monospace;
-    font-size: 11px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--color-klano-coral);
-    margin-bottom: 24px;
-    display: inline-block;
-  }
-  .feat-title {
-    font-family: 'Fraunces Variable', Georgia, serif;
-    font-variation-settings: 'opsz' 144, 'SOFT' 30, 'WONK' 1;
-    font-weight: 800;
-    font-size: clamp(1.875rem, 4vw, 2.75rem);
-    line-height: 1.0;
-    letter-spacing: -0.035em;
-    color: var(--color-klano-pearl);
+  .feat-icon {
+    width: 36px; height: 36px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 1px solid var(--color-klano-border);
+    border-radius: 10px;
+    color: var(--color-klano-text);
     margin-bottom: 20px;
   }
+  .feat-icon :global(svg) {
+    width: 18px; height: 18px;
+    stroke-width: 1.5;
+  }
+  .feat-title {
+    font-family: var(--font-sans);
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    color: var(--color-klano-text);
+    margin-bottom: 8px;
+  }
   .feat-body {
-    color: var(--color-klano-sand);
-    font-size: 15px;
+    color: var(--color-klano-text-2);
+    font-size: 14px;
     line-height: 1.6;
-    margin-bottom: 28px;
-    max-width: 460px;
-  }
-  .feat-pills {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .feat-visual {
-    /* Slight tilt + scale on hover for life */
-    transition: transform 400ms cubic-bezier(0.25, 1, 0.5, 1);
-  }
-  .feat:hover .feat-visual {
-    transform: translateY(-4px);
-  }
-  .feat-visual-narrow {
-    max-width: 580px;
-    margin: 0 auto;
-    width: 100%;
   }
 </style>

@@ -1,63 +1,45 @@
 ---
-import LogoMark from './LogoMark.astro';
+import Logo from './Logo.astro';
 import Button from './Button.astro';
+import Container from './Container.astro';
 
 interface Props {
-  waitlistLabel: string;
-  menuLabel: string;
-  howLabel: string;
+  primaryCta: string;
+  secondaryLabel: string;
+  secondaryHref: string;
   homeHref?: string;
 }
-const { waitlistLabel, menuLabel, howLabel, homeHref = '/' } = Astro.props;
+const { primaryCta, secondaryLabel, secondaryHref, homeHref = '/' } = Astro.props;
 ---
 
-<nav id="site-nav" class="fixed inset-x-0 z-50 transition-colors duration-300">
-  <div class="nav-row max-w-screen-xl mx-auto flex items-center justify-between px-4 py-4 md:px-8 md:py-5 xl:px-12 xl:py-6">
-    <LogoMark href={homeHref} size={40} />
-    <div class="flex items-center gap-3">
-      <a href="#how" class="hidden md:inline-flex nav-link">{howLabel}</a>
-      <Button
-        variant="primary"
-        href="#waitlist"
-        class="!min-h-[44px] !px-5 !py-2.5 !text-[13px]"
-      >
-        {waitlistLabel}
-      </Button>
+<nav id="site-nav" class="fixed top-0 inset-x-0 z-50 transition-colors duration-200">
+  <Container class="flex items-center justify-between py-4 md:py-5">
+    <Logo href={homeHref} />
+    <div class="flex items-center gap-2">
+      <a href={secondaryHref} class="hidden md:inline-flex h-11 px-4 items-center text-sm text-klano-text-2 hover:text-klano-text transition-colors no-underline">
+        {secondaryLabel}
+      </a>
+      <Button variant="primary" href="#waitlist" size="sm">{primaryCta}</Button>
     </div>
-  </div>
+  </Container>
 </nav>
 
 <style>
   #site-nav {
-    /* sits below the fixed marquee at top */
-    top: var(--marquee-h, 52px);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    background: rgba(10, 10, 11, 0.5);
+    background: rgba(250, 250, 250, 0.7);
+    backdrop-filter: saturate(180%) blur(12px);
+    -webkit-backdrop-filter: saturate(180%) blur(12px);
   }
   #site-nav.is-scrolled {
-    background: rgba(10, 10, 11, 0.92);
-    border-bottom: 1px solid var(--color-klano-edge-soft);
-  }
-  .nav-link {
-    color: var(--color-klano-bone);
-    font-size: 13px;
-    font-weight: 500;
-    padding: 10px 14px;
-    border-radius: 10px;
-    text-decoration: none;
-    transition: all 200ms cubic-bezier(0.25, 1, 0.5, 1);
-  }
-  .nav-link:hover {
-    color: var(--color-klano-pearl);
-    background: var(--color-klano-card);
+    background: rgba(250, 250, 250, 0.92);
+    border-bottom: 1px solid var(--color-klano-border);
   }
 </style>
 
 <script>
   const nav = document.getElementById('site-nav');
   if (nav) {
-    const onScroll = () => nav.classList.toggle('is-scrolled', window.scrollY > 16);
+    const onScroll = () => nav.classList.toggle('is-scrolled', window.scrollY > 12);
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
   }

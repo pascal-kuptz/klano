@@ -1,203 +1,59 @@
 ---
-import TrackMarker from './TrackMarker.astro';
+import Container from './Container.astro';
 import Button from './Button.astro';
 
 interface Props {
-  track: string;
   eyebrow: string;
-  heading: readonly [string, string];
-  lede: string;
+  heading: string;
+  subline: string;
   placeholder: string;
   submit: string;
   success: string;
   successPlaceholder: string;
   meta: string;
-  timing: { label: string; options: { value: string; label: string }[] };
   locale: 'de' | 'en';
 }
-const { track, eyebrow, heading, lede, placeholder, submit, success, successPlaceholder, meta, timing, locale } =
+const { eyebrow, heading, subline, placeholder, submit, success, successPlaceholder, meta, locale } =
   Astro.props;
 ---
 
-<section
-  id="waitlist"
-  class="reveal py-24 lg:py-32 relative bg-klano-stage border-y border-klano-edge"
->
-  <div class="max-w-screen-xl mx-auto px-4 md:px-8 xl:px-12">
-    <div class="mb-12 max-w-[820px]">
-      <TrackMarker num={track} label={eyebrow} />
-      <h2 class="cta-title mt-6">
-        {heading[0]}<br />
-        <em>{heading[1]}</em>
+<section id="waitlist" class="py-24 md:py-36">
+  <Container width="narrow">
+    <div class="text-center">
+      <p class="font-mono text-xs uppercase tracking-[0.08em] text-klano-text-3 mb-4">{eyebrow}</p>
+      <h2 class="font-display text-[clamp(2rem,4.5vw,3.25rem)] leading-[1.05] tracking-[-0.025em] text-klano-text">
+        {heading}
       </h2>
-      <p class="text-klano-bone text-base md:text-lg leading-relaxed mt-6 max-w-[520px]">{lede}</p>
-    </div>
+      <p class="mt-5 text-klano-text-2 text-base leading-[1.55] max-w-[560px] mx-auto">{subline}</p>
 
-    <form
-      class="cta-form max-w-2xl"
-      data-locale={locale}
-      data-success={success}
-      data-success-placeholder={successPlaceholder}
-    >
-      <div class="form-row">
+      <form
+        class="mt-10 flex flex-col sm:flex-row gap-2 max-w-[480px] mx-auto"
+        data-locale={locale}
+        data-success={success}
+        data-success-placeholder={successPlaceholder}
+      >
         <input
           type="email"
           name="email"
           required
           placeholder={placeholder}
-          class="form-input"
           aria-label="Email"
+          class="flex-1 h-12 px-4 bg-klano-surface border border-klano-border rounded-full text-klano-text placeholder:text-klano-text-3 outline-none transition-colors focus:border-klano-text"
         />
-        <Button variant="primary" type="submit" arrow>{submit}</Button>
-      </div>
+        <Button variant="primary" size="lg" type="submit">{submit}</Button>
+      </form>
 
-      <fieldset class="form-timing">
-        <legend class="form-timing-legend">{timing.label}</legend>
-        <div class="form-timing-options">
-          {
-            timing.options.map((opt, i) => (
-              <label class="timing-pill">
-                <input type="radio" name="timing" value={opt.value} checked={i === 0} />
-                <span>{opt.label}</span>
-              </label>
-            ))
-          }
-        </div>
-      </fieldset>
-
-      <p class="form-meta">{meta}</p>
-    </form>
-  </div>
+      <p class="mt-5 font-mono text-[11px] uppercase tracking-[0.08em] text-klano-text-3">{meta}</p>
+    </div>
+  </Container>
 </section>
 
-<style>
-  .cta-title {
-    font-family: 'Fraunces Variable', Georgia, serif;
-    font-variation-settings: 'opsz' 144, 'SOFT' 30, 'WONK' 1;
-    font-weight: 800;
-    font-size: clamp(2.25rem, 6vw, 4rem);
-    line-height: 1;
-    letter-spacing: -0.04em;
-    color: var(--color-klano-pearl);
-  }
-  .cta-title em {
-    font-style: italic;
-    font-weight: 400;
-    font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
-    color: var(--color-klano-coral);
-  }
-
-  .cta-form {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-  }
-  .form-row {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  @media (min-width: 600px) {
-    .form-row {
-      flex-direction: row;
-    }
-  }
-  .form-input {
-    flex: 1;
-    min-height: 56px;
-    background: var(--color-klano-card);
-    border: 1px solid var(--color-klano-edge);
-    color: var(--color-klano-pearl);
-    padding: 14px 20px;
-    border-radius: 14px;
-    font-family: 'Geist Variable', system-ui, sans-serif;
-    font-size: 16px;
-    outline: none;
-    transition: all 200ms cubic-bezier(0.25, 1, 0.5, 1);
-  }
-  .form-input::placeholder {
-    color: var(--color-klano-fog);
-  }
-  .form-input:focus {
-    border-color: var(--color-klano-pearl);
-    background: var(--color-klano-spotlight);
-  }
-
-  .form-timing {
-    border: 0;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .form-timing-legend {
-    font-family: 'Geist Mono Variable', ui-monospace, monospace;
-    font-size: 11px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--color-klano-fog);
-  }
-  .form-timing-options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .timing-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 16px;
-    border: 1px solid var(--color-klano-edge);
-    background: var(--color-klano-card);
-    color: var(--color-klano-bone);
-    border-radius: 999px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 200ms cubic-bezier(0.25, 1, 0.5, 1);
-  }
-  .timing-pill input {
-    appearance: none;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    border: 1px solid var(--color-klano-mist);
-    background: transparent;
-    margin: 0;
-    flex-shrink: 0;
-    transition: all 200ms cubic-bezier(0.25, 1, 0.5, 1);
-  }
-  .timing-pill:hover {
-    border-color: var(--color-klano-mist);
-    color: var(--color-klano-pearl);
-  }
-  .timing-pill:has(input:checked) {
-    border-color: var(--color-klano-acid);
-    color: var(--color-klano-pearl);
-    background: rgba(197, 242, 92, 0.06);
-  }
-  .timing-pill input:checked {
-    border-color: var(--color-klano-acid);
-    background: var(--color-klano-acid);
-    box-shadow: 0 0 0 2px rgba(197, 242, 92, 0.2);
-  }
-
-  .form-meta {
-    font-family: 'Geist Mono Variable', ui-monospace, monospace;
-    font-size: 11px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--color-klano-fog);
-  }
-</style>
-
 <script>
-  document.querySelectorAll<HTMLFormElement>('form.cta-form').forEach((form) => {
+  document.querySelectorAll<HTMLFormElement>('form[data-success]').forEach((form) => {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const input = form.querySelector<HTMLInputElement>('input[name="email"]');
       const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
-      const timing = form.querySelector<HTMLInputElement>('input[name="timing"]:checked');
       if (!input || !button) return;
 
       const email = input.value.trim();
@@ -212,9 +68,7 @@ const { track, eyebrow, heading, lede, placeholder, submit, success, successPlac
       button.innerHTML = '...';
 
       try {
-        // POST to /api/waitlist (Supabase Edge Function) — wired in v0.2.
         await new Promise((r) => setTimeout(r, 400));
-
         input.value = '';
         input.placeholder = successPlaceholder;
         button.innerHTML = successText;
@@ -224,7 +78,7 @@ const { track, eyebrow, heading, lede, placeholder, submit, success, successPlac
             plausible?: (event: string, opts?: { props?: Record<string, string> }) => void;
           }
         ).plausible;
-        plausible?.('waitlist_signup', { props: { locale, timing: timing?.value ?? 'unknown' } });
+        plausible?.('waitlist_signup', { props: { locale } });
       } catch (err) {
         button.disabled = false;
         button.innerHTML = original;

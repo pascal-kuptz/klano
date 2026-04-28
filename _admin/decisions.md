@@ -86,6 +86,32 @@ Siehe `_source/build-plan-v0.md` Sektion 13 "Tech-Decision-Log" (#1–#20). Alle
 - `_admin/` = lebende Arbeitsdokumente (siehe `README.md`).
 - Code & Docs leben **gemeinsam** im selben Repo (`klano/` Desktop-Ordner). Späterer Push auf GitHub-Org `klano-ai/klano`.
 
+## D12 — Brand Direction Reset (Neutral / Studio)
+
+**Datum:** 2026-04-28 (verworfen: v0.3 Editorial/Affinity-Direction)
+
+Klano-Marketing pivots auf **neutrales Werkzeug-Design** im Stil von [suno.com](https://suno.com), [linear.app](https://linear.app), [vercel.com](https://vercel.com).
+
+**Was gilt:**
+- Light-Theme als Primärerlebnis (Canvas `#FAFAFA`, Surface `#FFFFFF`, Text `#0A0A0A`)
+- Single Typeface: **Geist Variable** für alles. **Fraunces entfernt.**
+- Action ist **Schwarz** (`#0A0A0A` bg / `#FFFFFF` text). Keine Brand-Akzentfarben (Acid/Coral raus).
+- Pill-Buttons (`border-radius: 9999px`).
+- Cards weiß auf Canvas, 1px-Border `#E4E4E7`, Radius 20px.
+- Section-Padding 96–160px.
+- Keine Editorial-Moves: kein Marquee, keine Cream-Pause-Sections, kein Massive-Wordmark, kein Track-Marker-Gimmick, keine Italic-Display.
+
+**Was abgelöst wurde:**
+- Decision **D11** (SEO-Setup) bleibt gültig — JSON-LD/AI-Crawler-Allowlist sind unabhängig von der Visual-Direction.
+- `_source/design-system.md` wurde komplett ersetzt (v0.3 → v1.0).
+
+**Tagline-Frage:** Master-Plan-Tagline „make musicians be musicians" bleibt im internen Vision-Doc; auf Marketing wird stattdessen direkter Werkzeug-Sprech verwendet (z.B. „The booking agent for bands.").
+
+**Begründung (User-Feedback Session 2026-04-28):**
+1. „sieht richtig langweilig aus" → erste Iteration empathischer
+2. „nah das gefällt mir alles gar nicht grafisch. wir starten das gesamte projekt nochmal neu. neutrales design wie suno.com" → harter Reset
+3. „sauberes design system. neue tokens brand file anpassen alles. wir müssen clean sein von tag 1" → tokens + brand file frisch
+
 ## D11 — SEO / AI-Crawler-Strategie (Marketing)
 
 **Ziel:** Maximale Sichtbarkeit in klassischer Search **und** AI-Search (ChatGPT, Perplexity, Google AI Overviews, Apple Intelligence).
@@ -111,3 +137,4 @@ Siehe `_source/build-plan-v0.md` Sektion 13 "Tech-Decision-Log" (#1–#20). Alle
 |-------|-----|---------|
 | 2026-04-28 | Initial-Set D1–D10 | Aufsetzen `_admin/`, Bereinigung _source-Unklarheiten |
 | 2026-04-28 | D11 SEO/AI-Crawler-Strategie | User-Anforderung "schemaorg ai und seo optimized" beim Marketing-Scaffold |
+| 2026-04-28 | D12 Brand Direction Reset (Suno-Stil) | User-Feedback nach 2 Visual-Iterationen — Editorial-Direction verworfen, Neutral/Studio gesetzt |

@@ -2,13 +2,9 @@
 import Base from '../../layouts/Base.astro';
 import Nav from '../../components/Nav.astro';
 import Hero from '../../components/Hero.astro';
-import AgentLog from '../../components/AgentLog.astro';
-import CreamPause from '../../components/CreamPause.astro';
-import Wordmark from '../../components/Wordmark.astro';
+import Demo from '../../components/Demo.astro';
 import Features from '../../components/Features.astro';
-import Venues from '../../components/Venues.astro';
 import Plans from '../../components/Plans.astro';
-import TrustStrip from '../../components/TrustStrip.astro';
 import Waitlist from '../../components/Waitlist.astro';
 import Footer from '../../components/Footer.astro';
 import { copy } from '../../lib/copy';
@@ -25,7 +21,7 @@ const faqJsonLd = {
       name: 'What is Klano?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Klano is an AI agent for hobby and semi-pro bands that automates venue booking, internal coordination, and follow-ups.',
+        text: 'Klano is an AI booking agent for bands. It finds the right venues, drafts outreach emails, and follows up automatically.',
       },
     },
     {
@@ -33,15 +29,15 @@ const faqJsonLd = {
       name: 'How much does Klano cost?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'There is a permanently free tier and a Pro tier at 19 CHF/EUR/USD per month or 190 per year. Pro is free for 14 days, no credit card required.',
+        text: 'Free forever. Pro at 19 CHF/EUR/USD per month or 190/year (save 17%). 14-day Pro trial, no credit card.',
       },
     },
     {
       '@type': 'Question',
-      name: 'Which countries does Klano serve?',
+      name: 'Where does Klano work?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Klano launches in the DACH region (Switzerland, Germany, Austria) with a curated venue database for this market.',
+        text: 'Klano launches in the DACH region (Switzerland, Germany, Austria) with a curated venue database for that market.',
       },
     },
   ],
@@ -49,115 +45,48 @@ const faqJsonLd = {
 ---
 
 <Base title={SITE.tagline.en} description={SITE.description.en} jsonLd={[faqJsonLd]}>
-  <Nav waitlistLabel={c.nav.waitlist} menuLabel={c.nav.menu} howLabel={c.nav.how} homeHref="/en" />
+  <Nav
+    primaryCta={c.nav.primaryCta}
+    secondaryLabel={c.nav.secondaryLabel}
+    secondaryHref="#features"
+    homeHref="/en"
+  />
   <main>
     <Hero
-      observed={c.hero.observed}
-      lines={c.hero.lines}
-      tagline={c.hero.tagline}
+      badge={c.hero.badge}
+      headline={c.hero.headline}
+      headlineItalic={c.hero.headlineItalic}
+      subline={c.hero.subline}
       ctaPrimary={c.hero.ctaPrimary}
       ctaSecondary={c.hero.ctaSecondary}
-      meta={c.hero.meta}
     />
-    <AgentLog
-      track={c.agentLog.track}
-      heading={c.agentLog.heading}
-      sub={c.agentLog.sub}
-      timestamp={c.agentLog.timestamp}
-      band={c.agentLog.band}
-      entries={c.agentLog.entries}
-      footnote={c.agentLog.footnote}
+    <Demo
+      bandLabel={c.demo.bandLabel}
+      statsLabel={c.demo.statsLabel}
+      cols={c.demo.cols}
+      rows={c.demo.rows}
+      aiLabel={c.demo.aiLabel}
+      aiText={c.demo.aiText}
+      aiCta={c.demo.aiCta}
     />
-    <CreamPause
-      track={c.pause.track}
-      eyebrow={c.pause.eyebrow}
-      quote={c.pause.quote}
-      attributionName={c.pause.attribution.name}
-      attributionRole={c.pause.attribution.role}
-    />
-    <Wordmark
-      track={c.wordmark.track}
-      labelTop={c.wordmark.labelTop}
-      labelSub={c.wordmark.labelSub}
-      caption={c.wordmark.caption}
-    />
-    <Features
-      track={c.features.track}
-      eyebrow={c.features.eyebrow}
-      heading={c.features.heading}
-      lede={c.features.lede}
-      cards={c.features.cards}
-      locale="en"
-    />
-    <Venues
-      track={c.venues.track}
-      eyebrow={c.venues.eyebrow}
-      heading={c.venues.heading}
-      lede={c.venues.lede}
-      cards={c.venues.cards}
-    />
-    <Plans
-      track={c.plans.track}
-      eyebrow={c.plans.eyebrow}
-      heading={c.plans.heading}
-      lede={c.plans.lede}
-      cards={c.plans.cards}
-    />
-    <TrustStrip lines={c.trust.lines} />
+    <Features eyebrow={c.features.eyebrow} heading={c.features.heading} cards={c.features.cards} />
+    <Plans eyebrow={c.plans.eyebrow} heading={c.plans.heading} cards={c.plans.cards} />
     <Waitlist
-      track={c.waitlist.track}
       eyebrow={c.waitlist.eyebrow}
       heading={c.waitlist.heading}
-      lede={c.waitlist.lede}
+      subline={c.waitlist.subline}
       placeholder={c.waitlist.placeholder}
       submit={c.waitlist.submit}
       success={c.waitlist.success}
       successPlaceholder={c.waitlist.successPlaceholder}
       meta={c.waitlist.meta}
-      timing={c.waitlist.timing}
       locale="en"
     />
   </main>
   <Footer
-    manifest={c.footer.manifest}
+    tagline={c.footer.tagline}
     cols={c.footer.cols}
     legalLeft={c.footer.legalLeft}
     legalRight={c.footer.legalRight}
   />
 </Base>
-
-<script>
-  const io = new IntersectionObserver(
-    (entries) => {
-      for (const e of entries) {
-        if (e.isIntersecting) {
-          e.target.classList.add('in-view');
-          io.unobserve(e.target);
-        }
-      }
-    },
-    { threshold: 0.1, rootMargin: '0px 0px -60px 0px' },
-  );
-  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
-</script>
-
-<style is:global>
-  .reveal {
-    opacity: 0;
-    transform: translateY(28px);
-    transition:
-      opacity 900ms cubic-bezier(0.25, 1, 0.5, 1),
-      transform 900ms cubic-bezier(0.25, 1, 0.5, 1);
-  }
-  .reveal.in-view {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .reveal {
-      opacity: 1;
-      transform: none;
-      transition: none;
-    }
-  }
-</style>

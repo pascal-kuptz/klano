@@ -1,8 +1,8 @@
 ---
-import TrackMarker from './TrackMarker.astro';
-import CornerMarks from './CornerMarks.astro';
+import Container from './Container.astro';
+import Button from './Button.astro';
 
-interface PlanCard {
+interface Plan {
   name: string;
   price: string;
   priceMeta: string;
@@ -13,173 +13,131 @@ interface PlanCard {
   highlight?: boolean;
 }
 interface Props {
-  track: string;
   eyebrow: string;
-  heading: readonly [string, string];
-  lede: string;
-  cards: readonly PlanCard[];
+  heading: string;
+  cards: readonly Plan[];
 }
-const { track, eyebrow, heading, lede, cards } = Astro.props;
+const { eyebrow, heading, cards } = Astro.props;
 ---
 
-<section class="plans-section reveal py-24 lg:py-36 relative">
-  <div class="max-w-screen-xl mx-auto px-4 md:px-8 xl:px-12 relative">
-    <div class="plans-header text-center max-w-[820px] mx-auto mb-16 lg:mb-20">
-      <TrackMarker num={track} label={eyebrow} />
-      <h2 class="plans-heading mt-6">
-        {heading[0]}<br />
-        <em>{heading[1]}</em>
+<section id="pricing" class="py-24 md:py-36 bg-klano-surface-2 border-y border-klano-border">
+  <Container>
+    <div class="max-w-[720px] mb-16 md:mb-20">
+      <p class="font-mono text-xs uppercase tracking-[0.08em] text-klano-text-3 mb-4">{eyebrow}</p>
+      <h2 class="font-display text-[clamp(2rem,4vw,3rem)] leading-[1.05] tracking-[-0.02em] text-klano-text">
+        {heading}
       </h2>
-      <p class="text-klano-bone text-base md:text-lg leading-relaxed mt-8 max-w-[560px] mx-auto">
-        {lede}
-      </p>
     </div>
 
-    <div class="plans-grid grid gap-5 md:grid-cols-3 md:gap-6">
+    <div class="grid gap-4 md:grid-cols-3 md:gap-5">
       {
         cards.map((card) => (
-          <article class:list={['plan-card', card.highlight && 'is-highlight']}>
-            <CornerMarks />
+          <article class:list={['plan', card.highlight && 'plan-highlight']}>
             <div class="plan-head">
-              <h3 class="plan-name">{card.name}</h3>
-              {card.highlight && (
-                <span class="plan-badge">
-                  <span class="dot" /> Limited
-                </span>
-              )}
+              <span class="plan-name">{card.name}</span>
+              {card.highlight && <span class="plan-badge">Limited</span>}
             </div>
-            <div class="plan-price">
-              <span class="price">{card.price}</span>
-              <span class="price-meta">{card.priceMeta}</span>
+            <div class="plan-price-row">
+              <span class="plan-price">{card.price}</span>
+              <span class="plan-price-meta">{card.priceMeta}</span>
             </div>
             <p class="plan-desc">{card.description}</p>
             <ul class="plan-features">
               {card.features.map((f) => (
                 <li>
-                  <span class="feature-dot" aria-hidden="true">→</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
                   <span>{f}</span>
                 </li>
               ))}
             </ul>
-            <a href={card.ctaHref} class:list={['plan-cta', card.highlight ? 'plan-cta-acid' : 'plan-cta-ghost']}>
+            <Button
+              variant={card.highlight ? 'primary' : 'secondary'}
+              href={card.ctaHref}
+              size="md"
+              class="!w-full"
+            >
               {card.cta}
-              <span aria-hidden="true">→</span>
-            </a>
+            </Button>
           </article>
         ))
       }
     </div>
-  </div>
+  </Container>
 </section>
 
 <style>
-  .plans-heading {
-    font-family: 'Fraunces Variable', Georgia, serif;
-    font-variation-settings: 'opsz' 144, 'SOFT' 30, 'WONK' 1;
-    font-weight: 800;
-    font-size: clamp(2.5rem, 7vw, 4.5rem);
-    line-height: 0.95;
-    letter-spacing: -0.04em;
-    color: var(--color-klano-pearl);
-  }
-  .plans-heading em {
-    font-style: italic;
-    font-weight: 400;
-    font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
-    color: var(--color-klano-coral);
-  }
-
-  .plan-card {
-    position: relative;
-    background: var(--color-klano-card);
-    border: 1px solid var(--color-klano-edge);
+  .plan {
+    background: var(--color-klano-surface);
+    border: 1px solid var(--color-klano-border);
     border-radius: 20px;
     padding: 32px 28px;
     display: flex;
     flex-direction: column;
-    transition: all 300ms cubic-bezier(0.25, 1, 0.5, 1);
+    transition: border-color 200ms, transform 200ms;
   }
   @media (min-width: 768px) {
-    .plan-card { padding: 36px 32px; }
+    .plan { padding: 36px 32px; }
   }
-  .plan-card:hover {
-    border-color: var(--color-klano-mist);
-    transform: translateY(-4px);
+  .plan:hover {
+    border-color: var(--color-klano-border-strong);
   }
-  .plan-card.is-highlight {
-    background: linear-gradient(180deg, rgba(197, 242, 92, 0.06) 0%, var(--color-klano-card) 60%);
-    border-color: rgba(197, 242, 92, 0.3);
-  }
-  .plan-card.is-highlight:hover {
-    border-color: var(--color-klano-acid);
+  .plan-highlight {
+    border-color: var(--color-klano-text);
+    box-shadow: 0 0 0 1px var(--color-klano-text);
   }
 
   .plan-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
-  .plan-name {
-    font-family: 'Geist Mono Variable', ui-monospace, monospace;
-    font-size: 12px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--color-klano-bone);
-    font-weight: 500;
-  }
-  .is-highlight .plan-name {
-    color: var(--color-klano-acid);
-  }
-  .plan-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 10px;
-    background: rgba(197, 242, 92, 0.12);
-    border: 1px solid rgba(197, 242, 92, 0.3);
-    color: var(--color-klano-acid);
-    border-radius: 999px;
-    font-family: 'Geist Mono Variable', ui-monospace, monospace;
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-  }
-  .plan-badge .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--color-klano-acid);
-    box-shadow: 0 0 6px var(--color-klano-acid);
-  }
-
-  .plan-price {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding-bottom: 24px;
-    border-bottom: 1px solid var(--color-klano-edge-soft);
+    display: flex; align-items: center; justify-content: space-between;
     margin-bottom: 24px;
   }
-  .price {
-    font-family: 'Fraunces Variable', Georgia, serif;
-    font-variation-settings: 'opsz' 144, 'SOFT' 30, 'WONK' 1;
-    font-weight: 800;
-    font-size: clamp(2.5rem, 4vw, 3.5rem);
-    line-height: 1;
-    letter-spacing: -0.04em;
-    color: var(--color-klano-pearl);
-  }
-  .price-meta {
-    font-family: 'Geist Mono Variable', ui-monospace, monospace;
-    font-size: 11px;
-    letter-spacing: 0.18em;
+  .plan-name {
+    font-family: var(--font-mono);
+    font-size: 12px;
     text-transform: uppercase;
-    color: var(--color-klano-fog);
+    letter-spacing: 0.08em;
+    color: var(--color-klano-text-2);
+    font-weight: 500;
+  }
+  .plan-highlight .plan-name {
+    color: var(--color-klano-text);
+  }
+  .plan-badge {
+    height: 22px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: var(--color-klano-text);
+    color: var(--color-klano-action-fg);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    display: inline-flex; align-items: center;
+  }
+
+  .plan-price-row {
+    display: flex; align-items: baseline; gap: 8px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--color-klano-border);
+    margin-bottom: 24px;
+  }
+  .plan-price {
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 4vw, 3rem);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: var(--color-klano-text);
+  }
+  .plan-price-meta {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-klano-text-3);
   }
 
   .plan-desc {
-    color: var(--color-klano-bone);
+    color: var(--color-klano-text-2);
     font-size: 14px;
     line-height: 1.55;
     margin-bottom: 24px;
@@ -187,7 +145,7 @@ const { track, eyebrow, heading, lede, cards } = Astro.props;
   .plan-features {
     list-style: none;
     padding: 0;
-    margin: 0 0 32px;
+    margin: 0 0 28px;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -196,49 +154,15 @@ const { track, eyebrow, heading, lede, cards } = Astro.props;
   .plan-features li {
     display: flex;
     align-items: flex-start;
-    gap: 12px;
-    color: var(--color-klano-bone);
-    font-size: 14px;
-    line-height: 1.5;
-  }
-  .feature-dot {
-    color: var(--color-klano-acid);
-    font-family: 'Geist Mono Variable', ui-monospace, monospace;
-    flex-shrink: 0;
-    font-size: 13px;
-    margin-top: 2px;
-  }
-
-  .plan-cta {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
     gap: 10px;
-    padding: 14px 24px;
-    border-radius: 12px;
-    font-family: 'Geist Variable', system-ui, sans-serif;
-    font-weight: 600;
+    color: var(--color-klano-text);
     font-size: 14px;
-    letter-spacing: -0.01em;
-    text-decoration: none;
-    transition: all 200ms cubic-bezier(0.25, 1, 0.5, 1);
-    margin-top: auto;
+    line-height: 1.45;
   }
-  .plan-cta-acid {
-    background: var(--color-klano-acid);
-    color: var(--color-klano-ink);
-  }
-  .plan-cta-acid:hover {
-    background: var(--color-klano-acid-soft);
-    transform: translateY(-1px);
-  }
-  .plan-cta-ghost {
-    background: transparent;
-    color: var(--color-klano-pearl);
-    border: 1px solid var(--color-klano-edge);
-  }
-  .plan-cta-ghost:hover {
-    border-color: var(--color-klano-pearl);
-    background: var(--color-klano-spotlight);
+  .plan-features svg {
+    width: 16px; height: 16px;
+    color: var(--color-klano-text-2);
+    flex-shrink: 0;
+    margin-top: 2px;
   }
 </style>

@@ -1,214 +1,138 @@
 import type { Locale } from './seo';
 
-type PillVariant = 'default' | 'acid';
-type Pill = { variant: PillVariant; label: string };
+const iconSearch = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>`;
+const iconCalendar = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>`;
+const iconInbox = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/></svg>`;
+const iconBolt = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z"/></svg>`;
+const iconUsers = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>`;
+const iconShield = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V5l8-3 8 3Z"/></svg>`;
 
-type AgentLogEntry = { time: string; verb: string; object: string; tone?: 'acid' | 'default' };
-
-export const copy: Record<
-  Locale,
-  {
-    nav: { waitlist: string; menu: string; how: string };
-    hero: {
-      observed: string;
-      lines: readonly [string, string, string];
-      tagline: string;
-      ctaPrimary: string;
-      ctaSecondary: string;
-      meta: string;
-    };
-    agentLog: {
-      track: string;
-      heading: string;
-      sub: string;
-      timestamp: string;
-      band: string;
-      entries: readonly AgentLogEntry[];
-      footnote: string;
-    };
-    pause: {
-      track: string;
-      eyebrow: string;
-      quote: string;
-      attribution: { name: string; role: string };
-    };
-    wordmark: {
-      track: string;
-      labelTop: string;
-      labelSub: string;
-      caption: string;
-    };
-    features: {
-      track: string;
-      eyebrow: string;
-      heading: readonly [string, string];
-      lede: string;
-      cards: readonly { eyebrow: string; title: string; body: string; pills: Pill[] }[];
-    };
-    venues: {
-      track: string;
-      eyebrow: string;
-      heading: readonly [string, string];
-      lede: string;
-      cards: readonly {
-        rank: string;
-        match: string;
-        region: string;
-        name: string;
-        city: string;
-        cap: string;
-        genre: string;
-        verdict: string;
-      }[];
-    };
-    trust: {
-      lines: readonly string[];
-    };
-    plans: {
-      track: string;
-      eyebrow: string;
-      heading: readonly [string, string];
-      lede: string;
-      cards: readonly {
-        name: string;
-        price: string;
-        priceMeta: string;
-        description: string;
-        features: string[];
-        cta: string;
-        ctaHref: string;
-        highlight?: boolean;
-      }[];
-    };
-    marquee: { items: readonly string[] };
-    waitlist: {
-      track: string;
-      eyebrow: string;
-      heading: readonly [string, string];
-      lede: string;
-      placeholder: string;
-      submit: string;
-      success: string;
-      successPlaceholder: string;
-      meta: string;
-      timing: { label: string; options: { value: string; label: string }[] };
-    };
-    footer: {
-      manifest: string;
-      cols: readonly { heading: string; links: { label: string; href: string }[] }[];
-      legalLeft: string;
-      legalRight: string;
-    };
-  }
-> = {
+export const copy: Record<Locale, {
+  nav: { primaryCta: string; secondaryLabel: string };
+  hero: {
+    badge: string;
+    headline: string;
+    headlineItalic?: string;
+    subline: string;
+    ctaPrimary: string;
+    ctaSecondary: string;
+  };
+  demo: {
+    bandLabel: string;
+    statsLabel: string;
+    cols: readonly [string, string, string, string];
+    rows: readonly { venue: string; city: string; status: 'sent' | 'opened' | 'replied' | 'booked'; match: string; meta: string }[];
+    aiLabel: string;
+    aiText: string;
+    aiCta: string;
+  };
+  features: {
+    eyebrow: string;
+    heading: string;
+    cards: readonly { icon: string; title: string; body: string }[];
+  };
+  plans: {
+    eyebrow: string;
+    heading: string;
+    cards: readonly {
+      name: string;
+      price: string;
+      priceMeta: string;
+      description: string;
+      features: string[];
+      cta: string;
+      ctaHref: string;
+      highlight?: boolean;
+    }[];
+  };
+  waitlist: {
+    eyebrow: string;
+    heading: string;
+    subline: string;
+    placeholder: string;
+    submit: string;
+    success: string;
+    successPlaceholder: string;
+    meta: string;
+  };
+  footer: {
+    tagline: string;
+    cols: readonly { heading: string; links: { label: string; href: string }[] }[];
+    legalLeft: string;
+    legalRight: string;
+  };
+}> = {
   de: {
-    nav: { waitlist: 'Frühen Zugang', menu: 'Menü', how: 'Wie es funktioniert' },
+    nav: { primaryCta: 'Frühen Zugang', secondaryLabel: 'Funktionen' },
     hero: {
-      observed: 'Mi · 23:14 · noch immer am Schreiben.',
-      lines: ['make', 'musicians', 'be musicians.'] as const,
-      tagline: 'Du machst Musik. Klano macht den Rest.',
+      badge: 'Closed Beta · Frühjahr 2026',
+      headline: 'Der Booking-Agent',
+      headlineItalic: 'für Bands.',
+      subline:
+        'Klano sucht passende Venues, schreibt Outreach in eurem Ton und hakt automatisch nach. Ihr probt. Klano arbeitet.',
       ctaPrimary: 'Frühen Zugang sichern',
-      ctaSecondary: 'Wie es funktioniert',
-      meta: 'Closed Beta · Frühjahr 2026 · DACH zuerst',
+      ctaSecondary: 'Funktionen ansehen',
     },
-    agentLog: {
-      track: '01',
-      heading: 'Was Klano heute Morgen erledigt hat.',
-      sub: 'Während ihr geprobt habt.',
-      timestamp: 'Mittwoch · 06:00–11:42',
-      band: 'für Halbnacht · Indie · Zürich',
-      entries: [
-        { time: '06:14', verb: 'gefunden', object: '3 passende Venues — Bogen F · Mascotte · Sender', tone: 'acid' },
-        { time: '06:21', verb: 'geschrieben', object: 'Outreach an Bogen F (94% Match)' },
-        { time: '08:03', verb: 'erkannt', object: 'Reply von Mascotte: positiv, 17. Mai vorgeschlagen', tone: 'acid' },
-        { time: '09:47', verb: 'erinnert', object: 'Léa & David: Probe morgen 19:30, Setlist offen' },
-        { time: '11:42', verb: 'nachgehakt', object: 'Sender (7 Tage ohne Antwort) — sanft, persönlich' },
+    demo: {
+      bandLabel: 'Halbnacht — Bookings',
+      statsLabel: '6 aktiv · 1 neue Antwort',
+      cols: ['Venue', 'Status', 'Match', 'Letzte Aktion'],
+      rows: [
+        { venue: 'Helsinki', city: 'Zürich', status: 'replied', match: '81%', meta: 'Reply · 17. Mai · 800 CHF' },
+        { venue: 'Bogen F', city: 'Zürich', status: 'opened', match: '94%', meta: 'Geöffnet · gestern 18:42' },
+        { venue: 'Mascotte', city: 'Zürich', status: 'sent', match: '89%', meta: 'Gesendet · vor 2 Tagen' },
+        { venue: 'Sender', city: 'Winterthur', status: 'sent', match: '87%', meta: 'Gesendet · vor 7 Tagen' },
       ],
-      footnote: 'Du musstest dafür nichts tun. Bestätigt nur, was rausgehen darf.',
-    },
-    pause: {
-      track: '02',
-      eyebrow: 'Field Research · Zürich · Februar 2026',
-      quote:
-        '"Klano übernimmt all die Band-Aufgaben, die niemand wirklich machen will — und löst sie einfach. Es ist das erste Tool, das sich anfühlt, als wäre es auf unserer Seite."',
-      attribution: { name: 'Léa Sommer', role: 'Sängerin · Halbnacht — Zürich' },
-    },
-    wordmark: {
-      track: '03',
-      labelTop: 'Track 03 · made_in_zürich.wav',
-      labelSub: 'Geschrieben zwischen Gigs.',
-      caption:
-        'Klano lebt da, wo Bands leben — späte Nächte, Gruppenchats, halbfertige Setlisten. Hört zu, schreibt, hakt nach. Leise. Wie der Bandkollege, den du dir wünschst.',
+      aiLabel: 'AI live',
+      aiText: 'Antwort von Helsinki ist positiv. Datum & Gage erkannt — soll ich bestätigen?',
+      aiCta: 'Bestätigen',
     },
     features: {
-      track: '04',
-      eyebrow: 'Was Klano übernimmt',
-      heading: ['Ein Bandkollege,', 'keine Datenbank.'] as const,
-      lede:
-        'Andere Tools wollen, dass du Tabellen ausfüllst. Klano handelt — sucht, schreibt, hakt nach. Leise, autonom, bis du Stopp sagst.',
+      eyebrow: 'Funktionen',
+      heading: 'Sechs Stunden pro Woche, die ihr zurückbekommt.',
       cards: [
         {
-          eyebrow: '→ Booking',
-          title: 'Outreach, das ankommt.',
-          body:
-            'Klano matcht euch mit Venues, die zu eurem Sound und eurer Größe passen. Schreibt persönliche Mails. Hakt automatisch nach — wochenlang, falls nötig.',
-          pills: [
-            { variant: 'acid', label: 'Aktiv' },
-            { variant: 'default', label: 'DACH only' },
-          ],
+          icon: iconSearch,
+          title: 'Venue-Matching',
+          body: 'Kuratierte DACH-Datenbank. Klano matcht eure Größe, eure Region, euren Sound.',
         },
         {
-          eyebrow: '→ Sync',
-          title: 'Proben, ohne Hinterherrennen.',
-          body:
-            'Jedes Mitglied trägt Verfügbarkeit einmal ein. Klano schlägt den Slot vor, der für alle passt — und erinnert am Vortag.',
-          pills: [{ variant: 'acid', label: 'Aktiv' }],
+          icon: iconBolt,
+          title: 'Outreach-Drafts',
+          body: 'Persönliche Mails in DE oder EN, im Ton der Band. Ihr lest, klickt, sendet.',
         },
         {
-          eyebrow: '→ Inbox AI',
-          title: 'Antworten, verstanden.',
-          body:
-            'Wenn ein Venue antwortet, liest Klano die Mail, extrahiert Datum, Gage, Tech-Specs — und sagt dir, was zu entscheiden ist. Keine verlorenen Threads in drei Postfächern.',
-          pills: [
-            { variant: 'default', label: 'Beta' },
-            { variant: 'default', label: 'DE / EN' },
-          ],
+          icon: iconInbox,
+          title: 'Inbox-AI',
+          body: 'Antworten von Venues werden klassifiziert: Datum, Gage, Tech-Specs extrahiert.',
+        },
+        {
+          icon: iconCalendar,
+          title: 'Auto-Follow-ups',
+          body: 'Nach 7 und 14 Tagen ohne Antwort hakt Klano sanft nach. Persönlich, nicht generisch.',
+        },
+        {
+          icon: iconUsers,
+          title: 'Sync für die Band',
+          body: 'Verfügbarkeiten an einem Ort. Klano schlägt Probetermine vor, die für alle passen.',
+        },
+        {
+          icon: iconShield,
+          title: 'Privatsphäre eingebaut',
+          body: 'Daten in EU-Frankfurt. DSG- und DSGVO-konform. Keine Drittanbieter-Tracker.',
         },
       ],
-    },
-    venues: {
-      track: '05',
-      eyebrow: 'Der Agent in Aktion',
-      heading: ['Drei Venues.', 'Lohnt sich.'] as const,
-      lede:
-        'Du fragst einmal. Klano matcht euren Sound, eure Größe, eure Region. Schreibt die Outreach. Sendet. Hakt nach. Du gibst frei.',
-      cards: [
-        { rank: '01', match: '94%', region: 'ZRH', name: 'Bogen F', city: 'Zürich', cap: '180', genre: 'Indie', verdict: '★ Top-Fit' },
-        { rank: '02', match: '89%', region: 'ZRH', name: 'Mascotte', city: 'Zürich', cap: '220', genre: 'Alle', verdict: 'Stark' },
-        { rank: '03', match: '87%', region: 'WIN', name: 'Sender', city: 'Winterthur', cap: '140', genre: 'Folk', verdict: 'Solide' },
-      ],
-    },
-    trust: {
-      lines: ['Aus Zürich. Zwei Leute.', 'Kein VC. Kein Tracking.', 'Wir antworten auf jede Mail.'],
     },
     plans: {
-      track: '07',
-      eyebrow: 'Was du bekommst',
-      heading: ['Frei beim Spielen.', 'Pro beim Buchen.'] as const,
-      lede:
-        'Die Beta ist frei für die ersten 50 Bands. Danach bleibt Free permanent — Pro nimmt euch die Arbeit ab.',
+      eyebrow: 'Preise',
+      heading: 'Frei in der Beta. Pro, wenn ihr aktiv bookt.',
       cards: [
         {
           name: 'Beta',
           price: 'gratis',
-          priceMeta: 'Frühjahr 2026 · 50 Plätze',
-          description: 'Volle Funktionalität für die ersten 50 Bands. Kein Limit, kein Catch.',
-          features: [
-            'Alles aus Pro',
-            'Wöchentliche Calls mit dem Team',
-            'Du formst das Produkt mit',
-            'Nach Beta: 6 Monate Pro gratis',
-          ],
+          priceMeta: '50 Plätze · Frühjahr 2026',
+          description: 'Volle Funktionalität für die ersten 50 Bands. Wöchentliche Calls mit dem Team.',
+          features: ['Alles aus Pro', 'Wöchentliche Calls', 'Direkter Einfluss aufs Produkt', 'Nach Beta: 6 Monate Pro gratis'],
           cta: 'Beta-Platz sichern',
           ctaHref: '#waitlist',
           highlight: true,
@@ -217,13 +141,13 @@ export const copy: Record<
           name: 'Free',
           price: '0 CHF',
           priceMeta: 'für immer',
-          description: 'Wenn ihr Klano leichtgewichtig nutzen wollt — für die Band, die nur 4–6 Gigs im Jahr spielt.',
+          description: 'Für Bands mit 4–6 Gigs im Jahr. Klano bleibt im Hintergrund.',
           features: [
             'Bis 6 Bandmitglieder',
             '10 Outreach-Mails / Monat',
-            'Manuelles Inbox-Sortieren',
+            'Manuelle Inbox',
             'Probetermin-Vorschläge',
-            'Community Support',
+            'Community-Support',
           ],
           cta: 'Mit Free starten',
           ctaHref: '#waitlist',
@@ -232,65 +156,46 @@ export const copy: Record<
           name: 'Pro',
           price: '19 CHF',
           priceMeta: 'pro Monat · 14 Tage gratis',
-          description: 'Wenn ihr aktiv bookt und der Agent für euch arbeiten soll.',
+          description: 'Für aktive Bands. Klano übernimmt den Booking-Job vollständig.',
           features: [
             'Unlimitierte Outreach-Mails',
             'Auto-Follow-ups',
             'AI-Inbox-Klassifizierung',
             'Unlimitierte Mitglieder',
-            'Priority Support',
-            '190 CHF/Jahr — 17% Rabatt',
+            'Priority-Support',
+            '190 CHF/Jahr · 17% Rabatt',
           ],
           cta: 'Pro testen',
           ctaHref: '#waitlist',
         },
       ],
     },
-    marquee: {
-      items: [
-        'Made in Zürich',
-        'For musicians who play',
-        'Closed Beta · Frühjahr 2026',
-        'DACH first',
-        'Stop running the band',
-      ],
-    },
     waitlist: {
-      track: '06',
-      eyebrow: 'Closed Beta · Frühjahr 2026',
-      heading: ['Hör auf, die Band zu managen.', 'Fang an, sie zu spielen.'] as const,
-      lede: 'Wir nehmen 50 Bands in die Beta. Erst dann öffnen wir.',
+      eyebrow: 'Warteliste',
+      heading: 'Hör auf, die Band zu managen.',
+      subline:
+        'Wir nehmen 50 Bands in die Beta — Frühjahr 2026. Trag deine Mail ein, wir melden uns rechtzeitig.',
       placeholder: 'band@deinedomain.com',
-      submit: 'Frühen Zugang sichern',
+      submit: 'Anmelden',
       success: 'Du bist drin.',
       successPlaceholder: 'Wir melden uns im Frühjahr.',
       meta: 'Keine Kreditkarte · DSG/DSGVO · Made in Zürich',
-      timing: {
-        label: 'Wann brauchst du das?',
-        options: [
-          { value: 'now', label: 'Jetzt sofort' },
-          { value: 'soon', label: 'In 3 Monaten' },
-          { value: 'curious', label: 'Nur neugierig' },
-        ],
-      },
     },
     footer: {
-      manifest: 'Für die Leute, die immer wieder auftauchen — und nicht den Orga-Job wollen.',
+      tagline: 'Der Booking-Agent für Bands. Aus Zürich.',
       cols: [
         {
           heading: 'Produkt',
           links: [
-            { label: 'Booking', href: '/#features' },
-            { label: 'Sync', href: '/#features' },
-            { label: 'Inbox AI', href: '/#features' },
-            { label: 'Pricing', href: '/pricing' },
+            { label: 'Funktionen', href: '#features' },
+            { label: 'Preise', href: '#pricing' },
+            { label: 'App', href: 'https://app.klano.ai' },
           ],
         },
         {
           heading: 'Klano',
           links: [
             { label: 'Manifest', href: '/manifest' },
-            { label: 'Press', href: '/press' },
             { label: 'Kontakt', href: 'mailto:hello@klano.ai' },
           ],
         },
@@ -302,118 +207,81 @@ export const copy: Record<
           ],
         },
       ],
-      legalLeft: 'klano.ai · v0 · aus Zürich',
-      legalRight: '© 2026',
+      legalLeft: '© 2026 Klano · Zürich',
+      legalRight: 'klano.ai',
     },
   },
   en: {
-    nav: { waitlist: 'Get early access', menu: 'Menu', how: 'How it works' },
+    nav: { primaryCta: 'Get early access', secondaryLabel: 'Features' },
     hero: {
-      observed: 'Wed · 23:14 · still writing emails.',
-      lines: ['make', 'musicians', 'be musicians.'] as const,
-      tagline: 'You make music. Klano takes the rest.',
+      badge: 'Closed beta · Spring 2026',
+      headline: 'The booking agent',
+      headlineItalic: 'for bands.',
+      subline:
+        'Klano finds the right venues, drafts outreach in your voice, and follows up automatically. You rehearse. Klano works.',
       ctaPrimary: 'Get early access',
-      ctaSecondary: 'How it works',
-      meta: 'Closed beta · Spring 2026 · DACH first',
+      ctaSecondary: 'See features',
     },
-    agentLog: {
-      track: '01',
-      heading: 'What Klano did this morning.',
-      sub: 'While you were rehearsing.',
-      timestamp: 'Wednesday · 06:00–11:42',
-      band: 'for Halbnacht · indie · Zürich',
-      entries: [
-        { time: '06:14', verb: 'found', object: '3 venues — Bogen F · Mascotte · Sender', tone: 'acid' },
-        { time: '06:21', verb: 'wrote', object: 'outreach to Bogen F (94% match)' },
-        { time: '08:03', verb: 'detected', object: 'reply from Mascotte: positive, May 17 proposed', tone: 'acid' },
-        { time: '09:47', verb: 'reminded', object: 'Léa & David: rehearsal tomorrow 19:30, setlist open' },
-        { time: '11:42', verb: 'followed up', object: 'Sender (7 days, no reply) — gentle, personal' },
+    demo: {
+      bandLabel: 'Halbnacht — Bookings',
+      statsLabel: '6 active · 1 new reply',
+      cols: ['Venue', 'Status', 'Match', 'Last activity'],
+      rows: [
+        { venue: 'Helsinki', city: 'Zürich', status: 'replied', match: '81%', meta: 'Reply · May 17 · 800 CHF' },
+        { venue: 'Bogen F', city: 'Zürich', status: 'opened', match: '94%', meta: 'Opened · yesterday 18:42' },
+        { venue: 'Mascotte', city: 'Zürich', status: 'sent', match: '89%', meta: 'Sent · 2 days ago' },
+        { venue: 'Sender', city: 'Winterthur', status: 'sent', match: '87%', meta: 'Sent · 7 days ago' },
       ],
-      footnote: 'You did nothing. Just confirm what goes out.',
-    },
-    pause: {
-      track: '02',
-      eyebrow: 'Field research · Zürich · Feb 2026',
-      quote:
-        '"Klano takes the parts of being in a band that nobody signed up for — and just handles them. It\'s the first tool that feels like it\'s actually on our side."',
-      attribution: { name: 'Léa Sommer', role: 'Singer · Halbnacht — Zürich' },
-    },
-    wordmark: {
-      track: '03',
-      labelTop: 'Track 03 · made_in_zürich.wav',
-      labelSub: 'Written between gigs.',
-      caption:
-        'Klano lives where bands live — late nights, group chats, half-finished setlists. It listens, drafts, follows up. Quietly. Like the bandmate you wish you had.',
+      aiLabel: 'AI live',
+      aiText: 'Reply from Helsinki is positive. Date & fee detected — confirm?',
+      aiCta: 'Confirm',
     },
     features: {
-      track: '04',
-      eyebrow: 'What Klano takes off your plate',
-      heading: ['A bandmate,', 'not a database.'] as const,
-      lede:
-        'Other tools ask you to fill in spreadsheets. Klano takes action — searches, drafts, follows up. Quietly, autonomously, until you say no.',
+      eyebrow: 'Features',
+      heading: 'Six hours a week — back in your calendar.',
       cards: [
         {
-          eyebrow: '→ Booking',
-          title: 'Outreach that lands.',
-          body:
-            'Klano matches you with venues that fit your sound and size. Drafts personal emails. Follows up automatically — for weeks if needed.',
-          pills: [
-            { variant: 'acid', label: 'Active' },
-            { variant: 'default', label: 'DACH only' },
-          ],
+          icon: iconSearch,
+          title: 'Venue matching',
+          body: 'Curated DACH database. Klano matches your size, your region, your sound.',
         },
         {
-          eyebrow: '→ Sync',
-          title: 'Rehearsals, without the chase.',
-          body:
-            'Each member drops their availability once. Klano proposes the slot that works for everyone — and reminds you the day before.',
-          pills: [{ variant: 'acid', label: 'Active' }],
+          icon: iconBolt,
+          title: 'Outreach drafts',
+          body: 'Personal emails in DE or EN, in your band\'s voice. You read, click, send.',
         },
         {
-          eyebrow: '→ Inbox AI',
-          title: 'Replies, understood.',
-          body:
-            'When a venue replies, Klano reads the message, extracts dates, fees, technical specs — and tells you what to decide. No more lost threads in three different inboxes.',
-          pills: [
-            { variant: 'default', label: 'Beta' },
-            { variant: 'default', label: 'DE / EN' },
-          ],
+          icon: iconInbox,
+          title: 'Inbox AI',
+          body: 'Replies from venues are classified: date, fee, tech specs extracted.',
+        },
+        {
+          icon: iconCalendar,
+          title: 'Auto follow-ups',
+          body: 'After 7 and 14 days without reply, Klano follows up gently. Personal, not generic.',
+        },
+        {
+          icon: iconUsers,
+          title: 'Sync for the band',
+          body: 'Availability in one place. Klano proposes rehearsal slots that work for everyone.',
+        },
+        {
+          icon: iconShield,
+          title: 'Privacy by default',
+          body: 'Data in EU Frankfurt. GDPR-compliant. No third-party trackers.',
         },
       ],
-    },
-    venues: {
-      track: '05',
-      eyebrow: 'The agent in action',
-      heading: ['Three venues.', 'Worth a shot.'] as const,
-      lede:
-        'You ask once. Klano matches your sound, your size, your region. Drafts the outreach. Sends. Follows up. You sign off.',
-      cards: [
-        { rank: '01', match: '94%', region: 'ZRH', name: 'Bogen F', city: 'Zürich', cap: '180', genre: 'Indie', verdict: '★ Top fit' },
-        { rank: '02', match: '89%', region: 'ZRH', name: 'Mascotte', city: 'Zürich', cap: '220', genre: 'All', verdict: 'Strong' },
-        { rank: '03', match: '87%', region: 'WIN', name: 'Sender', city: 'Winterthur', cap: '140', genre: 'Folk', verdict: 'Solid' },
-      ],
-    },
-    trust: {
-      lines: ['From Zürich. Two people.', 'No VC. No tracking.', 'We answer every email.'],
     },
     plans: {
-      track: '07',
-      eyebrow: 'What you get',
-      heading: ['Free when you play.', 'Pro when you book.'] as const,
-      lede:
-        'Beta is free for the first 50 bands. After that, Free stays free forever — Pro takes the work off your plate.',
+      eyebrow: 'Pricing',
+      heading: 'Free in beta. Pro when you book.',
       cards: [
         {
           name: 'Beta',
           price: 'free',
-          priceMeta: 'Spring 2026 · 50 spots',
-          description: 'Full functionality for the first 50 bands. No limit, no catch.',
-          features: [
-            'Everything from Pro',
-            'Weekly calls with the team',
-            'You shape the product',
-            'After beta: 6 months of Pro free',
-          ],
+          priceMeta: '50 spots · Spring 2026',
+          description: 'Full functionality for the first 50 bands. Weekly calls with the team.',
+          features: ['Everything from Pro', 'Weekly calls', 'Direct product input', 'After beta: 6 months Pro free'],
           cta: 'Get a beta seat',
           ctaHref: '#waitlist',
           highlight: true,
@@ -422,11 +290,11 @@ export const copy: Record<
           name: 'Free',
           price: '0 CHF',
           priceMeta: 'forever',
-          description: 'For bands using Klano lightly — the ones playing 4–6 gigs a year.',
+          description: 'For bands with 4–6 gigs a year. Klano stays in the background.',
           features: [
-            'Up to 6 band members',
+            'Up to 6 members',
             '10 outreach emails / month',
-            'Manual inbox sorting',
+            'Manual inbox',
             'Rehearsal proposals',
             'Community support',
           ],
@@ -437,65 +305,46 @@ export const copy: Record<
           name: 'Pro',
           price: '19 CHF',
           priceMeta: 'per month · 14-day trial',
-          description: 'When you book actively and want the agent working for you.',
+          description: 'For active bands. Klano takes the booking job entirely.',
           features: [
-            'Unlimited outreach emails',
+            'Unlimited outreach',
             'Auto follow-ups',
             'AI inbox classification',
             'Unlimited members',
             'Priority support',
-            '190 CHF/year — save 17%',
+            '190 CHF/year · save 17%',
           ],
           cta: 'Try Pro',
           ctaHref: '#waitlist',
         },
       ],
     },
-    marquee: {
-      items: [
-        'Made in Zürich',
-        'For musicians who play',
-        'Closed beta · Spring 2026',
-        'DACH first',
-        'Stop running the band',
-      ],
-    },
     waitlist: {
-      track: '06',
-      eyebrow: 'Closed beta · Spring 2026',
-      heading: ['Stop running the band.', 'Start playing it.'] as const,
-      lede: "We're taking 50 bands into beta. Then we open up.",
+      eyebrow: 'Waitlist',
+      heading: 'Stop running the band.',
+      subline:
+        "We're taking 50 bands into beta — Spring 2026. Drop your email, we'll write when we open up.",
       placeholder: 'band@yourdomain.com',
-      submit: 'Get early access',
+      submit: 'Sign up',
       success: 'You are in.',
-      successPlaceholder: 'We will write in spring.',
+      successPlaceholder: "We'll write in spring.",
       meta: 'No credit card · GDPR · Made in Zürich',
-      timing: {
-        label: 'When do you need this?',
-        options: [
-          { value: 'now', label: 'Right now' },
-          { value: 'soon', label: 'In 3 months' },
-          { value: 'curious', label: 'Just curious' },
-        ],
-      },
     },
     footer: {
-      manifest: 'For the people who keep showing up — and never wanted the manager job.',
+      tagline: 'The booking agent for bands. From Zürich.',
       cols: [
         {
           heading: 'Product',
           links: [
-            { label: 'Booking', href: '/en#features' },
-            { label: 'Sync', href: '/en#features' },
-            { label: 'Inbox AI', href: '/en#features' },
-            { label: 'Pricing', href: '/en/pricing' },
+            { label: 'Features', href: '/en#features' },
+            { label: 'Pricing', href: '/en#pricing' },
+            { label: 'App', href: 'https://app.klano.ai' },
           ],
         },
         {
           heading: 'Klano',
           links: [
             { label: 'Manifesto', href: '/en/manifesto' },
-            { label: 'Press', href: '/en/press' },
             { label: 'Contact', href: 'mailto:hello@klano.ai' },
           ],
         },
@@ -507,10 +356,8 @@ export const copy: Record<
           ],
         },
       ],
-      legalLeft: 'klano.ai · v0 · from Zürich',
-      legalRight: '© 2026',
+      legalLeft: '© 2026 Klano · Zürich',
+      legalRight: 'klano.ai',
     },
   },
 };
-
-export type CopyFor<L extends Locale> = (typeof copy)[L];

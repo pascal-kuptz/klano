@@ -1,0 +1,18 @@
+---
+interface Props {
+  href?: string;
+  class?: string;
+}
+const { href = '/', class: className = '' } = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={[
+    'inline-flex items-center font-display text-[28px] tracking-[-0.025em] text-klano-text no-underline leading-none',
+    className,
+  ]}
+  aria-label="Klano"
+>
+  klano
+</a>

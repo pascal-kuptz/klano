@@ -7,13 +7,14 @@ export const SITE = {
   locales: ['de', 'en'] as const,
   twitter: '@klanoai',
   ogImage: '/og/default.png',
+  themeColor: '#FAFAFA',
   description: {
-    de: 'Klano ist der digitale Bandkollege. Booking, Koordination, Follow-ups — automatisiert, damit Musiker wieder Musiker sein können.',
-    en: "Klano is the digital bandmate. Booking, coordination, follow-ups — automated, so musicians can be musicians again.",
+    de: 'Klano ist der Booking-Agent für Bands. Sucht Venues, schreibt Outreach, hakt nach — automatisch.',
+    en: "Klano is the booking agent for bands. Finds venues, writes outreach, follows up — automatically.",
   },
   tagline: {
-    de: 'Make musicians be musicians.',
-    en: 'Make musicians be musicians.',
+    de: 'Der Booking-Agent für Bands.',
+    en: 'The booking agent for bands.',
   },
 } as const;
 
@@ -25,10 +26,6 @@ export function localizedUrl(path: string, locale: Locale): string {
   return `${SITE.url}/${locale}${clean}`;
 }
 
-/**
- * Schema.org Organization — emitted on every page.
- * @see https://schema.org/Organization
- */
 export function organizationJsonLd() {
   return {
     '@context': 'https://schema.org',
@@ -36,25 +33,12 @@ export function organizationJsonLd() {
     '@id': `${SITE.url}#organization`,
     name: SITE.name,
     url: SITE.url,
-    logo: {
-      '@type': 'ImageObject',
-      url: `${SITE.url}/brand/logo.png`,
-    },
-    sameAs: [
-      // fill in once social profiles exist
-    ],
+    logo: { '@type': 'ImageObject', url: `${SITE.url}/brand/logo.png` },
     description: SITE.description.de,
-    foundingLocation: {
-      '@type': 'Country',
-      name: 'CH',
-    },
+    foundingLocation: { '@type': 'Country', name: 'CH' },
   };
 }
 
-/**
- * Schema.org SoftwareApplication for the Klano product.
- * @see https://schema.org/SoftwareApplication
- */
 export function softwareApplicationJsonLd(locale: Locale) {
   return {
     '@context': 'https://schema.org',
@@ -93,9 +77,6 @@ export function softwareApplicationJsonLd(locale: Locale) {
   };
 }
 
-/**
- * Schema.org WebSite with SearchAction — helps Google understand site structure.
- */
 export function websiteJsonLd(locale: Locale) {
   return {
     '@context': 'https://schema.org',
