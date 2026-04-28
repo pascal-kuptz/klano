@@ -7,10 +7,13 @@ const PUBLIC_PATHS = ['/sign-in', '/auth/callback', '/auth/sign-out', '/onboardi
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
 
-  const supabase = createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
+  // Supabase not configured yet (local dev pre-setup) → skip auth checks.
+  // Onboarding is public; dashboard pages handle missing user gracefully.
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!supabaseUrl || !anon) return response;
+
+  const supabase = createServerClient<Database>(supabaseUrl, anon, {
       cookies: {
         getAll: () =>
           request.cookies.getAll().map(({ name, value }) => ({ name, value })),

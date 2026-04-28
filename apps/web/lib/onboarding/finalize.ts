@@ -55,6 +55,23 @@ export async function finalizeOnboarding(payload: WizardState): Promise<Finalize
 
   const bandId = (band as { id: string }).id;
 
+  // Profile (full_name from wizard "Du" block) — best-effort, ignore errors.
+  if (payload.user.fullName?.trim()) {
+    await supabase
+      .from('profiles')
+      .update({ full_name: payload.user.fullName.trim() })
+      .eq('id', user.id);
+  }
+
+  // Owner's band_members row was created by trigger; set the instrument if provided.
+  if (payload.user.instrument?.trim()) {
+    await supabase
+      .from('band_members')
+      .update({ instrument: payload.user.instrument.trim() })
+      .eq('band_id', bandId)
+      .eq('user_id', user.id);
+  }
+
   // Invitations.
   if (payload.invites.length) {
     await supabase.from('band_invitations').insert(

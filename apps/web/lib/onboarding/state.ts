@@ -20,9 +20,15 @@ export interface InviteDraft {
   instrument?: string;
 }
 
+export interface UserDraft {
+  fullName?: string;
+  instrument?: string;
+}
+
 export interface WizardState {
   step: Step;
   band: BandDraft;
+  user: UserDraft;
   invites: InviteDraft[];
   selectedVenueId?: string;
   /** Locale of the wizard — defaults to DE, set early in step 1 if needed */
@@ -32,6 +38,7 @@ export interface WizardState {
 export const initialState: WizardState = {
   step: 1,
   band: { name: '', genres: [], regions: [] },
+  user: {},
   invites: [],
   locale: 'de',
 };
@@ -41,6 +48,7 @@ export type WizardAction =
   | { type: 'prev' }
   | { type: 'goto'; step: Step }
   | { type: 'patch-band'; patch: Partial<BandDraft> }
+  | { type: 'patch-user'; patch: Partial<UserDraft> }
   | { type: 'set-invites'; invites: InviteDraft[] }
   | { type: 'select-venue'; id: string }
   | { type: 'reset' }
@@ -56,6 +64,8 @@ export function reducer(state: WizardState, action: WizardAction): WizardState {
       return { ...state, step: action.step };
     case 'patch-band':
       return { ...state, band: { ...state.band, ...action.patch } };
+    case 'patch-user':
+      return { ...state, user: { ...state.user, ...action.patch } };
     case 'set-invites':
       return { ...state, invites: action.invites };
     case 'select-venue':

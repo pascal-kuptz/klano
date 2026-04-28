@@ -18,9 +18,24 @@ export async function createServerClient() {
   });
 }
 
+function isConfigured(): boolean {
+  return Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+  );
+}
+
+/**
+ * Returns the current Supabase user, or null if Supabase is not yet configured
+ * (local dev before `.env.local` is set up) or the user is signed out.
+ */
 export async function getUser() {
-  const supabase = await createServerClient();
-  const { data, error } = await supabase.auth.getUser();
-  if (error) return null;
-  return data.user;
+  if (!isConfigured()) return null;
+  try {
+    const supabase = await createServerClient();
+    const { data, error } = await supabase.auth.getUser();
+    if (error) return null;
+    return data.user;
+  } catch {
+    return null;
+  }
 }
