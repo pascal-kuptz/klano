@@ -14,9 +14,18 @@ const { badge, headline, headlineItalic, subline, ctaPrimary, ctaSecondary } = A
 ---
 
 <section class="hero relative min-h-[88vh] flex items-center justify-center pt-32 pb-20 md:pt-36 md:pb-28 overflow-hidden">
-  <!-- Stage layers (background — replace with <img> later) -->
+  <!-- Stage layers (background — swap <img> with own photo later) -->
   <div class="hero-stage" aria-hidden="true">
-    <div class="hero-stage-bg"></div>
+    <img
+      class="hero-stage-img"
+      src="https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=2400&q=80&auto=format&fit=crop"
+      alt=""
+      loading="eager"
+      fetchpriority="high"
+      decoding="async"
+      referrerpolicy="no-referrer"
+    />
+    <div class="hero-stage-tint"></div>
     <div class="hero-stage-grid"></div>
     <div class="hero-stage-vignette"></div>
   </div>
@@ -48,37 +57,48 @@ const { badge, headline, headlineItalic, subline, ctaPrimary, ctaSecondary } = A
 </section>
 
 <style>
-  /* === Stage background — placeholder; swap with <img> later === */
+  /* === Stage background — placeholder image; swap with own photo later === */
   .hero-stage {
     position: absolute;
     inset: 0;
     z-index: 1;
     pointer-events: none;
+    background: var(--color-klano-canvas);
   }
-  .hero-stage-bg {
+  .hero-stage-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    /* Light-theme blend: desaturate slightly so colorful photos don't fight UI */
+    filter: saturate(0.85) contrast(0.95);
+  }
+  /* Soft cream tint over photo so it reads as part of light theme */
+  .hero-stage-tint {
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(ellipse 50% 60% at 75% 25%, rgba(10, 10, 10, 0.05) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 50% at 20% 90%, rgba(10, 10, 10, 0.04) 0%, transparent 70%),
-      linear-gradient(135deg, var(--color-klano-canvas) 0%, var(--color-klano-surface-2) 60%, var(--color-klano-canvas) 100%);
+      linear-gradient(180deg, rgba(250, 250, 250, 0.45) 0%, rgba(250, 250, 250, 0.78) 100%);
   }
   .hero-stage-grid {
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(rgba(10, 10, 10, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(10, 10, 10, 0.04) 1px, transparent 1px);
+      linear-gradient(rgba(10, 10, 10, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(10, 10, 10, 0.05) 1px, transparent 1px);
     background-size: 64px 64px;
     background-position: -1px -1px;
-    -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 90%);
-    mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 90%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 20%, transparent 80%);
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 20%, transparent 80%);
+    opacity: 0.6;
   }
-  /* Soft vignette pushes attention toward the centered text */
+  /* Center vignette keeps focus on the text without over-whitening the photo */
   .hero-stage-vignette {
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse 60% 50% at 50% 55%, rgba(255, 255, 255, 0.55) 0%, transparent 70%);
+    background: radial-gradient(ellipse 55% 45% at 50% 55%, rgba(250, 250, 250, 0.55) 0%, transparent 75%);
   }
 
 </style>
