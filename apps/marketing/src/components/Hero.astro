@@ -9,20 +9,8 @@ interface Props {
   subline: string;
   ctaPrimary: string;
   ctaSecondary: string;
-  /** Optional caption shown in top-right of the hero stage. */
-  stageCaption?: string;
-  stageDetail?: string;
 }
-const {
-  badge,
-  headline,
-  headlineItalic,
-  subline,
-  ctaPrimary,
-  ctaSecondary,
-  stageCaption = 'header image',
-  stageDetail = 'Zürich · backstage · 23:14',
-} = Astro.props;
+const { badge, headline, headlineItalic, subline, ctaPrimary, ctaSecondary } = Astro.props;
 ---
 
 <section class="hero relative min-h-[88vh] flex items-center justify-center pt-32 pb-20 md:pt-36 md:pb-28 overflow-hidden">
@@ -31,23 +19,6 @@ const {
     <div class="hero-stage-bg"></div>
     <div class="hero-stage-grid"></div>
     <div class="hero-stage-vignette"></div>
-  </div>
-
-  <!-- Stage corner mono captions (live on bg) -->
-  <div class="hero-meta" aria-hidden="true">
-    <span class="hero-cap hero-cap-tl">
-      <span class="dot"></span>
-      <span>{stageCaption}</span>
-    </span>
-    <span class="hero-cap hero-cap-tr">
-      <span>1920 × 1080</span>
-    </span>
-    <span class="hero-cap hero-cap-bl">
-      <span>{stageDetail}</span>
-    </span>
-    <span class="hero-cap hero-cap-br">
-      <span>klano · 00</span>
-    </span>
   </div>
 
   <Container>
@@ -110,54 +81,4 @@ const {
     background: radial-gradient(ellipse 60% 50% at 50% 55%, rgba(255, 255, 255, 0.55) 0%, transparent 70%);
   }
 
-  /* === Stage corner captions === */
-  .hero-meta {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    pointer-events: none;
-  }
-  .hero-cap {
-    position: absolute;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    color: var(--color-klano-text-3);
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    border: 1px solid var(--color-klano-border);
-    border-radius: 999px;
-    padding: 6px 12px;
-    top: 96px;
-  }
-  .hero-cap-tl { left: 16px; }
-  .hero-cap-tr { right: 16px; }
-  .hero-cap-bl { top: auto; bottom: 24px; left: 16px; }
-  .hero-cap-br { top: auto; bottom: 24px; right: 16px; }
-  @media (min-width: 768px) {
-    .hero-cap-tl { left: 32px; }
-    .hero-cap-tr { right: 32px; }
-    .hero-cap-bl { left: 32px; bottom: 32px; }
-    .hero-cap-br { right: 32px; bottom: 32px; }
-    .hero-cap { top: 116px; }
-  }
-  @media (min-width: 1280px) {
-    .hero-cap-tl { left: 48px; }
-    .hero-cap-tr { right: 48px; }
-    .hero-cap-bl { left: 48px; }
-    .hero-cap-br { right: 48px; }
-  }
-  /* Hide bottom captions on small screens — too cramped */
-  @media (max-width: 640px) {
-    .hero-cap-bl, .hero-cap-br { display: none; }
-  }
-  .hero-cap .dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: var(--color-klano-success);
-    box-shadow: 0 0 6px rgba(16, 185, 129, 0.5);
-  }
 </style>
