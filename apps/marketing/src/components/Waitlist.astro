@@ -1,8 +1,10 @@
 ---
 import Container from './Container.astro';
 import Button from './Button.astro';
+import SectionLabel from './SectionLabel.astro';
 
 interface Props {
+  num: string;
   eyebrow: string;
   heading: string;
   subline: string;
@@ -13,14 +15,17 @@ interface Props {
   meta: string;
   locale: 'de' | 'en';
 }
-const { eyebrow, heading, subline, placeholder, submit, success, successPlaceholder, meta, locale } =
+const { num, eyebrow, heading, subline, placeholder, submit, success, successPlaceholder, meta, locale } =
   Astro.props;
 ---
 
-<section id="waitlist" class="py-24 md:py-36">
+<section id="waitlist" class="py-24 md:py-36 relative overflow-hidden">
+  <div class="waitlist-glow" aria-hidden="true"></div>
   <Container width="narrow">
-    <div class="text-center">
-      <p class="font-mono text-xs uppercase tracking-[0.08em] text-klano-text-3 mb-4">{eyebrow}</p>
+    <div class="text-center relative">
+      <div class="flex justify-center mb-6">
+        <SectionLabel num={num} label={eyebrow} />
+      </div>
       <h2 class="font-display text-[clamp(2rem,4.5vw,3.25rem)] leading-[1.05] tracking-[-0.025em] text-klano-text">
         {heading}
       </h2>
@@ -47,6 +52,16 @@ const { eyebrow, heading, subline, placeholder, submit, success, successPlacehol
     </div>
   </Container>
 </section>
+
+<style>
+  .waitlist-glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 60% 70% at 50% 100%, rgba(10, 10, 10, 0.04) 0%, transparent 60%);
+  }
+</style>
 
 <script>
   document.querySelectorAll<HTMLFormElement>('form[data-success]').forEach((form) => {

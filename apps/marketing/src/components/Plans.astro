@@ -1,6 +1,7 @@
 ---
 import Container from './Container.astro';
 import Button from './Button.astro';
+import SectionLabel from './SectionLabel.astro';
 
 interface Plan {
   name: string;
@@ -13,17 +14,18 @@ interface Plan {
   highlight?: boolean;
 }
 interface Props {
+  num: string;
   eyebrow: string;
   heading: string;
   cards: readonly Plan[];
 }
-const { eyebrow, heading, cards } = Astro.props;
+const { num, eyebrow, heading, cards } = Astro.props;
 ---
 
-<section id="pricing" class="py-24 md:py-36 bg-klano-surface-2 border-y border-klano-border">
+<section id="pricing" class="py-24 md:py-36 bg-klano-surface-2 border-y border-klano-border relative">
   <Container>
     <div class="max-w-[720px] mb-16 md:mb-20">
-      <p class="font-mono text-xs uppercase tracking-[0.08em] text-klano-text-3 mb-4">{eyebrow}</p>
+      <SectionLabel num={num} label={eyebrow} class="mb-6" />
       <h2 class="font-display text-[clamp(2rem,4vw,3rem)] leading-[1.05] tracking-[-0.02em] text-klano-text">
         {heading}
       </h2>

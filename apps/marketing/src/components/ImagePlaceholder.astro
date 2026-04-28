@@ -1,0 +1,102 @@
+---
+/**
+ * Wireframe placeholder for product screenshots that don't exist yet.
+ * Renders as a subtle dashed-border box with mono "screenshot" label and
+ * a faint diagonal pattern. Replace with <img> once real screenshots ship.
+ */
+interface Props {
+  /** Aspect ratio shorthand: 16/9, 4/3, 1/1, 21/9 etc. Default 16/9. */
+  ratio?: string;
+  /** Override label */
+  label?: string;
+  /** Optional sub-label (e.g. file path / view name) */
+  caption?: string;
+  class?: string;
+}
+const { ratio = '16/9', label = 'screenshot', caption, class: className = '' } = Astro.props;
+---
+
+<div
+  class:list={['image-placeholder', className]}
+  style={`aspect-ratio: ${ratio};`}
+  role="img"
+  aria-label={`${label}${caption ? ` — ${caption}` : ''}`}
+>
+  <div class="ip-pattern" aria-hidden="true"></div>
+  <div class="ip-content">
+    <span class="ip-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2" />
+        <circle cx="9" cy="9" r="2" />
+        <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+      </svg>
+    </span>
+    <span class="ip-label">{label}</span>
+    {caption && <span class="ip-caption">{caption}</span>}
+  </div>
+</div>
+
+<style>
+  .image-placeholder {
+    position: relative;
+    width: 100%;
+    background: var(--color-klano-surface);
+    border: 1px dashed var(--color-klano-border-strong);
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-klano-text-3);
+  }
+  .ip-pattern {
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent 0,
+      transparent 14px,
+      rgba(10, 10, 10, 0.02) 14px,
+      rgba(10, 10, 10, 0.02) 15px
+    );
+  }
+  .ip-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+  .ip-icon {
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-klano-border-strong);
+    border-radius: 8px;
+    background: var(--color-klano-surface);
+    color: var(--color-klano-text-2);
+  }
+  .ip-icon svg {
+    width: 14px;
+    height: 14px;
+  }
+  .ip-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-klano-text-3);
+  }
+  .ip-caption {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--color-klano-text-3);
+    opacity: 0.7;
+    margin-top: 2px;
+  }
+</style>

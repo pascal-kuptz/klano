@@ -1,5 +1,8 @@
 ---
 import Container from './Container.astro';
+import SectionLabel from './SectionLabel.astro';
+import ImagePlaceholder from './ImagePlaceholder.astro';
+import CornerBrackets from './CornerBrackets.astro';
 
 interface FeatureCard {
   icon: string;
@@ -7,50 +10,228 @@ interface FeatureCard {
   body: string;
 }
 interface Props {
+  num: string;
   eyebrow: string;
   heading: string;
   cards: readonly FeatureCard[];
+  /** Mock screenshot captions for placeholders, pulled from copy */
+  shotCaptions?: { hero: string; inbox: string; sync: string };
 }
-const { eyebrow, heading, cards } = Astro.props;
+const { num, eyebrow, heading, cards, shotCaptions } = Astro.props;
 ---
 
-<section id="features" class="py-24 md:py-36">
+<section id="features" class="py-24 md:py-36 relative">
+  <span class="absolute inset-x-0 top-0 h-px bg-klano-border" aria-hidden="true"></span>
   <Container>
-    <div class="max-w-[720px] mb-16 md:mb-20">
-      <p class="font-mono text-xs uppercase tracking-[0.08em] text-klano-text-3 mb-4">{eyebrow}</p>
+    <div class="max-w-[720px] mb-14 md:mb-20">
+      <SectionLabel num={num} label={eyebrow} class="mb-6" />
       <h2 class="font-display text-[clamp(2rem,4vw,3rem)] leading-[1.05] tracking-[-0.02em] text-klano-text">
         {heading}
       </h2>
     </div>
 
-    <div class="grid gap-4 md:grid-cols-3 md:gap-5">
-      {
-        cards.map((card) => (
-          <article class="feat-card">
-            <div class="feat-icon" aria-hidden="true" set:html={card.icon} />
-            <h3 class="feat-title">{card.title}</h3>
-            <p class="feat-body">{card.body}</p>
-          </article>
-        ))
-      }
+    <div class="bento">
+      {/* HERO — wide top, with screenshot placeholder */}
+      <article class="feat feat-hero">
+        <CornerBrackets />
+        <div class="feat-text">
+          <div class="feat-icon-row">
+            <span class="feat-icon" aria-hidden="true" set:html={cards[0]?.icon} />
+            <span class="feat-tag">01</span>
+          </div>
+          <h3 class="feat-title-lg">{cards[0]?.title}</h3>
+          <p class="feat-body">{cards[0]?.body}</p>
+        </div>
+        <div class="feat-shot">
+          <ImagePlaceholder ratio="16/10" label="screenshot" caption={shotCaptions?.hero ?? 'app.klano.ai/venues'} />
+        </div>
+      </article>
+
+      {/* MID 1 — Outreach Drafts (narrow, text only) */}
+      <article class="feat feat-narrow">
+        <CornerBrackets />
+        <div class="feat-icon-row">
+          <span class="feat-icon" aria-hidden="true" set:html={cards[1]?.icon} />
+          <span class="feat-tag">02</span>
+        </div>
+        <h3 class="feat-title">{cards[1]?.title}</h3>
+        <p class="feat-body">{cards[1]?.body}</p>
+      </article>
+
+      {/* MID 2 — Inbox AI (with placeholder) */}
+      <article class="feat feat-shot-card">
+        <CornerBrackets />
+        <div class="feat-shot feat-shot-tight">
+          <ImagePlaceholder ratio="4/3" label="screenshot" caption={shotCaptions?.inbox ?? 'app.klano.ai/inbox'} />
+        </div>
+        <div class="feat-text">
+          <div class="feat-icon-row">
+            <span class="feat-icon" aria-hidden="true" set:html={cards[2]?.icon} />
+            <span class="feat-tag">03</span>
+          </div>
+          <h3 class="feat-title">{cards[2]?.title}</h3>
+          <p class="feat-body">{cards[2]?.body}</p>
+        </div>
+      </article>
+
+      {/* MID 3 — Auto Follow-ups (text only, narrow) */}
+      <article class="feat feat-narrow">
+        <CornerBrackets />
+        <div class="feat-icon-row">
+          <span class="feat-icon" aria-hidden="true" set:html={cards[3]?.icon} />
+          <span class="feat-tag">04</span>
+        </div>
+        <h3 class="feat-title">{cards[3]?.title}</h3>
+        <p class="feat-body">{cards[3]?.body}</p>
+      </article>
+
+      {/* BOTTOM ROW — asymmetric 7/5 */}
+      {/* BL — Sync (wider, with placeholder) */}
+      <article class="feat feat-bottom-wide">
+        <CornerBrackets />
+        <div class="feat-icon-row">
+          <span class="feat-icon" aria-hidden="true" set:html={cards[4]?.icon} />
+          <span class="feat-tag">05</span>
+        </div>
+        <h3 class="feat-title">{cards[4]?.title}</h3>
+        <p class="feat-body">{cards[4]?.body}</p>
+        <div class="feat-shot feat-shot-bottom">
+          <ImagePlaceholder ratio="21/9" label="screenshot" caption={shotCaptions?.sync ?? 'app.klano.ai/sync'} />
+        </div>
+      </article>
+
+      {/* BR — Privacy (narrow, text + accent bar) */}
+      <article class="feat feat-bottom-narrow feat-accent">
+        <CornerBrackets />
+        <div class="feat-icon-row">
+          <span class="feat-icon feat-icon-dark" aria-hidden="true" set:html={cards[5]?.icon} />
+          <span class="feat-tag feat-tag-light">06</span>
+        </div>
+        <h3 class="feat-title feat-title-light">{cards[5]?.title}</h3>
+        <p class="feat-body feat-body-light">{cards[5]?.body}</p>
+        <span class="feat-accent-meta">EU-Frankfurt · DSG · DSGVO</span>
+      </article>
     </div>
   </Container>
 </section>
 
 <style>
-  .feat-card {
+  .bento {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  @media (min-width: 768px) {
+    .bento {
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+    .feat-hero          { grid-column: span 12; }
+    .feat-narrow        { grid-column: span 6; }
+    .feat-shot-card     { grid-column: span 6; }
+    .feat-bottom-wide   { grid-column: span 7; }
+    .feat-bottom-narrow { grid-column: span 5; }
+  }
+  @media (min-width: 1024px) {
+    .feat-hero          { grid-column: span 12; }
+    .feat-narrow        { grid-column: span 4; }
+    .feat-shot-card     { grid-column: span 4; }
+    /* second narrow row uses spans for variety */
+  }
+
+  .feat {
+    position: relative;
     background: var(--color-klano-surface);
     border: 1px solid var(--color-klano-border);
     border-radius: 20px;
     padding: 28px;
     transition: border-color 200ms, transform 200ms;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
   }
-  @media (min-width: 768px) {
-    .feat-card { padding: 32px; }
-  }
-  .feat-card:hover {
+  @media (min-width: 768px) { .feat { padding: 32px; } }
+  .feat:hover {
     border-color: var(--color-klano-border-strong);
     transform: translateY(-2px);
+  }
+
+  /* Hero card: text left, screenshot right on desktop */
+  .feat-hero {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 28px;
+  }
+  @media (min-width: 1024px) {
+    .feat-hero {
+      grid-template-columns: 5fr 7fr;
+      gap: 56px;
+      align-items: center;
+      padding: 48px;
+    }
+  }
+
+  /* Shot card: screenshot top, text bottom */
+  .feat-shot-card {
+    padding: 0;
+    overflow: hidden;
+  }
+  .feat-shot-card .feat-shot-tight {
+    padding: 14px 14px 0;
+  }
+  .feat-shot-card .feat-text {
+    padding: 20px 28px 28px;
+  }
+
+  /* Bottom-wide: text top, screenshot bottom */
+  .feat-bottom-wide {
+    padding-bottom: 0;
+    overflow: hidden;
+  }
+  .feat-bottom-wide .feat-shot-bottom {
+    margin: 8px -1px -1px;
+  }
+  .feat-bottom-wide .feat-shot-bottom :global(.image-placeholder) {
+    border-radius: 14px 14px 0 0;
+    border-bottom: 0;
+  }
+
+  /* Accent dark card for Privacy */
+  .feat-accent {
+    background: var(--color-klano-text);
+    border-color: var(--color-klano-text);
+    color: var(--color-klano-action-fg);
+  }
+  .feat-accent:hover {
+    border-color: var(--color-klano-text);
+    transform: translateY(-2px);
+  }
+  .feat-icon-dark {
+    background: rgba(255,255,255,0.08) !important;
+    border-color: rgba(255,255,255,0.15) !important;
+    color: var(--color-klano-action-fg) !important;
+  }
+  .feat-tag-light {
+    color: rgba(255,255,255,0.5) !important;
+  }
+  .feat-title-light { color: var(--color-klano-action-fg); }
+  .feat-body-light { color: rgba(255,255,255,0.7); }
+  .feat-accent-meta {
+    margin-top: auto;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.5);
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+
+  .feat-icon-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
   }
   .feat-icon {
     width: 36px; height: 36px;
@@ -58,23 +239,46 @@ const { eyebrow, heading, cards } = Astro.props;
     border: 1px solid var(--color-klano-border);
     border-radius: 10px;
     color: var(--color-klano-text);
-    margin-bottom: 20px;
+    background: var(--color-klano-canvas);
   }
-  .feat-icon :global(svg) {
-    width: 18px; height: 18px;
-    stroke-width: 1.5;
+  .feat-icon :global(svg) { width: 18px; height: 18px; stroke-width: 1.5; }
+  .feat-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--color-klano-text-3);
+    tabular-nums: true;
   }
+
   .feat-title {
     font-family: var(--font-sans);
     font-size: 18px;
     font-weight: 600;
     letter-spacing: -0.015em;
     color: var(--color-klano-text);
-    margin-bottom: 8px;
+    margin: 4px 0 4px;
+  }
+  .feat-title-lg {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--color-klano-text);
+    margin: 8px 0 4px;
   }
   .feat-body {
     color: var(--color-klano-text-2);
     font-size: 14px;
     line-height: 1.6;
+  }
+  .feat-text {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .feat-shot {
+    display: flex;
+    align-items: stretch;
   }
 </style>

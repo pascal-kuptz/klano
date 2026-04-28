@@ -14,9 +14,10 @@ interface Props {
 const { badge, headline, headlineItalic, subline, ctaPrimary, ctaSecondary } = Astro.props;
 ---
 
-<section class="pt-36 pb-20 md:pt-44 md:pb-28 relative">
+<section class="pt-36 pb-20 md:pt-44 md:pb-28 relative overflow-hidden">
+  <div class="hero-glow" aria-hidden="true"></div>
   <Container>
-    <div class="flex flex-col items-center text-center max-w-[860px] mx-auto">
+    <div class="flex flex-col items-center text-center max-w-[860px] mx-auto relative">
       <span
         class="inline-flex items-center gap-2 h-7 px-3 rounded-full bg-klano-surface border border-klano-border text-[12px] text-klano-text-2 font-mono tracking-tight mb-8"
       >
@@ -40,3 +41,15 @@ const { badge, headline, headlineItalic, subline, ctaPrimary, ctaSecondary } = A
     </div>
   </Container>
 </section>
+
+<style>
+  .hero-glow {
+    position: absolute;
+    inset: -10% -10% auto -10%;
+    height: 80%;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 50% 60% at 50% 0%, rgba(10, 10, 10, 0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 80% 40% at 50% 100%, rgba(255, 255, 255, 0.6) 0%, transparent 70%);
+  }
+</style>

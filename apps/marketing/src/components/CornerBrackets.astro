@@ -1,0 +1,34 @@
+---
+/**
+ * Four small corner crosshairs that frame an element. Pure decoration —
+ * gives the framed element a "constructed" feel without adding noise.
+ */
+---
+
+<span class="cb cb-tl" aria-hidden="true"></span>
+<span class="cb cb-tr" aria-hidden="true"></span>
+<span class="cb cb-bl" aria-hidden="true"></span>
+<span class="cb cb-br" aria-hidden="true"></span>
+
+<style>
+  .cb {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    color: var(--color-klano-border-strong);
+    z-index: 2;
+    pointer-events: none;
+  }
+  .cb::before,
+  .cb::after {
+    content: '';
+    position: absolute;
+    background: currentColor;
+  }
+  .cb::before { width: 100%; height: 1px; top: 50%; }
+  .cb::after  { width: 1px; height: 100%; left: 50%; }
+  .cb-tl { top: -6px;    left: -6px; }
+  .cb-tr { top: -6px;    right: -6px; }
+  .cb-bl { bottom: -6px; left: -6px; }
+  .cb-br { bottom: -6px; right: -6px; }
+</style>

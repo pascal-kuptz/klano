@@ -18,6 +18,8 @@ export const copy: Record<Locale, {
     ctaSecondary: string;
   };
   demo: {
+    num: string;
+    sectionLabel: string;
     bandLabel: string;
     statsLabel: string;
     cols: readonly [string, string, string, string];
@@ -27,11 +29,13 @@ export const copy: Record<Locale, {
     aiCta: string;
   };
   features: {
+    num: string;
     eyebrow: string;
     heading: string;
     cards: readonly { icon: string; title: string; body: string }[];
   };
   plans: {
+    num: string;
     eyebrow: string;
     heading: string;
     cards: readonly {
@@ -45,7 +49,16 @@ export const copy: Record<Locale, {
       highlight?: boolean;
     }[];
   };
+  personal: {
+    num: string;
+    eyebrow: string;
+    heading: string;
+    body: string;
+    signoff: string;
+    people: { initials: string; name: string; role: string }[];
+  };
   waitlist: {
+    num: string;
     eyebrow: string;
     heading: string;
     subline: string;
@@ -74,6 +87,8 @@ export const copy: Record<Locale, {
       ctaSecondary: 'Funktionen ansehen',
     },
     demo: {
+      num: '01',
+      sectionLabel: 'Live in der App',
       bandLabel: 'Halbnacht — Bookings',
       statsLabel: '6 aktiv · 1 neue Antwort',
       cols: ['Venue', 'Status', 'Match', 'Letzte Aktion'],
@@ -88,6 +103,7 @@ export const copy: Record<Locale, {
       aiCta: 'Bestätigen',
     },
     features: {
+      num: '02',
       eyebrow: 'Funktionen',
       heading: 'Sechs Stunden pro Woche, die ihr zurückbekommt.',
       cards: [
@@ -124,6 +140,7 @@ export const copy: Record<Locale, {
       ],
     },
     plans: {
+      num: '03',
       eyebrow: 'Preise',
       heading: 'Frei in der Beta. Pro, wenn ihr aktiv bookt.',
       cards: [
@@ -170,7 +187,20 @@ export const copy: Record<Locale, {
         },
       ],
     },
+    personal: {
+      num: '04',
+      eyebrow: 'Wer wir sind',
+      heading: 'Zwei Leute aus Zürich. Wir bauen das, weil uns die Band wichtig ist.',
+      body:
+        'Pascal hat 12 Jahre lang die Band-Orga gemacht und es gehasst. Marc baut seit 8 Jahren AI-Tools. Klano ist das, was wir uns gewünscht hätten — und was wir jetzt teilen.',
+      signoff: 'Schreib uns: hello@klano.ai',
+      people: [
+        { initials: 'PK', name: 'Pascal', role: 'Produkt · Zürich' },
+        { initials: 'MR', name: 'Marc', role: 'Engineering · Zürich' },
+      ],
+    },
     waitlist: {
+      num: '05',
       eyebrow: 'Warteliste',
       heading: 'Hör auf, die Band zu managen.',
       subline:
@@ -223,6 +253,8 @@ export const copy: Record<Locale, {
       ctaSecondary: 'See features',
     },
     demo: {
+      num: '01',
+      sectionLabel: 'Live in the app',
       bandLabel: 'Halbnacht — Bookings',
       statsLabel: '6 active · 1 new reply',
       cols: ['Venue', 'Status', 'Match', 'Last activity'],
@@ -237,6 +269,7 @@ export const copy: Record<Locale, {
       aiCta: 'Confirm',
     },
     features: {
+      num: '02',
       eyebrow: 'Features',
       heading: 'Six hours a week — back in your calendar.',
       cards: [
@@ -273,6 +306,7 @@ export const copy: Record<Locale, {
       ],
     },
     plans: {
+      num: '03',
       eyebrow: 'Pricing',
       heading: 'Free in beta. Pro when you book.',
       cards: [
@@ -319,7 +353,20 @@ export const copy: Record<Locale, {
         },
       ],
     },
+    personal: {
+      num: '04',
+      eyebrow: 'Who we are',
+      heading: 'Two people from Zürich. We build this because we care about the band.',
+      body:
+        'Pascal ran band logistics for 12 years and hated it. Marc has been building AI tools for 8 years. Klano is what we wished we had — and now we share it.',
+      signoff: 'Write us: hello@klano.ai',
+      people: [
+        { initials: 'PK', name: 'Pascal', role: 'Product · Zürich' },
+        { initials: 'MR', name: 'Marc', role: 'Engineering · Zürich' },
+      ],
+    },
     waitlist: {
+      num: '05',
       eyebrow: 'Waitlist',
       heading: 'Stop running the band.',
       subline:

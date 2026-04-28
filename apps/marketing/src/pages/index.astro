@@ -5,6 +5,7 @@ import Hero from '../components/Hero.astro';
 import Demo from '../components/Demo.astro';
 import Features from '../components/Features.astro';
 import Plans from '../components/Plans.astro';
+import Personal from '../components/Personal.astro';
 import Waitlist from '../components/Waitlist.astro';
 import Footer from '../components/Footer.astro';
 import { copy } from '../lib/copy';
@@ -45,12 +46,7 @@ const faqJsonLd = {
 ---
 
 <Base title={SITE.tagline.de} description={SITE.description.de} jsonLd={[faqJsonLd]}>
-  <Nav
-    primaryCta={c.nav.primaryCta}
-    secondaryLabel={c.nav.secondaryLabel}
-    secondaryHref="#features"
-    homeHref="/"
-  />
+  <Nav primaryCta={c.nav.primaryCta} secondaryLabel={c.nav.secondaryLabel} secondaryHref="#features" homeHref="/" />
   <main>
     <Hero
       badge={c.hero.badge}
@@ -61,6 +57,8 @@ const faqJsonLd = {
       ctaSecondary={c.hero.ctaSecondary}
     />
     <Demo
+      num={c.demo.num}
+      sectionLabel={c.demo.sectionLabel}
       bandLabel={c.demo.bandLabel}
       statsLabel={c.demo.statsLabel}
       cols={c.demo.cols}
@@ -69,9 +67,28 @@ const faqJsonLd = {
       aiText={c.demo.aiText}
       aiCta={c.demo.aiCta}
     />
-    <Features eyebrow={c.features.eyebrow} heading={c.features.heading} cards={c.features.cards} />
-    <Plans eyebrow={c.plans.eyebrow} heading={c.plans.heading} cards={c.plans.cards} />
+    <Features
+      num={c.features.num}
+      eyebrow={c.features.eyebrow}
+      heading={c.features.heading}
+      cards={c.features.cards}
+      shotCaptions={{
+        hero: 'app.klano.ai/venues',
+        inbox: 'app.klano.ai/inbox',
+        sync: 'app.klano.ai/sync',
+      }}
+    />
+    <Plans num={c.plans.num} eyebrow={c.plans.eyebrow} heading={c.plans.heading} cards={c.plans.cards} />
+    <Personal
+      num={c.personal.num}
+      eyebrow={c.personal.eyebrow}
+      heading={c.personal.heading}
+      body={c.personal.body}
+      signoff={c.personal.signoff}
+      people={c.personal.people}
+    />
     <Waitlist
+      num={c.waitlist.num}
       eyebrow={c.waitlist.eyebrow}
       heading={c.waitlist.heading}
       subline={c.waitlist.subline}

@@ -1,5 +1,7 @@
 ---
 import Container from './Container.astro';
+import CornerBrackets from './CornerBrackets.astro';
+import SectionLabel from './SectionLabel.astro';
 
 interface BookingRow {
   venue: string;
@@ -11,6 +13,8 @@ interface BookingRow {
 interface Props {
   /** Browser chrome URL */
   url?: string;
+  num: string;
+  sectionLabel: string;
   bandLabel: string;
   statsLabel: string;
   rows: readonly BookingRow[];
@@ -20,8 +24,18 @@ interface Props {
   aiText: string;
   aiCta: string;
 }
-const { url = 'app.klano.ai/bookings', bandLabel, statsLabel, rows, cols, aiLabel, aiText, aiCta } =
-  Astro.props;
+const {
+  url = 'app.klano.ai/bookings',
+  num,
+  sectionLabel,
+  bandLabel,
+  statsLabel,
+  rows,
+  cols,
+  aiLabel,
+  aiText,
+  aiCta,
+} = Astro.props;
 
 const statusStyle: Record<BookingRow['status'], string> = {
   sent: 'bg-klano-surface-2 text-klano-text-2 border-klano-border',
@@ -33,6 +47,11 @@ const statusStyle: Record<BookingRow['status'], string> = {
 
 <section class="pt-4 pb-24 md:pb-32">
   <Container>
+    <div class="flex justify-center mb-6">
+      <SectionLabel num={num} label={sectionLabel} />
+    </div>
+    <div class="relative mock-wrap">
+      <CornerBrackets />
     <div class="mock-frame">
       <div class="chrome">
         <div class="chrome-dots">
@@ -87,10 +106,14 @@ const statusStyle: Record<BookingRow['status'], string> = {
         </div>
       </div>
     </div>
+    </div>
   </Container>
 </section>
 
 <style>
+  .mock-wrap {
+    /* Slot for CornerBrackets */
+  }
   .mock-frame {
     background: var(--color-klano-surface);
     border: 1px solid var(--color-klano-border);

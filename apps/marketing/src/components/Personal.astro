@@ -1,0 +1,160 @@
+---
+import Container from './Container.astro';
+import SectionLabel from './SectionLabel.astro';
+import CornerBrackets from './CornerBrackets.astro';
+
+interface Props {
+  num: string;
+  eyebrow: string;
+  heading: string;
+  body: string;
+  signoff: string;
+  people: { initials: string; name: string; role: string }[];
+}
+const { num, eyebrow, heading, body, signoff, people } = Astro.props;
+---
+
+<section class="py-24 md:py-32 relative">
+  <Container>
+    <div class="personal-card relative">
+      <CornerBrackets />
+      <div class="personal-grid">
+        <div>
+          <SectionLabel num={num} label={eyebrow} class="mb-6" />
+          <h2 class="font-display text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.1] tracking-[-0.02em] text-klano-text">
+            {heading}
+          </h2>
+          <p class="mt-6 text-base leading-[1.6] text-klano-text-2 max-w-[520px]">{body}</p>
+
+          <a href="mailto:hello@klano.ai" class="signoff">
+            {signoff}
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+
+        <ul class="people">
+          {
+            people.map((p) => (
+              <li>
+                <div class="person-row">
+                  <span class="avatar">{p.initials}</span>
+                  <div>
+                    <span class="person-name">{p.name}</span>
+                    <span class="person-role">{p.role}</span>
+                  </div>
+                </div>
+              </li>
+            ))
+          }
+          <li class="person-meta">
+            <span class="meta-line"></span>
+            <span class="meta-text">Aus Zürich · seit 2026</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .personal-card {
+    background: var(--color-klano-surface);
+    border: 1px solid var(--color-klano-border);
+    border-radius: 28px;
+    padding: 40px 32px;
+  }
+  @media (min-width: 768px) {
+    .personal-card { padding: 56px; }
+  }
+
+  .personal-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  @media (min-width: 1024px) {
+    .personal-grid {
+      grid-template-columns: 7fr 5fr;
+      gap: 64px;
+      align-items: start;
+    }
+  }
+
+  .signoff {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 28px;
+    font-size: 14px;
+    color: var(--color-klano-text);
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-klano-border-strong);
+    padding-bottom: 4px;
+    transition: border-color 150ms;
+  }
+  .signoff:hover {
+    border-bottom-color: var(--color-klano-text);
+  }
+
+  .people {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .person-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px;
+    border: 1px solid var(--color-klano-border);
+    border-radius: 14px;
+    background: var(--color-klano-canvas);
+  }
+  .avatar {
+    width: 40px; height: 40px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--color-klano-text);
+    color: var(--color-klano-action-fg);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    flex-shrink: 0;
+  }
+  .person-name {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-klano-text);
+    line-height: 1.2;
+  }
+  .person-role {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--color-klano-text-3);
+    margin-top: 2px;
+  }
+  .person-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 4px;
+  }
+  .meta-line {
+    flex: 1;
+    height: 1px;
+    background: var(--color-klano-border);
+  }
+  .meta-text {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-klano-text-3);
+  }
+</style>

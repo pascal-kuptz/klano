@@ -52,6 +52,27 @@
   }
   body {
     overflow-x: clip;
+    position: relative;
+  }
+  /* Fading 1px line grid — fixed bg, fades to transparent past 70% scroll-y on hero. */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      linear-gradient(rgba(10, 10, 10, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(10, 10, 10, 0.035) 1px, transparent 1px);
+    background-size: 56px 56px;
+    background-position: -1px -1px;
+    -webkit-mask-image: linear-gradient(180deg, black 0%, black 45%, transparent 95%);
+    mask-image: linear-gradient(180deg, black 0%, black 45%, transparent 95%);
+  }
+  /* Page content above grid */
+  body > * {
+    position: relative;
+    z-index: 1;
   }
   ::selection {
     background: var(--color-klano-text);
