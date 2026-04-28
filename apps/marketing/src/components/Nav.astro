@@ -5,40 +5,57 @@ import Button from './Button.astro';
 interface Props {
   waitlistLabel: string;
   menuLabel: string;
+  howLabel: string;
   homeHref?: string;
 }
-const { waitlistLabel, menuLabel, homeHref = '/' } = Astro.props;
+const { waitlistLabel, menuLabel, howLabel, homeHref = '/' } = Astro.props;
 ---
 
-<nav id="site-nav" class="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-klano-void/65 transition-colors duration-300">
-  <div class="max-w-screen-xl mx-auto flex items-center justify-between px-4 py-4 md:px-8 md:py-5 xl:px-12 xl:py-6">
-    <LogoMark href={homeHref} />
-    <div class="flex items-center gap-2">
+<nav id="site-nav" class="fixed top-0 inset-x-0 z-50 transition-colors duration-300">
+  <div class="nav-row max-w-screen-xl mx-auto flex items-center justify-between px-4 py-4 md:px-8 md:py-5 xl:px-12 xl:py-6">
+    <LogoMark href={homeHref} size={40} />
+    <div class="flex items-center gap-3">
+      <a href="#how" class="hidden md:inline-flex nav-link">{howLabel}</a>
       <Button
         variant="primary"
         href="#waitlist"
-        class="!min-h-[44px] !px-5 !py-2.5 !text-sm"
+        class="!min-h-[44px] !px-5 !py-2.5 !text-[13px]"
       >
         {waitlistLabel}
       </Button>
-      <button
-        type="button"
-        aria-label={menuLabel}
-        class="hidden md:inline-flex bg-transparent border border-klano-edge text-klano-pearl font-mono text-[11px] tracking-[0.18em] uppercase px-4 py-2.5 rounded-xl hover:border-klano-mist transition-colors"
-      >
-        {menuLabel}
-      </button>
     </div>
   </div>
 </nav>
 
+<style>
+  #site-nav {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: rgba(10, 10, 11, 0.5);
+  }
+  #site-nav.is-scrolled {
+    background: rgba(10, 10, 11, 0.92);
+    border-bottom: 1px solid var(--color-klano-edge-soft);
+  }
+  .nav-link {
+    color: var(--color-klano-bone);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 200ms cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  .nav-link:hover {
+    color: var(--color-klano-pearl);
+    background: var(--color-klano-card);
+  }
+</style>
+
 <script>
   const nav = document.getElementById('site-nav');
   if (nav) {
-    const onScroll = () => {
-      nav.classList.toggle('bg-klano-void/95', window.scrollY > 16);
-      nav.classList.toggle('bg-klano-void/65', window.scrollY <= 16);
-    };
+    const onScroll = () => nav.classList.toggle('is-scrolled', window.scrollY > 16);
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
   }

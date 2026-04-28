@@ -1,5 +1,5 @@
 ---
-import Eyebrow from './Eyebrow.astro';
+import TrackMarker from './TrackMarker.astro';
 import Pill from './Pill.astro';
 
 interface FeatureCard {
@@ -9,41 +9,66 @@ interface FeatureCard {
   pills: { variant: 'default' | 'acid'; label: string }[];
 }
 interface Props {
+  track: string;
   eyebrow: string;
   heading: readonly [string, string];
   lede: string;
   cards: readonly FeatureCard[];
 }
-const { eyebrow, heading, lede, cards } = Astro.props;
+const { track, eyebrow, heading, lede, cards } = Astro.props;
 ---
 
 <section id="features" class="reveal py-24 lg:py-36">
   <div class="max-w-screen-xl mx-auto px-4 md:px-8 xl:px-12">
-    <div class="features-header mb-14 max-w-[800px]">
-      <Eyebrow variant="coral" class="mb-6">{eyebrow}</Eyebrow>
-      <h2 class="features-heading">
+    <div class="features-header mb-16 lg:mb-20 max-w-[820px]">
+      <TrackMarker num={track} label={eyebrow} />
+      <h2 class="features-heading mt-6">
         {heading[0]} <em>{heading[1]}</em>
       </h2>
-      <p class="text-klano-bone text-lg leading-relaxed mt-6 max-w-[560px]">{lede}</p>
+      <p class="text-klano-bone text-base md:text-lg leading-relaxed mt-8 max-w-[520px]">{lede}</p>
     </div>
 
-    <div class="grid gap-6 lg:grid-cols-2 lg:auto-rows-fr">
+    <div class="grid gap-5 lg:grid-cols-12 lg:gap-6">
+      {/* Card 1 — wide hero (Booking) */}
+      <article class="fcard fcard-hero lg:col-span-12">
+        <div class="fcard-body-col">
+          <span class="fcard-eyebrow">{cards[0]?.eyebrow}</span>
+          <h3 class="fcard-title fcard-title-hero">{cards[0]?.title}</h3>
+          <p class="fcard-text">{cards[0]?.body}</p>
+          <div class="fcard-pills">
+            {cards[0]?.pills.map((p) => <Pill variant={p.variant}>{p.label}</Pill>)}
+          </div>
+        </div>
+        <div class="fcard-visual">
+          <div class="mini-thread" aria-hidden="true">
+            <div class="mt-line mt-user">
+              <span class="mt-meta">Du · 06:14</span>
+              <span class="mt-msg">Find Venues nahe Zürich. ~150 Cap.</span>
+            </div>
+            <div class="mt-line mt-bot">
+              <span class="mt-meta">Klano · 06:14</span>
+              <span class="mt-msg"><strong>3 Treffer.</strong> Soll ich Outreach draften?</span>
+            </div>
+            <div class="mt-line mt-user">
+              <span class="mt-meta">Du · 06:21</span>
+              <span class="mt-msg">Ja — für Bogen F.</span>
+            </div>
+            <div class="mt-line mt-bot mt-status">
+              <span class="mt-status-dot"></span>
+              <span class="mt-status-text">Mail gesendet · Tracking aktiv</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      {/* Card 2 + 3 — half width */}
       {
-        cards.map((card, i) => (
-          <article
-            class:list={[
-              'fcard bg-klano-card border border-klano-edge rounded-3xl p-7 md:p-10 lg:p-11',
-              'min-h-[420px] md:min-h-[480px] flex flex-col',
-              'hover:border-klano-mist hover:-translate-y-1 transition-all duration-300',
-              i === 2 && 'lg:col-span-2',
-            ]}
-          >
-            <span class="font-mono text-[11px] tracking-[0.22em] uppercase text-klano-coral mb-6">
-              {card.eyebrow}
-            </span>
+        cards.slice(1).map((card) => (
+          <article class="fcard fcard-half lg:col-span-6">
+            <span class="fcard-eyebrow">{card.eyebrow}</span>
             <h3 class="fcard-title">{card.title}</h3>
-            <p class="text-klano-sand text-base leading-relaxed mb-8 max-w-[460px]">{card.body}</p>
-            <div class="flex items-center gap-3 mt-auto flex-wrap">
+            <p class="fcard-text">{card.body}</p>
+            <div class="fcard-pills">
               {card.pills.map((p) => (
                 <Pill variant={p.variant}>{p.label}</Pill>
               ))}
@@ -60,9 +85,9 @@ const { eyebrow, heading, lede, cards } = Astro.props;
     font-family: 'Fraunces Variable', Georgia, serif;
     font-variation-settings: 'opsz' 144, 'SOFT' 30, 'WONK' 1;
     font-weight: 800;
-    font-size: clamp(2.5rem, 7vw, 4.5rem);
-    line-height: 0.95;
-    letter-spacing: -0.035em;
+    font-size: clamp(2.25rem, 6vw, 4rem);
+    line-height: 0.98;
+    letter-spacing: -0.04em;
     color: var(--color-klano-pearl);
   }
   .features-heading em {
@@ -71,13 +96,156 @@ const { eyebrow, heading, lede, cards } = Astro.props;
     font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
     color: var(--color-klano-coral);
   }
+
+  .fcard {
+    background: var(--color-klano-card);
+    border: 1px solid var(--color-klano-edge);
+    border-radius: 24px;
+    padding: 28px;
+    transition:
+      border-color 300ms cubic-bezier(0.25, 1, 0.5, 1),
+      transform 300ms cubic-bezier(0.25, 1, 0.5, 1);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  @media (min-width: 768px) {
+    .fcard {
+      padding: 40px;
+    }
+  }
+  .fcard:hover {
+    border-color: var(--color-klano-mist);
+    transform: translateY(-4px);
+  }
+
+  .fcard-hero {
+    display: grid;
+    gap: 32px;
+  }
+  @media (min-width: 1024px) {
+    .fcard-hero {
+      grid-template-columns: 5fr 6fr;
+      gap: 48px;
+      align-items: center;
+      padding: 48px;
+    }
+  }
+
+  .fcard-half {
+    min-height: 360px;
+  }
+
+  .fcard-eyebrow {
+    font-family: 'Geist Mono Variable', ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-klano-coral);
+    margin-bottom: 24px;
+    display: inline-block;
+  }
   .fcard-title {
     font-family: 'Geist Variable', system-ui, sans-serif;
     font-weight: 700;
-    font-size: clamp(1.75rem, 3vw, 2.25rem);
-    line-height: 1.05;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    line-height: 1.1;
     letter-spacing: -0.025em;
     color: var(--color-klano-pearl);
     margin-bottom: 16px;
+  }
+  .fcard-title-hero {
+    font-size: clamp(1.875rem, 4vw, 2.75rem);
+    line-height: 1.05;
+  }
+  .fcard-text {
+    color: var(--color-klano-sand);
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+    max-width: 460px;
+  }
+  .fcard-pills {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: auto;
+  }
+
+  /* Mini thread mockup */
+  .mini-thread {
+    background: var(--color-klano-stage);
+    border: 1px solid var(--color-klano-edge-soft);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .mt-line {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .mt-meta {
+    font-family: 'Geist Mono Variable', ui-monospace, monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-klano-fog);
+  }
+  .mt-msg {
+    background: var(--color-klano-spotlight);
+    border: 1px solid var(--color-klano-edge);
+    color: var(--color-klano-bone);
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    align-self: flex-start;
+    max-width: 90%;
+  }
+  .mt-msg strong {
+    color: var(--color-klano-acid);
+    font-weight: 600;
+  }
+  .mt-user .mt-msg {
+    background: transparent;
+    border-color: var(--color-klano-edge-soft);
+    color: var(--color-klano-bone);
+    align-self: flex-end;
+  }
+  .mt-user {
+    align-items: flex-end;
+  }
+  .mt-status {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--color-klano-edge-soft);
+  }
+  .mt-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-klano-acid);
+    box-shadow: 0 0 8px rgba(197, 242, 92, 0.5);
+    animation: blip 2s ease-in-out infinite;
+  }
+  .mt-status-text {
+    font-family: 'Geist Mono Variable', ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-klano-fog);
+  }
+  @keyframes blip {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.3); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mt-status-dot { animation: none; }
   }
 </style>

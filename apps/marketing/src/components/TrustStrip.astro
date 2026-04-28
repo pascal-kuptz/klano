@@ -1,0 +1,51 @@
+---
+interface Props {
+  lines: readonly string[];
+}
+const { lines } = Astro.props;
+---
+
+<section class="trust py-16 md:py-24 border-y border-klano-edge-soft">
+  <div class="max-w-screen-xl mx-auto px-4 md:px-8 xl:px-12">
+    <ul class="trust-list grid gap-6 md:grid-cols-3 md:gap-12">
+      {
+        lines.map((line, i) => (
+          <li class="trust-item">
+            <span class="num">0{i + 1}</span>
+            <span class="line">{line}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .trust-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .trust-item {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-klano-edge-soft);
+  }
+  .trust-item .num {
+    font-family: 'Geist Mono Variable', ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    color: var(--color-klano-fog);
+    flex-shrink: 0;
+  }
+  .trust-item .line {
+    font-family: 'Fraunces Variable', Georgia, serif;
+    font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 0;
+    font-weight: 500;
+    font-size: clamp(1.125rem, 2vw, 1.5rem);
+    line-height: 1.25;
+    color: var(--color-klano-bone);
+  }
+</style>

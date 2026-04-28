@@ -1,32 +1,33 @@
 ---
-import Eyebrow from './Eyebrow.astro';
+import TrackMarker from './TrackMarker.astro';
 
 interface Props {
+  track: string;
   eyebrow: string;
   quote: string;
   attributionName: string;
   attributionRole: string;
 }
-const { eyebrow, quote, attributionName, attributionRole } = Astro.props;
+const { track, eyebrow, quote, attributionName, attributionRole } = Astro.props;
 
-// Wrap a few key phrases in <em> for the editorial italic accent.
-function renderQuote(text: string): string {
+function emphasizeQuote(text: string): string {
+  // Single, well-chosen italic emphasis per locale.
   return text
-    .replace(/handles them\.|löst sie einfach\./g, (m) => `<em>${m}</em>`)
+    .replace(/handles them|löst sie einfach/g, (m) => `<em>${m}</em>`)
     .replace(/on our side|auf unserer Seite/g, (m) => `<em>${m}</em>`);
 }
-const quoteHtml = renderQuote(quote);
+const quoteHtml = emphasizeQuote(quote);
 ---
 
 <section
-  class="reveal bg-klano-cream text-klano-ink py-24 lg:py-36 border-y border-klano-edge relative overflow-hidden"
+  class="reveal bg-klano-cream text-klano-ink py-28 lg:py-44 relative overflow-hidden"
 >
   <div class="max-w-screen-xl mx-auto px-4 md:px-8 xl:px-12">
-    <div class="max-w-[1100px]">
-      <Eyebrow variant="dark" class="mb-12">{eyebrow}</Eyebrow>
-      <p class="pause-quote" set:html={quoteHtml}></p>
-      <div class="grid gap-2 pt-8 mt-14 border-t border-klano-cream-edge max-w-[480px]">
-        <span class="font-bold text-base text-klano-ink">{attributionName}</span>
+    <div class="max-w-[920px]">
+      <TrackMarker num={track} label={eyebrow} variant="cream" />
+      <p class="pause-quote mt-12 lg:mt-20" set:html={quoteHtml}></p>
+      <div class="mt-12 lg:mt-20 pt-6 border-t border-klano-cream-edge max-w-[480px] flex flex-col gap-1.5">
+        <span class="font-bold text-base text-klano-ink">— {attributionName}</span>
         <span class="text-sm text-[rgba(10,10,11,0.55)]">{attributionRole}</span>
       </div>
     </div>
@@ -38,11 +39,10 @@ const quoteHtml = renderQuote(quote);
     font-family: 'Fraunces Variable', Georgia, serif;
     font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 0;
     font-weight: 500;
-    font-size: clamp(2rem, 6vw, 4.5rem);
-    line-height: 1.05;
-    letter-spacing: -0.03em;
+    font-size: clamp(1.75rem, 5vw, 3.75rem);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
     color: var(--color-klano-ink);
-    margin-bottom: 0;
   }
   .pause-quote :global(em) {
     font-style: italic;

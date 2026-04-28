@@ -2,10 +2,12 @@
 import Base from '../../layouts/Base.astro';
 import Nav from '../../components/Nav.astro';
 import Hero from '../../components/Hero.astro';
+import AgentLog from '../../components/AgentLog.astro';
 import CreamPause from '../../components/CreamPause.astro';
 import Wordmark from '../../components/Wordmark.astro';
 import Features from '../../components/Features.astro';
 import Venues from '../../components/Venues.astro';
+import TrustStrip from '../../components/TrustStrip.astro';
 import Waitlist from '../../components/Waitlist.astro';
 import Footer from '../../components/Footer.astro';
 import { copy } from '../../lib/copy';
@@ -46,44 +48,70 @@ const faqJsonLd = {
 ---
 
 <Base title={SITE.tagline.en} description={SITE.description.en} jsonLd={[faqJsonLd]}>
-  <Nav waitlistLabel={c.nav.waitlist} menuLabel={c.nav.menu} homeHref="/en" />
+  <Nav waitlistLabel={c.nav.waitlist} menuLabel={c.nav.menu} howLabel={c.nav.how} homeHref="/en" />
   <main>
     <Hero
-      eyebrow={c.hero.eyebrow}
+      observed={c.hero.observed}
       lines={c.hero.lines}
+      tagline={c.hero.tagline}
       ctaPrimary={c.hero.ctaPrimary}
       ctaSecondary={c.hero.ctaSecondary}
-      stats={c.hero.stats}
+      meta={c.hero.meta}
+    />
+    <AgentLog
+      track={c.agentLog.track}
+      heading={c.agentLog.heading}
+      sub={c.agentLog.sub}
+      timestamp={c.agentLog.timestamp}
+      band={c.agentLog.band}
+      entries={c.agentLog.entries}
+      footnote={c.agentLog.footnote}
     />
     <CreamPause
+      track={c.pause.track}
       eyebrow={c.pause.eyebrow}
       quote={c.pause.quote}
       attributionName={c.pause.attribution.name}
       attributionRole={c.pause.attribution.role}
     />
-    <Wordmark labelTop={c.wordmark.labelTop} labelSub={c.wordmark.labelSub} caption={c.wordmark.caption} />
+    <Wordmark
+      track={c.wordmark.track}
+      labelTop={c.wordmark.labelTop}
+      labelSub={c.wordmark.labelSub}
+      caption={c.wordmark.caption}
+    />
     <Features
+      track={c.features.track}
       eyebrow={c.features.eyebrow}
       heading={c.features.heading}
       lede={c.features.lede}
       cards={c.features.cards}
     />
-    <Venues eyebrow={c.venues.eyebrow} heading={c.venues.heading} lede={c.venues.lede} cards={c.venues.cards} />
+    <Venues
+      track={c.venues.track}
+      eyebrow={c.venues.eyebrow}
+      heading={c.venues.heading}
+      lede={c.venues.lede}
+      cards={c.venues.cards}
+    />
+    <TrustStrip lines={c.trust.lines} />
     <Waitlist
+      track={c.waitlist.track}
       eyebrow={c.waitlist.eyebrow}
       heading={c.waitlist.heading}
+      lede={c.waitlist.lede}
       placeholder={c.waitlist.placeholder}
       submit={c.waitlist.submit}
       success={c.waitlist.success}
       successPlaceholder={c.waitlist.successPlaceholder}
       meta={c.waitlist.meta}
+      timing={c.waitlist.timing}
       locale="en"
     />
   </main>
   <Footer
-    tag={c.footer.tag}
+    manifest={c.footer.manifest}
     cols={c.footer.cols}
-    from={c.footer.from}
     legalLeft={c.footer.legalLeft}
     legalRight={c.footer.legalRight}
   />

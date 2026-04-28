@@ -15,7 +15,12 @@ const c = copy[locale];
 ---
 
 <Base title={title} description={description} noindex={false}>
-  <Nav waitlistLabel={c.nav.waitlist} menuLabel={c.nav.menu} homeHref={locale === 'de' ? '/' : '/en'} />
+  <Nav
+    waitlistLabel={c.nav.waitlist}
+    menuLabel={c.nav.menu}
+    howLabel={c.nav.how}
+    homeHref={locale === 'de' ? '/' : '/en'}
+  />
   <main class="pt-36 pb-20 md:pt-48 md:pb-28">
     <article class="max-w-2xl mx-auto px-4 md:px-8 prose-klano">
       <h1 class="legal-h1">{title}</h1>
@@ -23,9 +28,8 @@ const c = copy[locale];
     </article>
   </main>
   <Footer
-    tag={c.footer.tag}
+    manifest={c.footer.manifest}
     cols={c.footer.cols}
-    from={c.footer.from}
     legalLeft={c.footer.legalLeft}
     legalRight={c.footer.legalRight}
   />
