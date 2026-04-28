@@ -1,20 +1,42 @@
 'use client';
 
 import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { createClient } from '@/lib/supabase/client';
 
 export function SignInForm() {
+  const params = useSearchParams();
+  const next = params.get('next') ?? '/dashboard';
+  const callbackError = params.get('error');
+
   const [email, setEmail] = useState('');
   const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const [error, setError] = useState<string | null>(callbackError ? 'Login fehlgeschlagen.' : null);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!email.trim()) return;
 
     setState('sending');
-    // TODO v0.2: wire up Supabase auth.signInWithOtp({ email })
-    await new Promise((r) => setTimeout(r, 600));
+    setError(null);
+
+    const supabase = createClient();
+    const origin = window.location.origin;
+
+    const { error: authError } = await supabase.auth.signInWithOtp({
+      email: email.trim(),
+      options: {
+        emailRedirectTo: `${origin}/auth/callback?next=${encodeURIComponent(next)}`,
+      },
+    });
+
+    if (authError) {
+      setState('error');
+      setError(authError.message);
+      return;
+    }
     setState('sent');
   }
 
@@ -55,6 +77,10 @@ export function SignInForm() {
           onChange={(e) => setEmail(e.target.value)}
         />
       </div>
+
+      {error && (
+        <p className="text-sm text-klano-danger">{error}</p>
+      )}
 
       <Button type="submit" size="lg" disabled={state === 'sending'} className="w-full">
         {state === 'sending' ? 'Sende ...' : 'Magic-Link senden'}

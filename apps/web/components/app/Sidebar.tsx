@@ -67,7 +67,15 @@ const NAV: NavItem[] = [
   },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  user?: {
+    name: string;
+    role: string;
+    initials: string;
+  };
+}
+
+export function Sidebar({ user }: SidebarProps = {}) {
   const pathname = usePathname();
 
   return (
@@ -123,14 +131,29 @@ export function Sidebar() {
       <div className="px-3 py-4 border-t border-klano-border">
         <div className="px-3 py-2 flex items-center gap-3">
           <span className="w-7 h-7 rounded-full bg-klano-surface-2 border border-klano-border inline-flex items-center justify-center text-[10px] font-semibold text-klano-text-2">
-            P
+            {user?.initials ?? '—'}
           </span>
           <div className="flex-1 min-w-0">
-            <span className="block text-[12px] font-medium text-klano-text truncate">Pascal</span>
+            <span className="block text-[12px] font-medium text-klano-text truncate">
+              {user?.name ?? 'Gast'}
+            </span>
             <span className="block font-mono text-[10px] uppercase tracking-[0.06em] text-klano-text-3">
-              Owner
+              {user?.role ?? 'Nicht angemeldet'}
             </span>
           </div>
+          <form action="/auth/sign-out" method="post">
+            <button
+              type="submit"
+              aria-label="Sign out"
+              className="text-klano-text-3 hover:text-klano-text transition-colors p-1.5 rounded-md"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+            </button>
+          </form>
         </div>
       </div>
     </aside>

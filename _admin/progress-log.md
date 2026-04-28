@@ -4,6 +4,44 @@ Chronologisches Logbuch. Neueste Einträge oben.
 
 ---
 
+## 2026-04-28 — v0.2 Schema + Auth-Pipeline (offline ready)
+
+**Was gemacht:**
+- **Supabase migrations** (3 Files in `supabase/migrations/`)
+  - `0001_init.sql` — alle Kerntabellen: profiles, bands, band_members, band_invitations, venues, bookings, email_threads, events, availabilities, subscriptions, agent_actions, waitlist
+  - `0002_rls.sql` — Helper-Funktionen `is_band_member/leader/owner` (SECURITY DEFINER STABLE) + RLS-Policies für alle Tenant-Tabellen, Default-Deny auf `waitlist`
+  - `0003_triggers.sql` — generischer `set_updated_at`, `handle_new_user` (auto-create `profiles` aus `auth.users`), `ensure_owner_is_leader` (D4 invariant), `prevent_owner_member_removal`
+- **`supabase/seed.sql`** — 6 DACH-Venues für lokales Dev (Bogen F, Mascotte, Sender, Kammgarn, Lido, Flex)
+- **`supabase/config.toml`** — lokaler Dev-Config (Ports, Storage Buckets, Auth Email Templates, kein Email-Confirm in dev)
+- **`packages/db`** als richtiger Workspace-Package:
+  - `@supabase/ssr` + `@supabase/supabase-js` Deps
+  - `src/types.gen.ts` — Placeholder-Types passend zur Schema-Struktur (kann mit `pnpm --filter @klano/db gen-types` ersetzt werden sobald Supabase läuft)
+  - `src/browser.ts` → `createBrowserClient<Database>()`
+  - `src/server.ts` → `createServerClient(cookies)`
+  - Re-exports aller Domain-Enums (BookingStatus, BandRole, etc.)
+- **`apps/web` Auth-Pipeline:**
+  - `lib/supabase/server.ts` mit `getUser()` Server-Helper
+  - `lib/supabase/client.ts` Browser-Re-export
+  - `middleware.ts` — Token-Refresh + Route-Guards (signed-out → /sign-in, signed-in → /dashboard für /sign-in)
+  - `app/auth/callback/route.ts` — Magic-Link Code-Exchange + redirect zu `next`
+  - `app/auth/sign-out/route.ts` — POST → `signOut()` → /sign-in
+  - `SignInForm` an echtes `signInWithOtp` gewired (mit `next` query param + `emailRedirectTo` callback URL)
+  - `(app)/layout.tsx` lädt `getUser()` server-side, übergibt name/initials/role an Sidebar
+  - Dashboard-Greeting bekommt echten Vornamen (oder Email-Prefix)
+  - Sidebar-User-Pill hat Sign-out-Button (Form POST nach `/auth/sign-out`)
+- **Env Setup:**
+  - `apps/web/.env.example` — `NEXT_PUBLIC_SUPABASE_URL/ANON_KEY` + Server-only Secrets (Service-Role, Resend, Stripe, Anthropic, OpenAI)
+  - `apps/marketing/.env.example` — Public Supabase + Plausible + Resend
+
+**Build:** Web 9 Routes + Middleware (88.3kB), Marketing 4 Pages — beide grün.
+
+**Was du als nächstes brauchst (extern, Q-F2/Q-L1/Q-M1 in `_admin/open-questions.md`):**
+1. `supabase init` (CLI installieren falls noch nicht: `pnpm dlx supabase --version`) und dann `pnpm dlx supabase start` lokal — gibt dir `URL` + `anon_key` für `.env.local`
+2. `pnpm --filter @klano/db gen-types` — generiert echte Types aus laufendem Schema, ersetzt Placeholder
+3. Cloud-Projekt anlegen unter [supabase.com](https://supabase.com) (EU-Frankfurt) sobald wir richtigen Auth-Mail-Versand wollen → SMTP-Override mit Resend in Supabase Auth Settings
+
+---
+
 ## 2026-04-28 — Brand Reset v1.0 (Suno-Stil · Instrument Serif + Inter)
 
 **Was passiert ist:**

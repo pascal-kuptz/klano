@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { SignInForm } from '@/components/app/SignInForm';
 
 export const metadata = { title: 'Sign in' };
@@ -18,7 +19,9 @@ export default function SignInPage() {
       </div>
 
       <div className="bg-klano-surface border border-klano-border rounded-[20px] p-8">
-        <SignInForm />
+        <Suspense fallback={<div className="h-[280px]" />}>
+          <SignInForm />
+        </Suspense>
       </div>
 
       <p className="mt-6 text-center font-mono text-[11px] uppercase tracking-[0.08em] text-klano-text-3">

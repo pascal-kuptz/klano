@@ -1,3 +1,14 @@
-// Supabase typed client + DB type re-exports. Filled in v0.2.
-// See _source/build-plan-v0.md §3 for schema.
-export {};
+export type { Database } from './types.gen';
+export type {
+  Locale,
+  Country,
+  AmbitionLevel,
+  BandRole,
+  BookingStatus,
+  EmailDirection,
+  EventType,
+  AvailabilityStatus,
+  SubscriptionStatus,
+  SubscriptionPlan,
+  Json,
+} from './types.gen';

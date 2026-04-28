@@ -1,14 +1,21 @@
 import { Topbar } from '@/components/app/Topbar';
 import { Button, ButtonLink } from '@/components/ui/Button';
 import { SectionLabel } from '@/components/ui/SectionLabel';
+import { getUser } from '@/lib/supabase/server';
 
 export const metadata = { title: 'Dashboard' };
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const user = await getUser();
+  const firstName =
+    (user?.user_metadata?.full_name as string | undefined)?.split(' ')[0] ??
+    user?.email?.split('@')[0] ??
+    'Gast';
+
   return (
     <>
       <Topbar
-        title="Hi Pascal"
+        title={`Hi ${firstName}`}
         subtitle="Halbnacht · Frühling 2026"
         action={
           <ButtonLink href="/bookings/new" size="sm">

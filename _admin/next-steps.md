@@ -4,52 +4,75 @@ Aktuell anstehende, konkrete Tasks. Nach Erledigung → `progress-log.md` und hi
 
 > **Reihenfolge:** Top-down = Priorität.
 
-## Sofort (diese Woche)
+## Sofort — Auth lokal aufschalten
 
-1. **Greenlight für Tag-1-Repo-Scaffolding** (Pascal entscheiden)
-   - Optionen: (a) jetzt lokal starten ohne GitHub-Remote, (b) erst GitHub-Org `klano-ai` + Repo anlegen, dann scaffolden
-   - Blockiert: alles Engineering
+Schema + Auth-Pipeline sind aufgesetzt aber noch nicht connected. Damit Sign-in real funktioniert:
 
-2. **Domain `klano.ai` registrieren** + defensiv `klano.app`, `klano.io`
-   - Blocker: keine — sofort machbar
-   - Verantwortlich: Founder
+1. **Supabase CLI lokal starten** (Docker muss laufen)
+   ```bash
+   pnpm dlx supabase --version          # prüft installation
+   pnpm dlx supabase start              # spinnt Postgres + GoTrue + Studio + Inbucket auf
+   ```
+   Gibt dir `API URL`, `anon key`, `service_role key`.
 
-3. **Anwalt-Briefing Markenrecherche Klano** (Q-L1, Q-L3)
-   - Verantwortlich: Founder
-   - Output: schriftliche Marken-Clearance-Bestätigung
+2. **`apps/web/.env.local` anlegen** (von `.env.example` kopieren), mit den Werten aus Schritt 1 füllen:
+   ```
+   NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=<aus supabase status>
+   ```
 
-4. **Bandleader-Interviews terminieren** (Ziel: 15 Slots in 2 Wochen)
-   - Verantwortlich: PO (oder Founder bis PO bestätigt)
-   - Quelle: day-1-plan.md Anhang A Interview-Guide
+3. **Migrations + Seed anwenden**
+   ```bash
+   pnpm dlx supabase db reset           # läuft 0001/0002/0003 + seed.sql
+   ```
 
-## Kurzfristig (Wochen 2–3)
+4. **TS-Types regenerieren** (überschreibt Placeholder)
+   ```bash
+   pnpm --filter @klano/db gen-types
+   ```
 
-5. **Supabase-Projekt anlegen** (EU-Frankfurt)
-6. **Resend-Account** + Domain-Verifikation `hello.klano.ai` (DNS-Records SPF/DKIM/DMARC)
-7. **Vercel-Projekte** anlegen (`klano-marketing`, `klano-web`)
-8. **Stripe-Account** (Test-Mode, später Live nach Q-F2)
-9. **Marketing-Site v0.1** Skeleton + Wartelisten-Form (Astro)
+5. **Sign-in testen:** http://localhost:3000/sign-in eintragen → Inbucket UI auf http://localhost:54324 → Magic-Link klicken → landet auf `/dashboard`.
 
-## Open Questions auflösen
+## Kurzfristig
 
-Siehe [open-questions.md](open-questions.md). Für Engineering-Velocity besonders dringend:
-- Q-F4 (Team-Setup)
-- Q-E2 (DACH-GeoJSON)
+6. **Domain `klano.ai` registrieren** + defensiv `klano.app`, `klano.io`
+7. **Cloud-Supabase-Projekt** unter [supabase.com](https://supabase.com), EU-Frankfurt — production
+8. **Resend-Account** + Domain-Verifikation `hello.klano.ai` (DNS: SPF, DKIM, DMARC)
+9. **Vercel-Projekte** (`klano-marketing`, `klano-web`) — Preview-Deployments
+10. **Anwalt-Briefing** Markenrecherche Klano + DSG/AGB (Q-L1, Q-L3)
+
+## Mittelfristig — v0.3 Onboarding-Wizard
+
+Nach Auth läuft, kommt der 7-Schritt-Onboarding-Wizard (siehe build-plan-v0 §4):
+- Schritt 1 Welcome
+- Schritt 2 Band-Basics (Name, Logo-Upload, Genre, Bandgröße 3–8)
+- Schritt 3 Geografie (MapLibre-Karte CH/DE/AT)
+- Schritt 4 Anspruch (Hobby/Semi-Pro/Pro)
+- Schritt 5 Mitglieder einladen (1–7 Emails — D5)
+- Schritt 6 WOW-Moment (3 echte Venue-Vorschläge)
+- Schritt 7 Erste Outreach (Mail-Draft via Claude)
+
+Das wird der nächste größere Sprint nach Auth-Verification.
+
+## Open Questions
+
+Siehe [open-questions.md](open-questions.md). Für die nächsten zwei Wochen kritisch:
+- Q-F2 (Gründungs-Vehikel — blockiert Stripe-Live)
+- Q-L1 (Anwalt — Marken-Clearance + AGB)
+- Q-E2 (DACH-GeoJSON — für Onboarding Step 3)
 - Q-E3 (Helicone vs. Langfuse — Vorschlag Langfuse)
 
 ---
 
-## Definition of "Done" für Tag-1-Foundation (v0)
+## Definition of "Done" für v0.2 Auth (Schema + Wiring)
 
-Aus build-plan-v0.md §1.5, hier verkürzt als Checkliste:
-
-- [ ] Monorepo-Skelett (`pnpm-workspace.yaml`, `turbo.json`)
-- [ ] `apps/marketing` (Astro) startet lokal
-- [ ] `apps/web` (Next.js) startet lokal
-- [ ] `packages/{ui,db,agent,email,i18n,config}` Stubs
-- [ ] Biome konfiguriert, Tailwind v4 in beiden Apps
-- [ ] shadcn/ui in `packages/ui` initialisiert
-- [ ] Supabase lokal via Docker erreichbar
-- [ ] Vercel Preview-Deploy beider Apps grün
-- [ ] CI Workflow (lint+typecheck+build) grün
-- [ ] README mit Setup-Anleitung
+- [x] Supabase Migrations 0001/0002/0003 geschrieben
+- [x] RLS-Policies komplett, Helper-Funktionen für `is_band_*`
+- [x] Triggers: `updated_at`, `handle_new_user`, owner-as-leader-Invariante, owner-removal-Schutz
+- [x] `packages/db` mit typed Server- und Browser-Clients
+- [x] `apps/web` Middleware + Callback + Sign-out
+- [x] SignInForm wired an echtes `signInWithOtp`
+- [x] Sidebar zeigt eingeloggten User
+- [x] Build grün
+- [ ] **Mit echtem Supabase getestet** (Schritt 1–5 oben)
+- [ ] DB-Types via `gen-types` regeneriert

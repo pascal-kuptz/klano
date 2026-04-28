@@ -36,7 +36,20 @@ klano/
 
 ```bash
 pnpm install
+cp apps/web/.env.example apps/web/.env.local
+cp apps/marketing/.env.example apps/marketing/.env.local
+# Werte siehe _admin/next-steps.md → "Sofort — Auth lokal aufschalten"
 ```
+
+## Supabase lokal
+
+```bash
+pnpm dlx supabase start              # Docker — Postgres + GoTrue + Studio + Inbucket
+pnpm dlx supabase db reset           # Migrations + seed
+pnpm --filter @klano/db gen-types    # Types regenerieren
+```
+
+Studio: http://localhost:54323 · Mail-Inbox (Magic-Links): http://localhost:54324
 
 ## Dev
 
