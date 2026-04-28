@@ -5,21 +5,55 @@ import Button from './Button.astro';
 interface Props {
   badge: string;
   headline: string;
-  /** italicized tail after the headline, optional — Instrument Serif italic */
   headlineItalic?: string;
   subline: string;
   ctaPrimary: string;
   ctaSecondary: string;
+  /** Optional caption shown in top-right of the hero stage. */
+  stageCaption?: string;
+  stageDetail?: string;
 }
-const { badge, headline, headlineItalic, subline, ctaPrimary, ctaSecondary } = Astro.props;
+const {
+  badge,
+  headline,
+  headlineItalic,
+  subline,
+  ctaPrimary,
+  ctaSecondary,
+  stageCaption = 'header image',
+  stageDetail = 'Zürich · backstage · 23:14',
+} = Astro.props;
 ---
 
-<section class="pt-32 pb-12 md:pt-36 md:pb-16 relative overflow-hidden">
-  <div class="hero-glow" aria-hidden="true"></div>
+<section class="hero relative min-h-[88vh] flex items-center justify-center pt-32 pb-20 md:pt-36 md:pb-28 overflow-hidden">
+  <!-- Stage layers (background — replace with <img> later) -->
+  <div class="hero-stage" aria-hidden="true">
+    <div class="hero-stage-bg"></div>
+    <div class="hero-stage-grid"></div>
+    <div class="hero-stage-vignette"></div>
+  </div>
+
+  <!-- Stage corner mono captions (live on bg) -->
+  <div class="hero-meta" aria-hidden="true">
+    <span class="hero-cap hero-cap-tl">
+      <span class="dot"></span>
+      <span>{stageCaption}</span>
+    </span>
+    <span class="hero-cap hero-cap-tr">
+      <span>1920 × 1080</span>
+    </span>
+    <span class="hero-cap hero-cap-bl">
+      <span>{stageDetail}</span>
+    </span>
+    <span class="hero-cap hero-cap-br">
+      <span>klano · 00</span>
+    </span>
+  </div>
+
   <Container>
-    <div class="flex flex-col items-center text-center max-w-[860px] mx-auto relative">
+    <div class="flex flex-col items-center text-center max-w-[860px] mx-auto relative z-[3]">
       <span
-        class="inline-flex items-center gap-2 h-7 px-3 rounded-full bg-klano-surface border border-klano-border text-[12px] text-klano-text-2 font-mono tracking-tight mb-8"
+        class="inline-flex items-center gap-2 h-7 px-3 rounded-full bg-klano-surface/80 backdrop-blur border border-klano-border text-[12px] text-klano-text-2 font-mono tracking-tight mb-8"
       >
         <span class="w-1.5 h-1.5 rounded-full bg-klano-success"></span>
         {badge}
@@ -43,13 +77,87 @@ const { badge, headline, headlineItalic, subline, ctaPrimary, ctaSecondary } = A
 </section>
 
 <style>
-  .hero-glow {
+  /* === Stage background — placeholder; swap with <img> later === */
+  .hero-stage {
     position: absolute;
-    inset: -10% -10% auto -10%;
-    height: 80%;
+    inset: 0;
+    z-index: 1;
     pointer-events: none;
+  }
+  .hero-stage-bg {
+    position: absolute;
+    inset: 0;
     background:
-      radial-gradient(ellipse 50% 60% at 50% 0%, rgba(10, 10, 10, 0.06) 0%, transparent 60%),
-      radial-gradient(ellipse 80% 40% at 50% 100%, rgba(255, 255, 255, 0.6) 0%, transparent 70%);
+      radial-gradient(ellipse 50% 60% at 75% 25%, rgba(10, 10, 10, 0.05) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 20% 90%, rgba(10, 10, 10, 0.04) 0%, transparent 70%),
+      linear-gradient(135deg, var(--color-klano-canvas) 0%, var(--color-klano-surface-2) 60%, var(--color-klano-canvas) 100%);
+  }
+  .hero-stage-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(10, 10, 10, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(10, 10, 10, 0.04) 1px, transparent 1px);
+    background-size: 64px 64px;
+    background-position: -1px -1px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 90%);
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 90%);
+  }
+  /* Soft vignette pushes attention toward the centered text */
+  .hero-stage-vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 55%, rgba(255, 255, 255, 0.55) 0%, transparent 70%);
+  }
+
+  /* === Stage corner captions === */
+  .hero-meta {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .hero-cap {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--color-klano-text-3);
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid var(--color-klano-border);
+    border-radius: 999px;
+    padding: 6px 12px;
+    top: 96px;
+  }
+  .hero-cap-tl { left: 16px; }
+  .hero-cap-tr { right: 16px; }
+  .hero-cap-bl { top: auto; bottom: 24px; left: 16px; }
+  .hero-cap-br { top: auto; bottom: 24px; right: 16px; }
+  @media (min-width: 768px) {
+    .hero-cap-tl { left: 32px; }
+    .hero-cap-tr { right: 32px; }
+    .hero-cap-bl { left: 32px; bottom: 32px; }
+    .hero-cap-br { right: 32px; bottom: 32px; }
+    .hero-cap { top: 116px; }
+  }
+  @media (min-width: 1280px) {
+    .hero-cap-tl { left: 48px; }
+    .hero-cap-tr { right: 48px; }
+    .hero-cap-bl { left: 48px; }
+    .hero-cap-br { right: 48px; }
+  }
+  /* Hide bottom captions on small screens — too cramped */
+  @media (max-width: 640px) {
+    .hero-cap-bl, .hero-cap-br { display: none; }
+  }
+  .hero-cap .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--color-klano-success);
+    box-shadow: 0 0 6px rgba(16, 185, 129, 0.5);
   }
 </style>
