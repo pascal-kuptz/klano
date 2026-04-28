@@ -162,6 +162,9 @@ const { num, eyebrow, heading, cards, shotCaptions } = Astro.props;
     grid-template-columns: 1fr;
     gap: 28px;
     padding: 28px;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 0%, rgba(10, 10, 10, 0.025) 0%, transparent 70%),
+      linear-gradient(180deg, var(--color-klano-surface-2) 0%, var(--color-klano-surface) 50%);
   }
   @media (min-width: 1024px) {
     .feat-hero {
@@ -199,7 +202,9 @@ const { num, eyebrow, heading, cards, shotCaptions } = Astro.props;
 
   /* Accent dark card for Privacy */
   .feat-accent {
-    background: var(--color-klano-text);
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255, 255, 255, 0.06) 0%, transparent 60%),
+      linear-gradient(180deg, #18181B 0%, #0A0A0A 100%);
     border-color: var(--color-klano-text);
     color: var(--color-klano-action-fg);
   }
