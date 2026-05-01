@@ -32,10 +32,23 @@ export function WizardProvider({ children }: { children: ReactNode }) {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (!raw) return;
-      const parsed = JSON.parse(raw) as WizardState;
-      if (parsed && typeof parsed.step === 'number') {
-        dispatch({ type: 'hydrate', state: parsed });
-      }
+      const parsed = JSON.parse(raw) as Partial<WizardState> & { band?: Record<string, unknown> };
+      if (!parsed || typeof parsed.step !== 'number') return;
+      // Schema-tolerant merge: missing fields are filled from initialState.
+      const next: WizardState = {
+        ...initialState,
+        ...parsed,
+        band: {
+          ...initialState.band,
+          ...(parsed.band ?? {}),
+          countries: Array.isArray(parsed.band?.countries) ? (parsed.band.countries as WizardState['band']['countries']) : [],
+          regions: Array.isArray(parsed.band?.regions) ? (parsed.band.regions as string[]) : [],
+          genres: Array.isArray(parsed.band?.genres) ? (parsed.band.genres as string[]) : [],
+        },
+        invites: Array.isArray(parsed.invites) ? parsed.invites : [],
+        user: parsed.user ?? {},
+      } as WizardState;
+      dispatch({ type: 'hydrate', state: next });
     } catch {
       // ignore — corrupted state, start fresh
     }

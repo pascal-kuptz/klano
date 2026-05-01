@@ -93,7 +93,8 @@ export function canAdvance(state: WizardState): boolean {
     case 2:
       return state.band.name.trim().length >= 2 && state.band.genres.length >= 1;
     case 3: {
-      const { countries, regions } = state.band;
+      const countries = state.band.countries ?? [];
+      const regions = state.band.regions ?? [];
       if (countries.length === 0) return false;
       // Multi-country: country selection alone is enough.
       if (countries.length > 1) return true;
