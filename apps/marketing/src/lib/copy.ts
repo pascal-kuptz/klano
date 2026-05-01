@@ -8,7 +8,12 @@ const iconUsers = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" st
 const iconShield = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V5l8-3 8 3Z"/></svg>`;
 
 export const copy: Record<Locale, {
-  nav: { primaryCta: string; secondaryLabel: string };
+  nav: {
+    primaryCta: string;
+    loginLabel: string;
+    /** Inline links (desktop) + mobile menu items */
+    links: readonly { label: string; href: string }[];
+  };
   hero: {
     badge: string;
     headline: string;
@@ -81,7 +86,16 @@ export const copy: Record<Locale, {
   };
 }> = {
   de: {
-    nav: { primaryCta: 'Frühen Zugang', secondaryLabel: 'Funktionen' },
+    nav: {
+      primaryCta: 'Frühen Zugang',
+      loginLabel: 'Login',
+      links: [
+        { label: 'Funktionen', href: '/#features' },
+        { label: 'Pricing', href: '/pricing' },
+        { label: 'Manifest', href: '/#personal' },
+        { label: 'Kontakt', href: 'mailto:hello@klano.ai' },
+      ],
+    },
     hero: {
       badge: 'Closed Beta · Frühjahr 2026',
       headline: 'Der Booking-Agent',
@@ -278,7 +292,16 @@ export const copy: Record<Locale, {
     },
   },
   en: {
-    nav: { primaryCta: 'Get early access', secondaryLabel: 'Features' },
+    nav: {
+      primaryCta: 'Get early access',
+      loginLabel: 'Login',
+      links: [
+        { label: 'Features', href: '/en#features' },
+        { label: 'Pricing', href: '/en/pricing' },
+        { label: 'Manifesto', href: '/en#personal' },
+        { label: 'Contact', href: 'mailto:hello@klano.ai' },
+      ],
+    },
     hero: {
       badge: 'Closed beta · Spring 2026',
       headline: 'The booking agent',
