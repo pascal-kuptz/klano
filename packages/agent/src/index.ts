@@ -12,6 +12,13 @@ export {
 export { buildFallbackDraft } from './template-fallback';
 
 export {
+  classifyInboundEmail,
+  ClassificationSchema,
+  type Classification,
+  type ClassifyInput,
+} from './classify-inbound';
+
+export {
   OUTREACH_PROMPT_VERSION,
   OUTREACH_SYSTEM_DE,
   OUTREACH_SYSTEM_EN,

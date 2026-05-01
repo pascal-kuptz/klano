@@ -115,11 +115,32 @@ export function ComposeFlow() {
   }, [phase, venue]);
 
   async function send() {
+    if (!venue) return;
     setPhase('sending');
-    // TODO v0.6: POST /api/bookings { venue_id, subject, body }
-    await new Promise((r) => setTimeout(r, 800));
-    setPhase('sent');
-    setTimeout(() => router.push('/bookings' as never), 1200);
+    try {
+      const res = await fetch('/api/bookings/send', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          // TODO v0.7+: read bandId from active band context. For now we
+          // rely on the API resolving 'first owned band of caller', so we
+          // pass the placeholder static-id and let server pick if available.
+          bandId: 'self',
+          venueId: venue.id,
+          to: `bookings@${venue.name.toLowerCase().replace(/\s+/g, '')}.ch`,
+          subject,
+          body,
+        }),
+      });
+      if (!res.ok && res.status !== 502) throw new Error(`http ${res.status}`);
+      // 502 = mail-send returned an error but booking row was created.
+      // Treat both as "sent enough to move to /bookings".
+      setPhase('sent');
+      setTimeout(() => router.push('/bookings' as never), 1200);
+    } catch (e) {
+      console.error('send failed', e);
+      setPhase('error');
+    }
   }
 
   return (

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { sendMail, BandInvitationEmail } from '@klano/email';
 import { createServerClient, getUser } from '@/lib/supabase/server';
 
 interface PostBody {
@@ -76,9 +77,36 @@ export async function POST(request: Request) {
   const next = list.filter((m) => m.name.toLowerCase() !== name.toLowerCase());
   await supabase.from('bands').update({ pending_members: next }).eq('id', bandId);
 
-  // TODO v0.6: trigger Resend send via packages/email + Edge Function.
-  // For now, just acknowledge.
-  return NextResponse.json({ ok: true, token });
+  // Resolve band name + inviter name for the mail.
+  const { data: band } = await supabase
+    .from('bands')
+    .select('name')
+    .eq('id', bandId)
+    .maybeSingle();
+  const bandName = (band as { name?: string } | null)?.name ?? 'deine Band';
+  const { data: invProfile } = await supabase
+    .from('profiles')
+    .select('full_name, email')
+    .eq('id', user.id)
+    .maybeSingle();
+  const invitedByName =
+    ((invProfile as { full_name?: string | null } | null)?.full_name) ??
+    user.email?.split('@')[0] ??
+    'Dein Bandkollege';
+
+  const acceptUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://app.klano.ai'}/invite/${token}`;
+
+  const mail = await sendMail({
+    to: email,
+    subject: `${invitedByName} hat dich zu ${bandName} hinzugefügt`,
+    react: BandInvitationEmail({ bandName, invitedByName, acceptUrl }),
+    tags: [
+      { name: 'kind', value: 'invitation' },
+      { name: 'band', value: bandId },
+    ],
+  });
+
+  return NextResponse.json({ ok: true, token, mail: { source: mail.source, id: mail.id } });
 }
 
 function jsonError(message: string, status: number) {
