@@ -36,9 +36,22 @@ export function InviteCard({ members }: Props) {
     const row = rows[i];
     if (!row || !row.email.trim()) return;
     update(i, { status: 'sending' });
-    // TODO v0.6: POST /api/invitations { name, instrument, email }
-    await new Promise((r) => setTimeout(r, 600));
-    update(i, { status: 'sent' });
+    try {
+      const res = await fetch('/api/invitations', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          name: row.name,
+          instrument: row.instrument || undefined,
+          email: row.email.trim(),
+        }),
+      });
+      if (!res.ok) throw new Error(`http ${res.status}`);
+      update(i, { status: 'sent' });
+    } catch (e) {
+      console.error('invite send failed', e);
+      update(i, { status: 'idle' });
+    }
   }
 
   if (rows.length === 0) {

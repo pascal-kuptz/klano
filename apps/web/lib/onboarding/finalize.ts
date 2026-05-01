@@ -62,6 +62,26 @@ export async function finalizeOnboarding(payload: WizardState): Promise<Finalize
 
   const bandId = (band as { id: string }).id;
 
+  // Logo: upload data URL to Supabase Storage 'band-logos' bucket and patch URL.
+  if (payload.band.logoDataUrl) {
+    try {
+      const blob = dataUrlToBlob(payload.band.logoDataUrl);
+      const ext = blob.type === 'image/png' ? 'png' : 'jpg';
+      const path = `${user.id}/${slug}.${ext}`;
+      const { error: upError } = await supabase.storage
+        .from('band-logos')
+        .upload(path, blob, { upsert: true, contentType: blob.type });
+      if (!upError) {
+        const { data: pub } = supabase.storage.from('band-logos').getPublicUrl(path);
+        if (pub?.publicUrl) {
+          await supabase.from('bands').update({ logo_url: pub.publicUrl }).eq('id', bandId);
+        }
+      }
+    } catch (e) {
+      console.warn('Logo upload skipped', e);
+    }
+  }
+
   // Profile (full_name from wizard "Du" block) — best-effort, ignore errors.
   if (payload.user.fullName?.trim()) {
     await supabase
@@ -114,6 +134,18 @@ export async function finalizeAndRedirect(payload: WizardState): Promise<void> {
     redirect(`/onboarding?error=${encodeURIComponent(result.error ?? 'unknown')}`);
   }
   redirect('/dashboard');
+}
+
+function dataUrlToBlob(dataUrl: string): Blob {
+  const [head, body] = dataUrl.split(',');
+  if (!head || !body) throw new Error('Invalid data URL');
+  const mimeMatch = /data:(.*?);base64/.exec(head);
+  const mime = mimeMatch?.[1] ?? 'application/octet-stream';
+  const binary = atob(body);
+  const len = binary.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) bytes[i] = binary.charCodeAt(i);
+  return new Blob([bytes], { type: mime });
 }
 
 function slugify(s: string): string {

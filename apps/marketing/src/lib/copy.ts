@@ -49,6 +49,11 @@ export const copy: Record<Locale, {
       highlight?: boolean;
     }[];
   };
+  pricing: {
+    title: string;
+    intro: string;
+    faq: readonly { q: string; a: string }[];
+  };
   personal: {
     num: string;
     eyebrow: string;
@@ -184,6 +189,37 @@ export const copy: Record<Locale, {
           ],
           cta: 'Pro testen',
           ctaHref: '#waitlist',
+        },
+      ],
+    },
+    pricing: {
+      title: 'Faire Preise. Keine Tricks.',
+      intro:
+        'Free bleibt für immer kostenlos. Pro nimmt euch die Arbeit ab — 14 Tage gratis testen, ohne Kreditkarte. Während der Beta kostet alles nichts.',
+      faq: [
+        {
+          q: 'Wann startet die Beta?',
+          a: 'Frühjahr 2026. Wir nehmen 50 Bands rein, wöchentliche Calls inklusive. Trag dich auf der Warteliste ein.',
+        },
+        {
+          q: 'Was passiert nach der Beta?',
+          a: 'Beta-Bands bekommen 6 Monate Pro gratis. Free-Tier bleibt permanent. Pro startet bei 19 CHF/Monat.',
+        },
+        {
+          q: 'Brauche ich eine Kreditkarte für den Trial?',
+          a: 'Nein. 14 Tage Pro testen ohne Karte. Wenn ihr nichts macht, fallt ihr automatisch auf Free zurück.',
+        },
+        {
+          q: 'Kann ich monatlich kündigen?',
+          a: 'Ja. Monats-Abo monatlich kündbar, Jahres-Abo pro rata mit kleiner Bearbeitungsgebühr.',
+        },
+        {
+          q: 'Wo werden die Daten gespeichert?',
+          a: 'Supabase EU-Frankfurt. DSG- und DSGVO-konform. Auftragsverarbeitungsverträge mit allen Sub-Auftragnehmern.',
+        },
+        {
+          q: 'Wird Klano auch in DE/AT/EU funktionieren?',
+          a: 'Ja. Klano startet DACH-weit. Venue-Datenbank für CH/DE/AT von Anfang an.',
         },
       ],
     },
@@ -350,6 +386,37 @@ export const copy: Record<Locale, {
           ],
           cta: 'Try Pro',
           ctaHref: '#waitlist',
+        },
+      ],
+    },
+    pricing: {
+      title: 'Fair pricing. No tricks.',
+      intro:
+        "Free stays free forever. Pro takes the work off your plate — 14-day trial, no credit card. During beta everything is free.",
+      faq: [
+        {
+          q: 'When does beta start?',
+          a: 'Spring 2026. 50 bands, weekly calls included. Drop your email on the waitlist.',
+        },
+        {
+          q: 'What happens after beta?',
+          a: "Beta bands get 6 months Pro free. Free tier stays permanent. Pro starts at 19 CHF/month.",
+        },
+        {
+          q: 'Do I need a credit card for the trial?',
+          a: 'No. 14-day Pro trial, no card. If you do nothing, you fall back to Free automatically.',
+        },
+        {
+          q: 'Can I cancel monthly?',
+          a: 'Yes. Monthly is cancel-anytime, yearly is pro-rata with a small handling fee.',
+        },
+        {
+          q: 'Where is the data stored?',
+          a: 'Supabase EU Frankfurt. GDPR-compliant. DPA with every sub-processor.',
+        },
+        {
+          q: 'Does Klano work in DE/AT/EU too?',
+          a: 'Yes. DACH-wide from day one — venue database covers CH/DE/AT.',
         },
       ],
     },

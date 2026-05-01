@@ -1,6 +1,7 @@
 'use client';
 
 import { useWizard } from './WizardProvider';
+import { LogoUpload } from './LogoUpload';
 import { Input } from '@/components/ui/Input';
 import { cn } from '@/lib/cn';
 
@@ -60,6 +61,14 @@ export function Step2BandBasics() {
             Hi {name.trim()}.
           </p>
         )}
+      </div>
+
+      {/* Logo */}
+      <div className="mb-8">
+        <label className="block font-mono text-[11px] uppercase tracking-[0.08em] text-klano-text-3 mb-3">
+          Logo <span className="lowercase">(optional)</span>
+        </label>
+        <LogoUpload />
       </div>
 
       {/* Genres */}
