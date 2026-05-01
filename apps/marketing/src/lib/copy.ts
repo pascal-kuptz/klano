@@ -284,6 +284,7 @@ export const copy: Record<Locale, {
           links: [
             { label: 'Datenschutz', href: '/datenschutz' },
             { label: 'Impressum', href: '/impressum' },
+            { label: 'AGB', href: '/agb' },
           ],
         },
       ],

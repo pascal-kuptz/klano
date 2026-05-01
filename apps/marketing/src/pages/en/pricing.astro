@@ -1,0 +1,81 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Plans from '../../components/Plans.astro';
+import Footer from '../../components/Footer.astro';
+import Container from '../../components/Container.astro';
+import SectionLabel from '../../components/SectionLabel.astro';
+import { copy } from '../../lib/copy';
+
+const c = copy.en;
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: c.pricing.faq.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+
+<Base title="Pricing" description={c.pricing.intro} jsonLd={[faqJsonLd]}>
+  <Nav primaryCta={c.nav.primaryCta} loginLabel={c.nav.loginLabel} links={c.nav.links} homeHref="/en" />
+  <main>
+    <section class="pt-36 pb-12 md:pt-44 md:pb-16">
+      <Container>
+        <div class="max-w-[760px]">
+          <p class="font-mono text-[11px] uppercase tracking-[0.08em] text-klano-text-3 mb-4">
+            Pricing · 03
+          </p>
+          <h1 class="font-display text-[clamp(2.25rem,5vw,3.5rem)] leading-[1.05] tracking-[-0.025em] text-klano-text mb-6">
+            {c.pricing.title}
+          </h1>
+          <p class="text-[clamp(1rem,1.4vw,1.125rem)] leading-[1.55] text-klano-text-2 max-w-[560px]">
+            {c.pricing.intro}
+          </p>
+        </div>
+      </Container>
+    </section>
+
+    <Plans num={c.plans.num} eyebrow={c.plans.eyebrow} heading={c.plans.heading} cards={c.plans.cards} />
+
+    <section class="py-24 md:py-32 border-t border-klano-border">
+      <Container>
+        <div class="max-w-[820px] mb-12">
+          <SectionLabel num="04" label="FAQ" />
+          <h2 class="font-display text-[clamp(2rem,4vw,3rem)] leading-[1.05] tracking-[-0.02em] text-klano-text mt-6">
+            Common questions.
+          </h2>
+        </div>
+
+        <ul class="grid gap-3 md:grid-cols-2 max-w-[1100px]">
+          {
+            c.pricing.faq.map((f) => (
+              <li class="bg-klano-surface border border-klano-border rounded-[16px] p-6 md:p-7">
+                <h3 class="text-[16px] font-semibold text-klano-text tracking-tight mb-3">
+                  {f.q}
+                </h3>
+                <p class="text-[14px] text-klano-text-2 leading-[1.6]">{f.a}</p>
+              </li>
+            ))
+          }
+        </ul>
+
+        <p class="font-mono text-[11px] uppercase tracking-[0.08em] text-klano-text-3 mt-12">
+          Other question?{' '}
+          <a href="mailto:hello@klano.ai" class="text-klano-text underline underline-offset-4">
+            hello@klano.ai
+          </a>
+        </p>
+      </Container>
+    </section>
+  </main>
+  <Footer
+    tagline={c.footer.tagline}
+    cols={c.footer.cols}
+    legalLeft={c.footer.legalLeft}
+    legalRight={c.footer.legalRight}
+  />
+</Base>

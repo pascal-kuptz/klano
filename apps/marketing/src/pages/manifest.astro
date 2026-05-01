@@ -1,0 +1,131 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import Container from '../components/Container.astro';
+import { copy } from '../lib/copy';
+
+const c = copy.de;
+
+const TITLE = 'Manifest';
+const DESCRIPTION =
+  'Was Klano ist und warum wir es bauen. Ein Werkzeug für Bands, die spielen — nicht für Bands, die Tabellen pflegen.';
+---
+
+<Base title={TITLE} description={DESCRIPTION}>
+  <Nav primaryCta={c.nav.primaryCta} loginLabel={c.nav.loginLabel} links={c.nav.links} homeHref="/" />
+  <main class="pt-36 pb-24 md:pt-44 md:pb-32">
+    <Container width="narrow">
+      <p class="font-mono text-[11px] uppercase tracking-[0.08em] text-klano-text-3 mb-4">Manifest</p>
+      <h1 class="font-display text-[clamp(2.5rem,6vw,4rem)] leading-[1] tracking-[-0.03em] text-klano-text mb-12">
+        Für die Leute, die nicht den Manager-Job wollten.
+      </h1>
+
+      <div class="prose-klano">
+        <p>
+          Es gibt eine bestimmte Person in jeder Band. Die mit dem Spreadsheet, dem Posteingang voller halb-getippter
+          Mails, der Frage „kann jemand Mittwoch?". Sie hat sich nicht dafür beworben — sie wurde es. Und sie hasst es,
+          jeden zweiten Sonntag. Trotzdem macht sie weiter, weil ohne sie die Band keine Gigs hätte.
+        </p>
+
+        <p>
+          Klano ist für diese Person.
+        </p>
+
+        <p>
+          Wir glauben: Musiker sollen Musik machen. Wer im Übungsraum steht, soll am Übungsraum-Sound denken — nicht
+          an Outreach an Bogen F. Wer auf der Bühne ist, soll die Setlist im Kopf haben — nicht den Follow-up-Reminder
+          im Kalender. Die Orga-Arbeit ist real und sie ist wertvoll. Aber sie sollte nicht dauernd auf einer Person
+          lasten, die eigentlich Bass spielt.
+        </p>
+
+        <h2>Was Klano nicht ist.</h2>
+
+        <p>
+          Klano ist keine Datenbank-mit-UI. Wir bauen kein Tool, das eure Tabelle in eine schönere Tabelle verwandelt.
+          Davon gibt's genug. Was wir bauen ist ein Agent — etwas das selbst handelt. Sucht. Schreibt. Hakt nach. Und
+          euch nur dann reinzieht, wenn eine echte Entscheidung ansteht.
+        </p>
+
+        <p>
+          Klano ist kein Spam-Tool. Wir verschicken keine Mass-Mails. Jede Outreach ist personalisiert, limitiert auf
+          ein paar pro Tag, und vom Bandleader freigegeben. Email-Reputation ist heilig — eure und unsere.
+        </p>
+
+        <p>
+          Klano ist kein VC-Produkt. Zwei Leute. Keine Wachstums-Hetze. Keine Pivot-Roadmap, weil die nächste Runde es
+          braucht. Wir wollen, dass Bands gerne dafür zahlen — nicht dass Investoren uns für eine schnelle Skalierung
+          loben.
+        </p>
+
+        <h2>Was wir versprechen.</h2>
+
+        <p>
+          Wir antworten auf jede Mail. Persönlich, nicht aus einer Inbox mit „Support-Ticket #4811". Schreibt uns —
+          Pascal &amp; Marc — wenn etwas kaputt ist, wenn etwas fehlt, wenn etwas richtig gut wird. Wir lesen jede
+          Antwort.
+        </p>
+
+        <p>
+          Eure Daten bleiben eure Daten. Supabase EU-Frankfurt. DSG- und DSGVO-konform. Keine Drittanbieter-Tracker,
+          keine Fingerprinting, keine „Anonyme Nutzungs-Statistiken" die in Wahrheit alles tracken. Plausible für die
+          Marketing-Site, das war's.
+        </p>
+
+        <p>
+          Wir bleiben fokussiert. Klano ist ein Booking-Agent, ein Sync-Tool und eine Inbox. Mehr nicht. Wir bauen
+          keine Lyric-Generators, keine AI-Music-Composers, keine Stock-Photo-Libraries für Bands. Wenn das Tool
+          überall gut sein soll, ist es nirgends gut.
+        </p>
+
+        <h2>Wie wir bauen.</h2>
+
+        <p>
+          Wir bauen langsam. Lieber drei Features im Quartal richtig als zwölf hingerotzt. Lieber eine Beta mit 50
+          Bands die ihre Wochenenden zurückbekommen, als 5'000 Sign-ups die sich nie wieder einloggen.
+        </p>
+
+        <p>
+          Disziplin schlägt Cleverness. Wir folgen dem Plan, auch wenn ein neues Feature spannender ist. Side-Quests
+          gibt es erst nach v1.0.
+        </p>
+
+        <p>
+          Wenn ihr eine Band habt, die das Booking-Problem kennt — wir würden gerne von euch hören. Trag euch auf der
+          Warteliste ein, oder schreib uns direkt.
+        </p>
+
+        <p style="margin-top: 3rem;">
+          — Pascal &amp; Marc<br />
+          <span style="font-family: ui-monospace, monospace; font-size: 12px; color: var(--color-klano-text-3); letter-spacing: 0.06em; text-transform: uppercase;">aus Zürich · 2026</span>
+        </p>
+      </div>
+    </Container>
+  </main>
+  <Footer
+    tagline={c.footer.tagline}
+    cols={c.footer.cols}
+    legalLeft={c.footer.legalLeft}
+    legalRight={c.footer.legalRight}
+  />
+</Base>
+
+<style is:global>
+  .prose-klano {
+    color: var(--color-klano-text-2);
+    font-size: 17px;
+    line-height: 1.65;
+  }
+  .prose-klano p {
+    margin: 0 0 1.25em;
+  }
+  .prose-klano h2 {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(1.5rem, 2.5vw, 1.875rem);
+    color: var(--color-klano-text);
+    letter-spacing: -0.02em;
+    margin: 3rem 0 1rem;
+    line-height: 1.15;
+  }
+</style>
