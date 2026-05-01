@@ -1,8 +1,22 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import type { Country } from '@klano/db';
 import { useWizard } from './WizardProvider';
+import { CITIES } from '@/lib/onboarding/cities';
 import { cn } from '@/lib/cn';
+
+// MapLibre uses window/canvas — load only on the client.
+const RegionMap = dynamic(() => import('./RegionMap').then((m) => m.RegionMap), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-[360px] rounded-[16px] border border-klano-border bg-klano-surface-2 flex items-center justify-center">
+      <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-klano-text-3">
+        Karte lädt …
+      </span>
+    </div>
+  ),
+});
 
 const COUNTRIES: { code: Country; flag: string; name: string }[] = [
   { code: 'CH', flag: '🇨🇭', name: 'Schweiz' },
@@ -10,11 +24,7 @@ const COUNTRIES: { code: Country; flag: string; name: string }[] = [
   { code: 'AT', flag: '🇦🇹', name: 'Österreich' },
 ];
 
-const REGIONS_BY_COUNTRY: Record<Country, string[]> = {
-  CH: ['Zürich', 'Bern', 'Basel', 'Luzern', 'St. Gallen', 'Winterthur', 'Schaffhausen', 'Lausanne', 'Genf'],
-  DE: ['Berlin', 'Hamburg', 'München', 'Köln', 'Frankfurt', 'Leipzig', 'Stuttgart', 'Düsseldorf', 'Bremen'],
-  AT: ['Wien', 'Graz', 'Linz', 'Salzburg', 'Innsbruck', 'Klagenfurt'],
-};
+const MAX_REGIONS = 5;
 
 export function Step3Geo() {
   const { state, dispatch } = useWizard();
@@ -22,7 +32,6 @@ export function Step3Geo() {
 
   function setCountry(c: Country) {
     if (country === c) return;
-    // Reset regions when country switches
     dispatch({ type: 'patch-band', patch: { country: c, regions: [] } });
   }
 
@@ -30,15 +39,13 @@ export function Step3Geo() {
     const has = regions.includes(r);
     let next: string[];
     if (has) next = regions.filter((x) => x !== r);
-    else if (regions.length >= 5) return;
+    else if (regions.length >= MAX_REGIONS) return;
     else next = [...regions, r];
     dispatch({ type: 'patch-band', patch: { regions: next } });
   }
 
-  const cities = country ? REGIONS_BY_COUNTRY[country] : [];
-
   return (
-    <div className="max-w-[640px] mx-auto w-full">
+    <div className="max-w-[760px] mx-auto w-full">
       <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-klano-text-3 mb-4">
         03 / Region
       </p>
@@ -54,7 +61,8 @@ export function Step3Geo() {
         Wo seid ihr unterwegs?
       </h2>
 
-      <div className="grid grid-cols-3 gap-3 mb-10">
+      {/* Country picker */}
+      <div className="grid grid-cols-3 gap-3 mb-6">
         {COUNTRIES.map((c) => {
           const active = country === c.code;
           return (
@@ -76,20 +84,33 @@ export function Step3Geo() {
         })}
       </div>
 
+      {/* Map */}
+      <div className="mb-6">
+        <RegionMap country={country} selected={regions} onToggle={toggleRegion} />
+        <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-klano-text-3 mt-3">
+          {country
+            ? regions.length
+              ? `${regions.length} / ${MAX_REGIONS} ausgewählt — Klick auf Marker zum Toggle`
+              : 'Wähl bis zu 5 Städte. Klick auf einen Marker.'
+            : 'Land wählen, dann Karte fokussiert.'}
+        </p>
+      </div>
+
+      {/* Quick-pick chips (in case map markers are missed) */}
       {country && (
-        <>
-          <label className="block font-mono text-[11px] uppercase tracking-[0.08em] text-klano-text-3 mb-3">
-            Städte / Regionen <span className="lowercase">(1–5)</span>
-          </label>
+        <div>
+          <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-klano-text-3 mb-3">
+            Schnellauswahl
+          </p>
           <div className="flex flex-wrap gap-2">
-            {cities.map((r) => {
-              const active = regions.includes(r);
-              const disabled = !active && regions.length >= 5;
+            {CITIES[country].map((city) => {
+              const active = regions.includes(city.name);
+              const disabled = !active && regions.length >= MAX_REGIONS;
               return (
                 <button
-                  key={r}
+                  key={city.name}
                   type="button"
-                  onClick={() => toggleRegion(r)}
+                  onClick={() => toggleRegion(city.name)}
                   disabled={disabled}
                   className={cn(
                     'h-9 px-4 rounded-full text-sm transition-colors border',
@@ -99,12 +120,12 @@ export function Step3Geo() {
                     disabled && 'opacity-40 cursor-not-allowed',
                   )}
                 >
-                  {r}
+                  {city.name}
                 </button>
               );
             })}
           </div>
-        </>
+        </div>
       )}
     </div>
   );
