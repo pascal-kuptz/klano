@@ -2,7 +2,7 @@
 
 import { useWizard } from './WizardProvider';
 import { canAdvance } from '@/lib/onboarding/state';
-import { OnboardingNav } from './OnboardingNav';
+import { MobileTopBar } from './MobileTopBar';
 import { OnboardingStage } from './OnboardingStage';
 import { ProgressBar } from './ProgressBar';
 import { Step1Welcome } from './Step1Welcome';
@@ -26,9 +26,9 @@ export function Wizard() {
       {/* LEFT — atmospheric stage (desktop only) */}
       <OnboardingStage currentStep={state.step} />
 
-      {/* RIGHT — pill nav + scrollable content + sticky pill footer */}
+      {/* RIGHT — mobile top bar + scrollable content + sticky pill footer */}
       <main className="content">
-        <OnboardingNav currentStep={state.step} />
+        <MobileTopBar />
 
         {/* Mobile-only progress bar — desktop has it on the stage */}
         <div className="mobile-progress">
@@ -45,28 +45,30 @@ export function Wizard() {
           {state.step === 7 && <Step7SignUp />}
         </div>
 
-        {!isLast && <div className="footer-spacer" aria-hidden="true" />}
+        {!isFirst && <div className="footer-spacer" aria-hidden="true" />}
 
-        {!isFirst && !isLast && (
+        {!isFirst && (
           <footer className="footer">
             <div className="footer-pill">
               <Button variant="ghost" size="sm" onClick={() => dispatch({ type: 'prev' })}>
                 ← Zurück
               </Button>
-              <div className="footer-cta">
-                {showSkip && (
-                  <button
-                    type="button"
-                    onClick={() => dispatch({ type: 'next' })}
-                    className="skip"
-                  >
-                    Überspringen
-                  </button>
-                )}
-                <Button size="sm" disabled={!advanceOk} onClick={() => dispatch({ type: 'next' })}>
-                  Weiter →
-                </Button>
-              </div>
+              {!isLast && (
+                <div className="footer-cta">
+                  {showSkip && (
+                    <button
+                      type="button"
+                      onClick={() => dispatch({ type: 'next' })}
+                      className="skip"
+                    >
+                      Überspringen
+                    </button>
+                  )}
+                  <Button size="sm" disabled={!advanceOk} onClick={() => dispatch({ type: 'next' })}>
+                    Weiter →
+                  </Button>
+                </div>
+              )}
             </div>
           </footer>
         )}
