@@ -4,6 +4,7 @@ import { Topbar } from '@/components/app/Topbar';
 const TABS = [
   { href: '/settings/band', label: 'Band' },
   { href: '/settings/profile', label: 'Profil' },
+  { href: '/settings/billing', label: 'Billing' },
 ] as const;
 
 export default function SettingsLayout({ children }: { children: React.ReactNode }) {
