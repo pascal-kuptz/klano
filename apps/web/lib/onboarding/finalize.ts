@@ -45,6 +45,13 @@ export async function finalizeOnboarding(payload: WizardState): Promise<Finalize
       ambition_level: payload.band.ambition ?? 'hobby',
       owner_user_id: user.id,
       preferred_language: payload.locale,
+      // Onboarding step 5 captures names only — emails are added on the
+      // dashboard 'Bandkollegen einladen' card, which then creates real
+      // band_invitations rows + sends Resend mails.
+      pending_members: payload.invites.map((i) => ({
+        name: i.name,
+        instrument: i.instrument ?? null,
+      })),
     })
     .select('id')
     .single();
@@ -72,19 +79,10 @@ export async function finalizeOnboarding(payload: WizardState): Promise<Finalize
       .eq('user_id', user.id);
   }
 
-  // Invitations.
-  if (payload.invites.length) {
-    await supabase.from('band_invitations').insert(
-      payload.invites.map((i) => ({
-        band_id: bandId,
-        email: i.email.toLowerCase(),
-        invited_by: user.id,
-        token: cryptoRandomToken(),
-        expires_at: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
-      })),
-    );
-    // TODO v0.6: trigger Resend invite email via packages/email + Edge Function.
-  }
+  // Email-based invitations are NOT created during onboarding anymore —
+  // the leader collects only names + instruments here. Emails are added
+  // and sent from the dashboard's 'Bandkollegen einladen' card, which
+  // creates band_invitations rows and triggers Resend mails (v0.6).
 
   // Pre-seeded booking from selected venue (if a real DB venue matches).
   if (payload.selectedVenueId) {
@@ -128,8 +126,3 @@ function slugify(s: string): string {
     .slice(0, 40);
 }
 
-function cryptoRandomToken(): string {
-  const arr = new Uint8Array(24);
-  crypto.getRandomValues(arr);
-  return Array.from(arr, (b) => b.toString(16).padStart(2, '0')).join('');
-}

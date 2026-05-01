@@ -9,32 +9,31 @@ const MAX_INVITES = 7;
 
 export function Step5Invites() {
   const { state, dispatch } = useWizard();
-  const [rows, setRows] = useState<{ email: string; instrument: string }[]>(
+  const [rows, setRows] = useState<{ name: string; instrument: string }[]>(
     state.invites.length
-      ? state.invites.map((i) => ({ email: i.email, instrument: i.instrument ?? '' }))
-      : [{ email: '', instrument: '' }],
+      ? state.invites.map((i) => ({ name: i.name, instrument: i.instrument ?? '' }))
+      : [{ name: '', instrument: '' }],
   );
 
-  // Persist invites to wizard state on change.
   useEffect(() => {
     const cleaned = rows
-      .map((r) => ({ email: r.email.trim(), instrument: r.instrument.trim() }))
-      .filter((r) => r.email.length > 0);
+      .map((r) => ({ name: r.name.trim(), instrument: r.instrument.trim() }))
+      .filter((r) => r.name.length > 0);
     dispatch({
       type: 'set-invites',
       invites: cleaned.map((r) => ({
-        email: r.email,
+        name: r.name,
         instrument: r.instrument || undefined,
       })),
     });
   }, [rows, dispatch]);
 
-  function update(i: number, patch: Partial<{ email: string; instrument: string }>) {
+  function update(i: number, patch: Partial<{ name: string; instrument: string }>) {
     setRows((prev) => prev.map((r, idx) => (idx === i ? { ...r, ...patch } : r)));
   }
   function addRow() {
     if (rows.length >= MAX_INVITES) return;
-    setRows((prev) => [...prev, { email: '', instrument: '' }]);
+    setRows((prev) => [...prev, { name: '', instrument: '' }]);
   }
   function removeRow(i: number) {
     setRows((prev) => prev.filter((_, idx) => idx !== i));
@@ -57,7 +56,7 @@ export function Step5Invites() {
         Wer ist dabei?
       </h2>
       <p className="text-klano-text-2 mb-10">
-        Du selbst und alle Bandkollegen. Verfügbarkeiten kommen erst im Dashboard — hier reicht Name und Instrument.
+        Trag jetzt einfach Namen ein. Die Einladungs-Mails verschickst du später ganz entspannt aus dem Dashboard.
       </p>
 
       {/* === Du === */}
@@ -86,13 +85,13 @@ export function Step5Invites() {
       </section>
 
       <div className="hr-section" aria-hidden="true">
-        <span className="hr-label">Andere</span>
+        <span className="hr-label">Bandkollegen</span>
       </div>
 
       {/* === Andere === */}
       <section className="mt-8">
         <p className="text-[13px] text-klano-text-2 mb-4">
-          Lade weitere Bandmitglieder per Mail ein. Sie bekommen einen Link, sobald dein Konto steht.
+          Wer spielt sonst noch mit? Du kannst sie gleich aus dem Dashboard per Mail einladen.
         </p>
 
         <div className="flex flex-col gap-2">
@@ -102,10 +101,10 @@ export function Step5Invites() {
               className="grid grid-cols-1 md:grid-cols-[1fr_180px_40px] gap-2 items-center"
             >
               <Input
-                type="email"
-                placeholder="band@deinedomain.com"
-                value={r.email}
-                onChange={(e) => update(i, { email: e.target.value })}
+                type="text"
+                placeholder="Vorname"
+                value={r.name}
+                onChange={(e) => update(i, { name: e.target.value })}
               />
               <Input
                 type="text"

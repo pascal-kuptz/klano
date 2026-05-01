@@ -110,9 +110,9 @@ export function Step7SignUp() {
           </dd>
           {state.invites.length > 0 && (
             <>
-              <dt className="text-klano-text-3">Mitglieder</dt>
+              <dt className="text-klano-text-3">Bandkollegen</dt>
               <dd className="text-klano-text">
-                {state.invites.length} eingeladen
+                {state.invites.map((i) => i.name).join(' · ')}
               </dd>
             </>
           )}

@@ -1,7 +1,16 @@
 import { Topbar } from '@/components/app/Topbar';
+import { InviteCard, type PendingMember } from '@/components/app/InviteCard';
 import { Button, ButtonLink } from '@/components/ui/Button';
 import { SectionLabel } from '@/components/ui/SectionLabel';
 import { getUser } from '@/lib/supabase/server';
+
+// TODO v0.4: read from `bands.pending_members` for the active band.
+// Static placeholder until that wiring lands.
+const PENDING_MEMBERS: PendingMember[] = [
+  { name: 'Léa', instrument: 'Vocals' },
+  { name: 'David', instrument: 'Drums' },
+  { name: 'Marc', instrument: 'Bass' },
+];
 
 export const metadata = { title: 'Dashboard' };
 
@@ -101,25 +110,9 @@ export default async function DashboardPage() {
             </ul>
           </div>
 
-          {/* Quick actions */}
+          {/* Right column: invite card + beta */}
           <div className="flex flex-col gap-5">
-            <div className="bg-klano-surface border border-klano-border rounded-[16px] p-6">
-              <SectionLabel num="02" label="Quick actions" className="mb-5" />
-              <div className="flex flex-col gap-2">
-                <ButtonLink href="/bookings/new" variant="secondary" size="md" className="!justify-start !w-full">
-                  + Neue Outreach
-                </ButtonLink>
-                <ButtonLink href="/sync/new" variant="secondary" size="md" className="!justify-start !w-full">
-                  + Probetermin vorschlagen
-                </ButtonLink>
-                <ButtonLink href="/venues" variant="secondary" size="md" className="!justify-start !w-full">
-                  → Venues durchsuchen
-                </ButtonLink>
-                <ButtonLink href="/settings/band" variant="secondary" size="md" className="!justify-start !w-full">
-                  → Band-Einstellungen
-                </ButtonLink>
-              </div>
-            </div>
+            <InviteCard members={PENDING_MEMBERS} />
 
             <div className="bg-klano-text text-klano-action-fg rounded-[16px] p-6">
               <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-white/50 mb-3">

@@ -16,7 +16,8 @@ export interface BandDraft {
 }
 
 export interface InviteDraft {
-  email: string;
+  /** Name of the person to invite — email is collected later in the dashboard. */
+  name: string;
   instrument?: string;
 }
 
