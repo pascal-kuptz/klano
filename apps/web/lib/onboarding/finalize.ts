@@ -40,7 +40,7 @@ export async function finalizeOnboarding(payload: WizardState): Promise<Finalize
       name,
       slug,
       genre: payload.band.genres,
-      country: payload.band.country ?? 'CH',
+      country: payload.band.countries[0] ?? 'CH',
       region: payload.band.regions[0] ?? null,
       ambition_level: payload.band.ambition ?? 'hobby',
       owner_user_id: user.id,

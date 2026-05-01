@@ -102,7 +102,11 @@ export function Step7SignUp() {
           <dd className="text-klano-text">{state.band.genres.join(' · ') || '—'}</dd>
           <dt className="text-klano-text-3">Region</dt>
           <dd className="text-klano-text">
-            {state.band.country ? `${state.band.country} · ${state.band.regions.join(', ')}` : '—'}
+            {state.band.countries.length
+              ? state.band.countries.length === 1
+                ? `${state.band.countries[0]}${state.band.regions.length ? ` · ${state.band.regions.join(', ')}` : ''}`
+                : state.band.countries.join(' · ')
+              : '—'}
           </dd>
           <dt className="text-klano-text-3">Anspruch</dt>
           <dd className="text-klano-text capitalize">

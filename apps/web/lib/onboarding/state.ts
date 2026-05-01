@@ -2,7 +2,8 @@ import type { Country, AmbitionLevel } from '@klano/db';
 
 // Bump when the wizard payload shape changes — drops stale localStorage instead of crashing.
 // v1 → v2: invites changed from {email,instrument} to {name,instrument}
-export const STORAGE_KEY = 'klano-onboarding-v2';
+// v2 → v3: band.country (single) → band.countries (array)
+export const STORAGE_KEY = 'klano-onboarding-v3';
 export const TOTAL_STEPS = 7 as const;
 
 export type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7;
@@ -12,8 +13,9 @@ export interface BandDraft {
   logoDataUrl?: string; // base64 — uploaded to Supabase Storage on finalize
   genres: string[]; // up to 3
   bandSize?: 3 | 4 | 5 | 6 | 7 | 8;
-  country?: Country;
-  regions: string[]; // 1–5 cities
+  countries: Country[]; // 1–3 — defaults to ['CH']
+  /** Region picks; only meaningful when exactly one country is active. */
+  regions: string[];
   ambition?: AmbitionLevel;
 }
 
@@ -40,7 +42,7 @@ export interface WizardState {
 
 export const initialState: WizardState = {
   step: 1,
-  band: { name: '', genres: [], regions: [] },
+  band: { name: '', genres: [], countries: [], regions: [] },
   user: {},
   invites: [],
   locale: 'de',
@@ -90,8 +92,14 @@ export function canAdvance(state: WizardState): boolean {
       return true;
     case 2:
       return state.band.name.trim().length >= 2 && state.band.genres.length >= 1;
-    case 3:
-      return Boolean(state.band.country) && state.band.regions.length >= 1;
+    case 3: {
+      const { countries, regions } = state.band;
+      if (countries.length === 0) return false;
+      // Multi-country: country selection alone is enough.
+      if (countries.length > 1) return true;
+      // Single country: at least one region.
+      return regions.length >= 1;
+    }
     case 4:
       return Boolean(state.band.ambition);
     case 5:

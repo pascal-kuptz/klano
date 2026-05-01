@@ -28,21 +28,38 @@ export const REGIONS: Record<Country, string[]> = {
   ],
 };
 
-/** Camera target per country (center + zoom for fly-to). */
-export const COUNTRY_VIEW: Record<Country, { center: [number, number]; zoom: number }> = {
-  CH: { center: [8.2, 46.85], zoom: 6.6 },
-  DE: { center: [10.5, 51.2], zoom: 5.4 },
-  AT: { center: [13.5, 47.7], zoom: 6.4 },
+/** Approximate bbox per country [west, south, east, north] for camera fitBounds. */
+export const COUNTRY_BBOX: Record<Country, [number, number, number, number]> = {
+  CH: [5.95, 45.82, 10.49, 47.81],
+  DE: [5.87, 47.27, 15.04, 55.06],
+  AT: [9.53, 46.37, 17.16, 49.02],
 };
 
-export const DACH_VIEW: { center: [number, number]; zoom: number } = {
-  center: [10.5, 49.0],
-  zoom: 4.6,
+export const DACH_BBOX: [number, number, number, number] = [5.87, 45.82, 17.16, 55.06];
+
+/**
+ * Public CDN URLs for simplified GeoJSON of administrative regions.
+ * Multiple URLs per country — first one that responds wins (used for resilience
+ * because the click_that_hood repo doesn't ship every DACH country reliably).
+ */
+export const GEOJSON_URLS: Record<Country, string[]> = {
+  CH: [
+    'https://raw.githubusercontent.com/codeforgermany/click_that_hood/main/public/data/switzerland.geojson',
+    'https://raw.githubusercontent.com/openZH/canton-geometries/master/cantons.geojson',
+  ],
+  DE: [
+    'https://raw.githubusercontent.com/codeforgermany/click_that_hood/main/public/data/germany.geojson',
+    'https://raw.githubusercontent.com/isellsoap/deutschlandGeoJSON/main/2_bundeslaender/2_hoch.geo.json',
+  ],
+  AT: [
+    'https://raw.githubusercontent.com/ginseng666/GeoJSON-TopoJSON-Austria/master/2017/simplified-99.9/laender_999_geo.json',
+    'https://raw.githubusercontent.com/codeforgermany/click_that_hood/main/public/data/austria-states.geojson',
+    'https://raw.githubusercontent.com/codeforgermany/click_that_hood/main/public/data/austria.geojson',
+  ],
 };
 
-/** Public CDN URLs for simplified GeoJSON of administrative regions. */
-export const GEOJSON_URL: Record<Country, string> = {
-  CH: 'https://raw.githubusercontent.com/codeforgermany/click_that_hood/main/public/data/switzerland.geojson',
-  DE: 'https://raw.githubusercontent.com/codeforgermany/click_that_hood/main/public/data/germany.geojson',
-  AT: 'https://raw.githubusercontent.com/codeforgermany/click_that_hood/main/public/data/austria.geojson',
-};
+/**
+ * Some sources use different property names for the region label. We try
+ * these in order on each feature and use the first non-empty value.
+ */
+export const NAME_PROPS = ['name', 'NAME', 'Name', 'BL', 'BL_NAME', 'NUTS_NAME'] as const;

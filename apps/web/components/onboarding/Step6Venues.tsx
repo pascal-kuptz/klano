@@ -12,7 +12,9 @@ export function Step6Venues() {
   const matches = useMemo<MatchedVenue[]>(
     () =>
       matchVenues({
-        country: state.band.country,
+        // matchVenues currently filters by a single country — use the first
+        // selected country in onboarding (multi-country tour shows broader matches in v0.5).
+        country: state.band.countries[0],
         regions: state.band.regions,
         genres: state.band.genres.map((g) => g.toLowerCase()),
         ambition: state.band.ambition,
@@ -60,7 +62,7 @@ export function Step6Venues() {
           ))}
           <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-klano-text-3 mt-4 text-center">
             <span className="inline-block w-1.5 h-1.5 rounded-full bg-klano-success mr-2 align-middle animate-pulse" />
-            Klano scannt 480+ Venues in {state.band.country ?? 'DACH'} …
+            Klano scannt 480+ Venues in {state.band.countries.join('/') || 'DACH'} …
           </p>
           <style jsx>{`
             .shimmer {
