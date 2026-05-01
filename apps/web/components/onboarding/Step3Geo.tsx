@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import type { Country } from '@klano/db';
 import { useWizard } from './WizardProvider';
-import { CITIES } from '@/lib/onboarding/cities';
+import { REGIONS } from '@/lib/onboarding/regions';
 import { cn } from '@/lib/cn';
 
 // MapLibre uses window/canvas — load only on the client.
@@ -90,9 +90,9 @@ export function Step3Geo() {
         <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-klano-text-3 mt-3">
           {country
             ? regions.length
-              ? `${regions.length} / ${MAX_REGIONS} ausgewählt — Klick auf Marker zum Toggle`
-              : 'Wähl bis zu 5 Städte. Klick auf einen Marker.'
-            : 'Land wählen, dann Karte fokussiert.'}
+              ? `${regions.length} / ${MAX_REGIONS} ausgewählt — Klick auf eine Region zum Toggle`
+              : 'Wähl bis zu 5 Regionen. Klick direkt auf die Karte.'
+            : 'Land wählen, dann zoomt die Karte.'}
         </p>
       </div>
 
@@ -103,14 +103,14 @@ export function Step3Geo() {
             Schnellauswahl
           </p>
           <div className="flex flex-wrap gap-2">
-            {CITIES[country].map((city) => {
-              const active = regions.includes(city.name);
+            {REGIONS[country].map((region) => {
+              const active = regions.includes(region);
               const disabled = !active && regions.length >= MAX_REGIONS;
               return (
                 <button
-                  key={city.name}
+                  key={region}
                   type="button"
-                  onClick={() => toggleRegion(city.name)}
+                  onClick={() => toggleRegion(region)}
                   disabled={disabled}
                   className={cn(
                     'h-9 px-4 rounded-full text-sm transition-colors border',
@@ -120,7 +120,7 @@ export function Step3Geo() {
                     disabled && 'opacity-40 cursor-not-allowed',
                   )}
                 >
-                  {city.name}
+                  {region}
                 </button>
               );
             })}

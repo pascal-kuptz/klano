@@ -1,64 +1,60 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import maplibregl, { type Map as MaplibreMap, type Marker, type StyleSpecification } from 'maplibre-gl';
+import { useEffect, useRef, useState } from 'react';
+import maplibregl, {
+  type Map as MaplibreMap,
+  type StyleSpecification,
+} from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import type { Country } from '@klano/db';
-import { CITIES, COUNTRY_VIEW, DACH_VIEW, type City } from '@/lib/onboarding/cities';
+import { COUNTRY_VIEW, DACH_VIEW, GEOJSON_URL } from '@/lib/onboarding/regions';
 
 interface Props {
   country?: Country;
-  selected: string[]; // city names
-  onToggle: (cityName: string) => void;
+  selected: string[];
+  onToggle: (regionName: string) => void;
 }
 
-/**
- * Minimal raster style — uses public OSM tiles (fine for low-volume
- * onboarding traffic). For prod scale switch to MapTiler/Stadia keyed
- * vector style. https://operations.osmfoundation.org/policies/tiles/
- */
+/** Fully neutral style — no tiles, no labels, no roads. Just our polygons. */
 const STYLE: StyleSpecification = {
   version: 8,
-  sources: {
-    osm: {
-      type: 'raster',
-      tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
-      tileSize: 256,
-      attribution: '© OpenStreetMap contributors',
-      maxzoom: 19,
-    },
-  },
+  sources: {},
   layers: [
     {
-      id: 'osm',
-      type: 'raster',
-      source: 'osm',
-      paint: {
-        'raster-saturation': -1,
-        'raster-contrast': -0.05,
-        'raster-brightness-max': 0.95,
-      },
+      id: 'bg',
+      type: 'background',
+      paint: { 'background-color': '#fafafa' },
     },
   ],
   glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
 };
 
+const SOURCE_ID = 'regions';
+const FILL_LAYER = 'regions-fill';
+const OUTLINE_LAYER = 'regions-outline';
+const HOVER_LAYER = 'regions-hover';
+const SELECTED_LAYER = 'regions-selected';
+
+type FC = GeoJSON.FeatureCollection<GeoJSON.Polygon | GeoJSON.MultiPolygon, { name: string }>;
+
 export function RegionMap({ country, selected, onToggle }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MaplibreMap | null>(null);
-  const markersRef = useRef<Marker[]>([]);
+  const dataCacheRef = useRef<Partial<Record<Country, FC>>>({});
   const selectedRef = useRef(selected);
   const onToggleRef = useRef(onToggle);
+  const hoveredRef = useRef<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  // Keep refs in sync so marker click closures stay current.
   useEffect(() => {
     selectedRef.current = selected;
     onToggleRef.current = onToggle;
   }, [selected, onToggle]);
 
-  // Initialize map once.
+  // Init map once.
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
+
     const map = new maplibregl.Map({
       container: containerRef.current,
       style: STYLE,
@@ -66,11 +62,112 @@ export function RegionMap({ country, selected, onToggle }: Props) {
       zoom: DACH_VIEW.zoom,
       attributionControl: false,
     });
-    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
-    map.addControl(
-      new maplibregl.AttributionControl({ compact: true, customAttribution: '© OSM' }),
-      'bottom-right',
-    );
+
+    map.on('load', () => {
+      // Empty source initially, populated when country loads.
+      map.addSource(SOURCE_ID, {
+        type: 'geojson',
+        data: { type: 'FeatureCollection', features: [] },
+        promoteId: 'name',
+      });
+
+      // Base fill: subtle warm gray
+      map.addLayer({
+        id: FILL_LAYER,
+        type: 'fill',
+        source: SOURCE_ID,
+        paint: {
+          'fill-color': '#ffffff',
+          'fill-opacity': 1,
+        },
+      });
+
+      // Hover fill — soft tint
+      map.addLayer({
+        id: HOVER_LAYER,
+        type: 'fill',
+        source: SOURCE_ID,
+        paint: {
+          'fill-color': '#0a0a0a',
+          'fill-opacity': [
+            'case',
+            ['boolean', ['feature-state', 'hover'], false],
+            0.06,
+            0,
+          ],
+        },
+      });
+
+      // Selected fill — solid black
+      map.addLayer({
+        id: SELECTED_LAYER,
+        type: 'fill',
+        source: SOURCE_ID,
+        paint: {
+          'fill-color': '#0a0a0a',
+          'fill-opacity': [
+            'case',
+            ['boolean', ['feature-state', 'selected'], false],
+            1,
+            0,
+          ],
+        },
+      });
+
+      // Outline always
+      map.addLayer({
+        id: OUTLINE_LAYER,
+        type: 'line',
+        source: SOURCE_ID,
+        paint: {
+          'line-color': [
+            'case',
+            ['boolean', ['feature-state', 'selected'], false],
+            '#0a0a0a',
+            '#d4d4d8',
+          ],
+          'line-width': 1,
+        },
+      });
+
+      // Click → toggle
+      map.on('click', FILL_LAYER, (e) => {
+        const f = e.features?.[0];
+        if (!f) return;
+        const name = (f.properties as { name?: string })?.name;
+        if (name) onToggleRef.current(name);
+      });
+
+      // Hover state
+      map.on('mousemove', FILL_LAYER, (e) => {
+        const f = e.features?.[0];
+        if (!f) return;
+        map.getCanvas().style.cursor = 'pointer';
+        const name = (f.properties as { name?: string })?.name ?? null;
+        if (hoveredRef.current && hoveredRef.current !== name) {
+          map.setFeatureState(
+            { source: SOURCE_ID, id: hoveredRef.current },
+            { hover: false },
+          );
+        }
+        hoveredRef.current = name;
+        if (name) {
+          map.setFeatureState({ source: SOURCE_ID, id: name }, { hover: true });
+        }
+      });
+
+      map.on('mouseleave', FILL_LAYER, () => {
+        map.getCanvas().style.cursor = '';
+        if (hoveredRef.current) {
+          map.setFeatureState(
+            { source: SOURCE_ID, id: hoveredRef.current },
+            { hover: false },
+          );
+          hoveredRef.current = null;
+        }
+      });
+    });
+
     mapRef.current = map;
     return () => {
       map.remove();
@@ -78,49 +175,76 @@ export function RegionMap({ country, selected, onToggle }: Props) {
     };
   }, []);
 
-  // Fly to country and rebuild markers when country changes.
+  // Load + update GeoJSON on country change.
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
+    const apply = () => {
+      const view = country ? COUNTRY_VIEW[country] : DACH_VIEW;
+      map.flyTo({ center: view.center, zoom: view.zoom, speed: 1.4, curve: 1.6 });
 
-    // Clean up old markers
-    for (const m of markersRef.current) m.remove();
-    markersRef.current = [];
+      if (!country) {
+        const src = map.getSource(SOURCE_ID);
+        if (src && 'setData' in src) {
+          (src as maplibregl.GeoJSONSource).setData({
+            type: 'FeatureCollection',
+            features: [],
+          });
+        }
+        return;
+      }
 
-    const view = country ? COUNTRY_VIEW[country] : DACH_VIEW;
-    map.flyTo({ center: view.center, zoom: view.zoom, speed: 1.4, curve: 1.6 });
+      const cached = dataCacheRef.current[country];
+      if (cached) {
+        applyData(map, cached, selectedRef.current);
+        return;
+      }
 
-    if (!country) return;
+      setError(null);
+      fetch(GEOJSON_URL[country])
+        .then((r) => {
+          if (!r.ok) throw new Error(`GeoJSON ${r.status}`);
+          return r.json();
+        })
+        .then((fc: FC) => {
+          dataCacheRef.current[country] = fc;
+          applyData(map, fc, selectedRef.current);
+        })
+        .catch((e) => {
+          console.error('RegionMap load failed', e);
+          setError('Karte konnte nicht geladen werden.');
+        });
+    };
 
-    const cities = CITIES[country];
-    for (const city of cities) {
-      const el = createMarkerEl(city, selectedRef.current.includes(city.name));
-      el.addEventListener('click', (e) => {
-        e.stopPropagation();
-        onToggleRef.current(city.name);
-      });
-      const marker = new maplibregl.Marker({ element: el, anchor: 'center' })
-        .setLngLat([city.lng, city.lat])
-        .addTo(map);
-      markersRef.current.push(marker);
-    }
+    if (map.loaded()) apply();
+    else map.once('load', apply);
   }, [country]);
 
-  // Restyle existing markers when selection changes (without rebuilding).
+  // Update selected feature-state when selection changes.
   useEffect(() => {
-    if (!country) return;
-    const cities = CITIES[country];
-    markersRef.current.forEach((marker, i) => {
-      const city = cities[i];
-      if (!city) return;
-      const el = marker.getElement();
-      paintMarkerEl(el, city, selected.includes(city.name));
-    });
+    const map = mapRef.current;
+    if (!map || !country) return;
+    const fc = dataCacheRef.current[country];
+    if (!fc) return;
+    for (const f of fc.features) {
+      const name = f.properties.name;
+      map.setFeatureState(
+        { source: SOURCE_ID, id: name },
+        { selected: selected.includes(name) },
+      );
+    }
   }, [selected, country]);
 
   return (
     <div className="map-wrap">
       <div ref={containerRef} className="map" aria-label="Region map" />
+      {error && (
+        <div className="map-error">
+          <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-klano-text-3">
+            {error}
+          </p>
+        </div>
+      )}
       <style jsx>{`
         .map-wrap {
           position: relative;
@@ -129,89 +253,29 @@ export function RegionMap({ country, selected, onToggle }: Props) {
           border-radius: 16px;
           overflow: hidden;
           border: 1px solid var(--color-klano-border);
-          background: var(--color-klano-surface-2);
+          background: #fafafa;
         }
         .map { width: 100%; height: 100%; }
-        :global(.maplibregl-ctrl-attrib) {
-          font-size: 10px !important;
-          font-family: var(--font-mono);
-          letter-spacing: 0.04em;
-        }
-        :global(.maplibregl-ctrl-group) {
-          background: var(--color-klano-surface) !important;
-          border: 1px solid var(--color-klano-border) !important;
-          box-shadow: none !important;
-        }
-        :global(.maplibregl-ctrl-group button) {
-          width: 32px !important;
-          height: 32px !important;
+        .map-error {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(250, 250, 250, 0.85);
         }
       `}</style>
     </div>
   );
 }
 
-// === Marker element factory ===
-
-function createMarkerEl(city: City, isSelected: boolean): HTMLDivElement {
-  const el = document.createElement('div');
-  el.className = 'klano-marker';
-  el.setAttribute('role', 'button');
-  el.setAttribute('aria-label', city.name);
-  el.style.cursor = 'pointer';
-  el.style.position = 'relative';
-  el.style.display = 'flex';
-  el.style.alignItems = 'center';
-  el.style.gap = '6px';
-
-  const dot = document.createElement('span');
-  dot.className = 'klano-marker-dot';
-  dot.style.display = 'inline-block';
-  dot.style.borderRadius = '50%';
-  dot.style.transition = 'all 150ms ease';
-  el.appendChild(dot);
-
-  const label = document.createElement('span');
-  label.className = 'klano-marker-label';
-  label.textContent = city.name;
-  label.style.fontFamily = 'Inter Variable, system-ui, sans-serif';
-  label.style.fontSize = '11px';
-  label.style.fontWeight = '500';
-  label.style.padding = '2px 6px';
-  label.style.borderRadius = '6px';
-  label.style.transition = 'all 150ms ease';
-  label.style.whiteSpace = 'nowrap';
-  el.appendChild(label);
-
-  paintMarkerEl(el, city, isSelected);
-  return el;
-}
-
-function paintMarkerEl(el: HTMLElement, _city: City, isSelected: boolean) {
-  const dot = el.querySelector<HTMLElement>('.klano-marker-dot');
-  const label = el.querySelector<HTMLElement>('.klano-marker-label');
-  if (!dot || !label) return;
-
-  if (isSelected) {
-    dot.style.width = '12px';
-    dot.style.height = '12px';
-    dot.style.background = '#0a0a0a';
-    dot.style.border = '2px solid #ffffff';
-    dot.style.boxShadow = '0 0 0 1px rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.15)';
-
-    label.style.background = '#0a0a0a';
-    label.style.color = '#ffffff';
-    label.style.border = '1px solid #0a0a0a';
-  } else {
-    dot.style.width = '8px';
-    dot.style.height = '8px';
-    dot.style.background = '#ffffff';
-    dot.style.border = '1.5px solid #52525b';
-    dot.style.boxShadow = '0 1px 2px rgba(0,0,0,0.1)';
-
-    label.style.background = 'rgba(255,255,255,0.85)';
-    label.style.color = '#52525b';
-    label.style.border = '1px solid #e4e4e7';
-    label.style.backdropFilter = 'blur(4px)';
+function applyData(map: MaplibreMap, fc: FC, selected: string[]) {
+  const src = map.getSource(SOURCE_ID);
+  if (!src || !('setData' in src)) return;
+  (src as maplibregl.GeoJSONSource).setData(fc);
+  // Re-apply selected states
+  for (const f of fc.features) {
+    const name = f.properties.name;
+    map.setFeatureState({ source: SOURCE_ID, id: name }, { selected: selected.includes(name) });
   }
 }
