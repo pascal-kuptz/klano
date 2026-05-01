@@ -222,15 +222,20 @@ export function VenuesMap({ venues, onSelect, activeId }: Props) {
 // === Marker element ===
 
 function createMarkerEl(venue: StaticVenue, active: boolean): HTMLDivElement {
+  // Wrapper is anchored at venue lng/lat (Marker anchor='center'). The dot
+  // sits at the exact center; the label is absolute-positioned so it never
+  // shifts the dot away from the coordinate.
   const el = document.createElement('div');
   el.className = 'klano-venue-marker';
   el.setAttribute('role', 'button');
   el.setAttribute('aria-label', venue.name);
   el.style.cursor = 'pointer';
   el.style.position = 'relative';
+  el.style.width = '14px';
+  el.style.height = '14px';
   el.style.display = 'flex';
   el.style.alignItems = 'center';
-  el.style.gap = '6px';
+  el.style.justifyContent = 'center';
 
   const dot = document.createElement('span');
   dot.className = 'klano-venue-dot';
@@ -242,6 +247,10 @@ function createMarkerEl(venue: StaticVenue, active: boolean): HTMLDivElement {
   const label = document.createElement('span');
   label.className = 'klano-venue-label';
   label.textContent = venue.name;
+  label.style.position = 'absolute';
+  label.style.left = '16px';
+  label.style.top = '50%';
+  label.style.transform = 'translateY(-50%)';
   label.style.fontFamily = 'Inter Variable, system-ui, sans-serif';
   label.style.fontSize = '11px';
   label.style.fontWeight = '500';
@@ -249,6 +258,7 @@ function createMarkerEl(venue: StaticVenue, active: boolean): HTMLDivElement {
   label.style.borderRadius = '999px';
   label.style.transition = 'all 150ms ease';
   label.style.whiteSpace = 'nowrap';
+  label.style.pointerEvents = 'none';
   el.appendChild(label);
 
   paintMarkerEl(el, venue, active);
