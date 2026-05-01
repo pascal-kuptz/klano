@@ -1,6 +1,8 @@
 import type { Country, AmbitionLevel } from '@klano/db';
 
-export const STORAGE_KEY = 'klano-onboarding-v1';
+// Bump when the wizard payload shape changes — drops stale localStorage instead of crashing.
+// v1 → v2: invites changed from {email,instrument} to {name,instrument}
+export const STORAGE_KEY = 'klano-onboarding-v2';
 export const TOTAL_STEPS = 7 as const;
 
 export type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7;

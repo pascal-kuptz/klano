@@ -11,13 +11,13 @@ export function Step5Invites() {
   const { state, dispatch } = useWizard();
   const [rows, setRows] = useState<{ name: string; instrument: string }[]>(
     state.invites.length
-      ? state.invites.map((i) => ({ name: i.name, instrument: i.instrument ?? '' }))
+      ? state.invites.map((i) => ({ name: i.name ?? '', instrument: i.instrument ?? '' }))
       : [{ name: '', instrument: '' }],
   );
 
   useEffect(() => {
     const cleaned = rows
-      .map((r) => ({ name: r.name.trim(), instrument: r.instrument.trim() }))
+      .map((r) => ({ name: (r.name ?? '').trim(), instrument: (r.instrument ?? '').trim() }))
       .filter((r) => r.name.length > 0);
     dispatch({
       type: 'set-invites',
