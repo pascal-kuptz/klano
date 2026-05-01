@@ -8,30 +8,21 @@ import { SectionLabel } from '@/components/ui/SectionLabel';
 import { STATIC_VENUES, type StaticVenue } from '@/lib/onboarding/venues-static';
 import { cn } from '@/lib/cn';
 
-type Phase = 'pick' | 'drafting' | 'ready' | 'sending' | 'sent';
+type Phase = 'pick' | 'drafting' | 'ready' | 'sending' | 'sent' | 'error';
 
 const SAMPLE_BAND = {
   name: 'Halbnacht',
-  genre: 'Indie · Singer-Songwriter',
-  city: 'Zürich',
+  genres: ['Indie', 'Singer-Songwriter'],
+  region: 'Zürich',
+  ambition: 'semi_pro' as const,
 };
 
-function buildDraft(venue: StaticVenue): { subject: string; body: string } {
-  return {
-    subject: `Anfrage Gig — ${SAMPLE_BAND.name}`,
-    body: `Hallo ${venue.name}-Team,
-
-wir sind ${SAMPLE_BAND.name}, eine ${SAMPLE_BAND.genre.toLowerCase()}-Band aus ${SAMPLE_BAND.city}. Eure Programmgestaltung der letzten Monate hat uns aufgefallen — besonders eure Linie zwischen ${venue.genres[0] ?? 'Indie'} und Live-Atmosphäre passt zu dem, was wir live machen.
-
-Konkret: wir suchen für Frühjahr/Sommer 2026 ein Gig-Datum in ${venue.city}. Unsere Bandgröße passt zu eurer Kapazität (${venue.capacity}), und wir bringen eigenes Publikum aus der Region mit.
-
-Hört euch gerne mal rein: https://halbnacht.bandcamp.com
-
-Hättet ihr für April–Juni 2026 freie Daten? Über eine kurze Rückmeldung würden wir uns freuen.
-
-Beste Grüße,
-Pascal · ${SAMPLE_BAND.name}`,
-  };
+/** Splits a Claude/template response of `Subject\n\nBody` into parts. */
+function splitDraft(text: string): { subject: string; body: string } {
+  const trimmed = text.replace(/^[\s\n]+/, '');
+  const idx = trimmed.indexOf('\n\n');
+  if (idx === -1) return { subject: trimmed, body: '' };
+  return { subject: trimmed.slice(0, idx).trim(), body: trimmed.slice(idx + 2).trimStart() };
 }
 
 export function ComposeFlow() {
@@ -62,39 +53,65 @@ export function ComposeFlow() {
     setPhase('drafting');
   }
 
-  // Stream the draft when entering 'drafting' phase.
-  const streamRef = useRef<number | null>(null);
+  // Stream the draft from /api/agent/draft on entering 'drafting' phase.
+  const abortRef = useRef<AbortController | null>(null);
+  const [source, setSource] = useState<string>('');
   useEffect(() => {
     if (phase !== 'drafting' || !venue) return;
-    const draft = buildDraft(venue);
-
+    const ac = new AbortController();
+    abortRef.current = ac;
     setStreamedSubject('');
     setStreamedBody('');
-    setSubject(draft.subject);
-    setBody(draft.body);
 
-    let i = 0;
-    const tick = () => {
-      // Subject streams first (fast), then body
-      const subjLen = draft.subject.length;
-      if (i < subjLen) {
-        setStreamedSubject(draft.subject.slice(0, i + 1));
-        i += 2; // 2 chars/tick on subject
-      } else {
-        const bodyIdx = i - subjLen;
-        if (bodyIdx >= draft.body.length) {
-          setPhase('ready');
-          return;
+    (async () => {
+      try {
+        const res = await fetch('/api/agent/draft', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          signal: ac.signal,
+          body: JSON.stringify({
+            band: {
+              name: SAMPLE_BAND.name,
+              genres: SAMPLE_BAND.genres,
+              region: SAMPLE_BAND.region,
+              ambition: SAMPLE_BAND.ambition,
+            },
+            venue: {
+              name: venue.name,
+              city: venue.city,
+              capacity: venue.capacity,
+              genres: venue.genres,
+              primaryLanguage: 'de',
+            },
+            intent: 'first_contact',
+          }),
+        });
+        if (!res.ok || !res.body) throw new Error(`http ${res.status}`);
+        setSource(res.headers.get('X-Klano-Source') ?? 'unknown');
+
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let acc = '';
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          acc += decoder.decode(value, { stream: true });
+          const { subject: s, body: b } = splitDraft(acc);
+          setStreamedSubject(s);
+          setStreamedBody(b);
         }
-        setStreamedBody(draft.body.slice(0, bodyIdx + 4));
-        i += 4; // 4 chars/tick on body
+        const final = splitDraft(acc);
+        setSubject(final.subject);
+        setBody(final.body);
+        setPhase('ready');
+      } catch (e) {
+        if ((e as { name?: string }).name === 'AbortError') return;
+        console.error('compose stream failed', e);
+        setPhase('error');
       }
-      streamRef.current = window.setTimeout(tick, 18);
-    };
-    streamRef.current = window.setTimeout(tick, 200);
-    return () => {
-      if (streamRef.current) window.clearTimeout(streamRef.current);
-    };
+    })();
+
+    return () => ac.abort();
   }, [phase, venue]);
 
   async function send() {
@@ -186,6 +203,19 @@ export function ComposeFlow() {
           </div>
         )}
 
+        {phase === 'error' && venue && (
+          <div className="mt-6 bg-klano-surface border border-klano-danger/30 rounded-[16px] p-6">
+            <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-klano-danger mb-2">
+              Draft fehlgeschlagen
+            </p>
+            <p className="text-[13px] text-klano-text-2 mb-4">
+              Klano konnte gerade keine Mail draften. Versuch's nochmal — sonst nutzen wir die Vorlage.
+            </p>
+            <Button size="sm" onClick={() => setPhase('drafting')}>
+              Erneut versuchen
+            </Button>
+          </div>
+        )}
         {(phase === 'drafting' || phase === 'ready' || phase === 'sending' || phase === 'sent') &&
           venue && (
             <div className="mt-6 bg-klano-surface border border-klano-border rounded-[16px] overflow-hidden">
@@ -210,7 +240,7 @@ export function ComposeFlow() {
                   </span>
                 </div>
                 <span className="font-mono text-[11px] text-klano-text-3 truncate">
-                  An: bookings@{venue.name.toLowerCase().replace(/\s+/g, '')}.ch
+                  {source === 'anthropic' ? 'Claude' : source === 'fallback' || source === 'fallback-after-error' ? 'Vorlage' : 'An'}: bookings@{venue.name.toLowerCase().replace(/\s+/g, '')}.ch
                 </span>
               </div>
 
